@@ -91,55 +91,56 @@ def cmd_trends(args):
 PH_API_URL = "https://api.producthunt.com/v2/api/graphql"
 
 
-def cmd_producthunt(args):
-    query = """
-    query($q: String!, $first: Int!) {
-      posts(order: VOTES, search: { query: $q }, first: $first) {
+def _ph_fetch_posts(ph_token, first=50):
+    """Fetch recent top posts from PH (API v2 has no free-text search)."""
+    gql = """
+    query($first: Int!) {
+      posts(order: VOTES, first: $first) {
         nodes {
-          id
-          name
-          tagline
-          votesCount
-          commentsCount
-          website
-          url
-          createdAt
+          id name tagline votesCount commentsCount website url createdAt
           topics { nodes { name } }
         }
       }
     }
     """
-    ph_token = _get_ph_token()
-    if not ph_token:
-        print(json.dumps({"error": "PRODUCTHUNT_TOKEN not set. Get a developer token at producthunt.com/v2/oauth/applications"}))
-        sys.exit(1)
-
-    payload = json.dumps({"query": query, "variables": {"q": args.query, "first": args.limit}}).encode()
+    payload = json.dumps({"query": gql, "variables": {"first": first}}).encode()
     req = urllib.request.Request(
-        PH_API_URL,
-        data=payload,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {ph_token}",
-        },
+        PH_API_URL, data=payload,
+        headers={"Content-Type": "application/json", "Authorization": f"Bearer {ph_token}"},
     )
     with urllib.request.urlopen(req, timeout=10) as resp:
         data = json.loads(resp.read())
+    return data.get("data", {}).get("posts", {}).get("nodes", [])
 
-    nodes = data.get("data", {}).get("posts", {}).get("nodes", [])
+
+def cmd_producthunt(args):
+    ph_token = _get_ph_token()
+    if not ph_token:
+        print(json.dumps({"error": "PRODUCTHUNT_TOKEN not set."}))
+        sys.exit(1)
+
+    keywords = [w.lower() for w in args.query.split()]
+    nodes = _ph_fetch_posts(ph_token, first=200)
+
     results = []
     for n in nodes:
-        results.append({
-            "id": n["id"],
-            "name": n["name"],
-            "tagline": n["tagline"],
-            "votes": n["votesCount"],
-            "comments": n["commentsCount"],
-            "url": n["url"],
-            "website": n.get("website", ""),
-            "created_at": n["createdAt"][:10],
-            "topics": [t["name"] for t in n.get("topics", {}).get("nodes", [])],
-        })
+        text = (n["name"] + " " + n["tagline"]).lower()
+        topic_names = [t["name"].lower() for t in n.get("topics", {}).get("nodes", [])]
+        combined = text + " " + " ".join(topic_names)
+        if all(kw in combined for kw in keywords):
+            results.append({
+                "id": n["id"],
+                "name": n["name"],
+                "tagline": n["tagline"],
+                "votes": n["votesCount"],
+                "comments": n["commentsCount"],
+                "url": n["url"],
+                "website": n.get("website", ""),
+                "created_at": n["createdAt"][:10],
+                "topics": [t["name"] for t in n.get("topics", {}).get("nodes", [])],
+            })
+            if len(results) >= args.limit:
+                break
 
     print(json.dumps(results, indent=2, ensure_ascii=False))
 
@@ -223,21 +224,17 @@ def cmd_report(args):
     ph_token = _get_ph_token()
     if ph_token:
         try:
-            query_gql = """
-            query($q: String!, $first: Int!) {
-              posts(order: VOTES, search: { query: $q }, first: $first) {
-                nodes { name tagline votesCount url createdAt }
-              }
-            }
-            """
-            payload = json.dumps({"query": query_gql, "variables": {"q": args.query, "first": 5}}).encode()
-            req = urllib.request.Request(
-                PH_API_URL, data=payload,
-                headers={"Content-Type": "application/json", "Authorization": f"Bearer {ph_token}"},
-            )
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read())
-            nodes = data.get("data", {}).get("posts", {}).get("nodes", [])
+            keywords = [w.lower() for w in args.query.split()]
+            all_nodes = _ph_fetch_posts(ph_token, first=200)
+            nodes = []
+            for n in all_nodes:
+                text = (n["name"] + " " + n["tagline"]).lower()
+                topic_names = [t["name"].lower() for t in n.get("topics", {}).get("nodes", [])]
+                combined = text + " " + " ".join(topic_names)
+                if all(kw in combined for kw in keywords):
+                    nodes.append(n)
+                if len(nodes) >= 5:
+                    break
             report["sources"]["product_hunt"] = {
                 "existing_products": len(nodes),
                 "top_products": [{"name": n["name"], "tagline": n["tagline"], "votes": n["votesCount"]} for n in nodes[:3]],
