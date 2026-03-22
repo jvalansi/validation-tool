@@ -113,69 +113,29 @@ def cmd_reddit(args):
 
 
 # ---------------------------------------------------------------------------
-# Product Hunt (public API v2 — no auth needed for basic search)
+# Product Hunt (via DuckDuckGo site:producthunt.com — no auth needed)
 # ---------------------------------------------------------------------------
 
-PH_API_URL = "https://api.producthunt.com/v2/api/graphql"
-
-
-def _ph_fetch_posts(ph_token, first=50):
-    """Fetch recent top posts from PH (API v2 has no free-text search)."""
-    gql = """
-    query($first: Int!) {
-      posts(order: VOTES, first: $first) {
-        nodes {
-          id name tagline votesCount commentsCount website url createdAt
-          topics { nodes { name } }
-        }
-      }
-    }
-    """
-    payload = json.dumps({"query": gql, "variables": {"first": first}}).encode()
-    req = urllib.request.Request(
-        PH_API_URL, data=payload,
-        headers={"Content-Type": "application/json", "Authorization": f"Bearer {ph_token}"},
-    )
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        data = json.loads(resp.read())
-    return data.get("data", {}).get("posts", {}).get("nodes", [])
+def _ph_search(query, limit=10):
+    from ddgs import DDGS
+    ddg_query = f"site:producthunt.com/products {query}"
+    results = []
+    for r in DDGS().text(ddg_query, max_results=limit):
+        # Filter out non-product pages (alternatives, makers, profiles)
+        url = r["href"]
+        if any(x in url for x in ["/alternatives", "/makers", "/@", "/discussion"]):
+            continue
+        results.append({
+            "title": r["title"].replace(" | Product Hunt", "").strip(),
+            "url": url,
+            "snippet": r["body"],
+        })
+    return results
 
 
 def cmd_producthunt(args):
-    ph_token = _get_ph_token()
-    if not ph_token:
-        print(json.dumps({"error": "PRODUCTHUNT_TOKEN not set."}))
-        sys.exit(1)
-
-    keywords = [w.lower() for w in args.query.split()]
-    nodes = _ph_fetch_posts(ph_token, first=200)
-
-    results = []
-    for n in nodes:
-        text = (n["name"] + " " + n["tagline"]).lower()
-        topic_names = [t["name"].lower() for t in n.get("topics", {}).get("nodes", [])]
-        combined = text + " " + " ".join(topic_names)
-        if all(kw in combined for kw in keywords):
-            results.append({
-                "id": n["id"],
-                "name": n["name"],
-                "tagline": n["tagline"],
-                "votes": n["votesCount"],
-                "comments": n["commentsCount"],
-                "url": n["url"],
-                "website": n.get("website", ""),
-                "created_at": n["createdAt"][:10],
-                "topics": [t["name"] for t in n.get("topics", {}).get("nodes", [])],
-            })
-            if len(results) >= args.limit:
-                break
-
+    results = _ph_search(args.query, limit=args.limit)
     print(json.dumps(results, indent=2, ensure_ascii=False))
-
-
-def _get_ph_token():
-    import os
-    return os.environ.get("PRODUCTHUNT_TOKEN")
 
 
 # ---------------------------------------------------------------------------
@@ -236,29 +196,15 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["reddit"] = {"error": str(e)}
 
-    # Product Hunt
-    ph_token = _get_ph_token()
-    if ph_token:
-        try:
-            keywords = [w.lower() for w in args.query.split()]
-            all_nodes = _ph_fetch_posts(ph_token, first=200)
-            nodes = []
-            for n in all_nodes:
-                text = (n["name"] + " " + n["tagline"]).lower()
-                topic_names = [t["name"].lower() for t in n.get("topics", {}).get("nodes", [])]
-                combined = text + " " + " ".join(topic_names)
-                if all(kw in combined for kw in keywords):
-                    nodes.append(n)
-                if len(nodes) >= 5:
-                    break
-            report["sources"]["product_hunt"] = {
-                "existing_products": len(nodes),
-                "top_products": [{"name": n["name"], "tagline": n["tagline"], "votes": n["votesCount"]} for n in nodes[:3]],
-            }
-        except Exception as e:
-            report["sources"]["product_hunt"] = {"error": str(e)}
-    else:
-        report["sources"]["product_hunt"] = {"skipped": "PRODUCTHUNT_TOKEN not set"}
+    # Product Hunt (via DDG)
+    try:
+        ph_results = _ph_search(args.query, limit=5)
+        report["sources"]["product_hunt"] = {
+            "existing_products": len(ph_results),
+            "top_products": [{"name": r["title"], "url": r["url"], "snippet": r["snippet"][:100]} for r in ph_results[:3]],
+        }
+    except Exception as e:
+        report["sources"]["product_hunt"] = {"error": str(e)}
 
     # Summary signal
     signals = []
