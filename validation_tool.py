@@ -85,6 +85,34 @@ def cmd_trends(args):
 
 
 # ---------------------------------------------------------------------------
+# Reddit (unofficial JSON API — no auth needed)
+# ---------------------------------------------------------------------------
+
+def _reddit_search(query, subreddits=None, limit=10):
+    from ddgs import DDGS
+    if subreddits:
+        subs = [s.strip() for s in subreddits.split(",")]
+        sub_filter = " OR ".join("r/" + s.lstrip("r/") for s in subs)
+        ddg_query = f"site:reddit.com ({sub_filter}) {query}"
+    else:
+        ddg_query = f"site:reddit.com {query}"
+
+    results = []
+    for r in DDGS().text(ddg_query, max_results=limit):
+        results.append({
+            "title": r["title"],
+            "url": r["href"],
+            "snippet": r["body"],
+        })
+    return results
+
+
+def cmd_reddit(args):
+    results = _reddit_search(args.query, args.subreddits, limit=args.limit)
+    print(json.dumps(results, indent=2, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------------------
 # Product Hunt (public API v2 — no auth needed for basic search)
 # ---------------------------------------------------------------------------
 
@@ -198,25 +226,13 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["google_trends"] = {"error": str(e)}
 
-    # Reddit
+    # Reddit (via DuckDuckGo site:reddit.com — no auth needed)
     try:
-        reddit_tool = os.path.join(os.path.dirname(__file__), "..", "reddit-tool", "reddit_tool.py")
-        python = sys.executable
-        cmd = [python, reddit_tool, "search", "--query", args.query, "--limit", "5"]
-        if args.reddit_subreddits:
-            cmd += ["--subreddits", args.reddit_subreddits]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-        if result.returncode == 0:
-            posts = json.loads(result.stdout)
-            report["sources"]["reddit"] = {
-                "total_results": len(posts),
-                "top_posts": [
-                    {"title": p["title"], "score": p["score"], "comments": p["num_comments"], "url": p["url"]}
-                    for p in sorted(posts, key=lambda x: x["score"], reverse=True)[:3]
-                ],
-            }
-        else:
-            report["sources"]["reddit"] = {"error": result.stderr.strip()}
+        reddit_posts = _reddit_search(args.query, args.reddit_subreddits, limit=10)
+        report["sources"]["reddit"] = {
+            "total_results": len(reddit_posts),
+            "top_posts": [{"title": p["title"], "url": p["url"], "snippet": p["snippet"][:150]} for p in reddit_posts[:3]],
+        }
     except Exception as e:
         report["sources"]["reddit"] = {"error": str(e)}
 
@@ -255,7 +271,7 @@ def cmd_report(args):
     if gt.get("signal") == "strong":
         signals.append("strong search volume")
     rd = report["sources"].get("reddit", {})
-    if rd.get("total_results", 0) > 10:
+    if rd.get("total_results", 0) > 5:
         signals.append("active Reddit discussion")
     ph = report["sources"].get("product_hunt", {})
     if 0 < ph.get("existing_products", 0) < 5:
@@ -292,6 +308,11 @@ def main():
     p_ph.add_argument("--query", required=True)
     p_ph.add_argument("--limit", type=int, default=10)
 
+    p_reddit = subparsers.add_parser("reddit", help="Search Reddit (no auth needed)")
+    p_reddit.add_argument("--query", required=True)
+    p_reddit.add_argument("--subreddits", help="Comma-separated subreddits (optional, default: all)")
+    p_reddit.add_argument("--limit", type=int, default=10)
+
     p_report = subparsers.add_parser("report", help="Full multi-source validation report")
     p_report.add_argument("--query", required=True)
     p_report.add_argument("--reddit-subreddits", help="Comma-separated subreddits to search (optional)")
@@ -304,6 +325,8 @@ def main():
         cmd_trends(args)
     elif args.command == "producthunt":
         cmd_producthunt(args)
+    elif args.command == "reddit":
+        cmd_reddit(args)
     elif args.command == "report":
         cmd_report(args)
 
