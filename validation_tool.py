@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import json
+import os
 import re
 import sys
 import urllib.parse
@@ -208,7 +209,6 @@ def _mrr_range(tam_tier, prices):
 
 def cmd_report(args):
     import subprocess
-    import os
 
     report = {"query": args.query, "sources": {}}
 
@@ -319,7 +319,62 @@ def cmd_report(args):
         "verdict": "validate further" if len(signals) >= 2 else "weak signal — reconsider or reframe",
     }
 
+    # Claude synthesis
+    claude_analysis = _claude_review(args.query, report)
+    if claude_analysis:
+        report["claude_analysis"] = claude_analysis
+
     print(json.dumps(report, indent=2, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------------------
+# Claude revenue/value synthesis
+# ---------------------------------------------------------------------------
+
+def _claude_review(query, report):
+    """Call Claude via CLI to synthesize the report data into a revenue/value estimate."""
+    import subprocess
+    import shutil
+
+    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
+    if not os.path.exists(claude_path):
+        return None
+
+    prompt = f"""You are a startup analyst. Given the following market research data for the idea "{query}", provide a concise revenue and value assessment.
+
+Research data:
+{json.dumps(report.get("sources", {}), indent=2)}
+
+Revenue signals extracted:
+{json.dumps(report.get("revenue_estimate", {}), indent=2)}
+
+Provide your assessment as JSON with these fields:
+- "tam_assessment": one sentence on market size (mention specific evidence from the data)
+- "pricing_recommendation": suggested price point and model (e.g. "$19/mo SaaS")
+- "mrr_12mo_estimate": realistic MRR after 12 months as a string range (e.g. "$500–$3,000")
+- "key_risks": list of 2-3 main risks to revenue
+- "key_opportunities": list of 2-3 strongest signals supporting the idea
+- "roi_verdict": one of "strong", "moderate", "weak", "unclear"
+- "roi_reasoning": one sentence explaining the verdict
+
+Return only valid JSON, no markdown."""
+
+    try:
+        result = subprocess.run(
+            [claude_path, "--print", "--output-format", "text", prompt],
+            capture_output=True, text=True, timeout=60
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            text = result.stdout.strip()
+            # Strip markdown code fences if present
+            if text.startswith("```"):
+                text = "\n".join(text.split("\n")[1:])
+                text = text.rsplit("```", 1)[0].strip()
+            return json.loads(text)
+    except Exception as e:
+        return {"error": str(e)}
+
+    return None
 
 
 # ---------------------------------------------------------------------------
