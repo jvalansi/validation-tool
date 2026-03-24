@@ -118,8 +118,6 @@ Writes numeric/select fields to the **table**:
 | `Value ($)` | Claude (`value` — annual revenue estimate) |
 | `TAM Tier` | Rule-based (`mass` / `mid` / `niche`) |
 | `Market Signal` | Rule-based from signal count (≥3=strong, 1-2=moderate, 0=weak) |
-| `MRR Estimate` | Revenue estimate range (`conservative – optimistic`) |
-| `Pricing Recommendation` | Claude (`pricing_assessment`) |
 | `Trends Interest` | Google Trends 12-month average interest (0–100) |
 | `HN Results` | Total Hacker News posts matching the query |
 | `Reddit Results` | Total Reddit threads found |

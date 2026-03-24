@@ -277,12 +277,6 @@ def main():
     if suggested_probability is not None:
         table_props["Probability"] = {"number": float(suggested_probability)}
     table_props["Market Signal"] = {"select": {"name": market_signal}}
-    cons_mrr = rev.get("conservative_mrr", "")
-    opt_mrr = rev.get("optimistic_mrr", "")
-    if cons_mrr and opt_mrr:
-        table_props["MRR Estimate"] = {"rich_text": [{"text": {"content": f"{cons_mrr} – {opt_mrr}"}}]}
-    if pricing:
-        table_props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing}}]}
     if trends_avg is not None:
         table_props["Trends Interest"] = {"number": float(trends_avg)}
     if hn_results is not None:
