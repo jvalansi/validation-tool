@@ -67,7 +67,7 @@ def run_validation(query, subreddits):
 
 def calc_new_prob(current_prob, report, project_name, project_desc):
     if not report:
-        return current_prob
+        return current_prob, ""
 
     prompt = f"""You are evaluating the market validation signals for a software project idea.
 
@@ -100,7 +100,7 @@ Respond with ONLY a JSON object in this exact format:
     )
     if result.returncode != 0 or not result.stdout.strip():
         print(f"  Claude error: {result.stderr[:200] or 'no output'}")
-        return current_prob
+        return current_prob, ""
 
     # claude --output-format json wraps in {"result": "...", ...}
     outer = json.loads(result.stdout)
@@ -109,8 +109,9 @@ Respond with ONLY a JSON object in this exact format:
     inner_text = inner_text.strip().strip("```json").strip("```").strip()
     inner = json.loads(inner_text)
     new_prob = round(max(0.02, min(0.95, float(inner["probability"]))), 2)
-    print(f"  Reasoning: {inner.get('reasoning', '')}")
-    return new_prob
+    reasoning = inner.get("reasoning", "")
+    print(f"  Reasoning: {reasoning}")
+    return new_prob, reasoning
 
 
 def notion_patch(path, body):
@@ -204,7 +205,7 @@ def remove_existing_validation_section(blocks):
                 pass
 
 
-def append_validation_section(page_id, report, new_prob, old_prob):
+def append_validation_section(page_id, report, new_prob, old_prob, reasoning=""):
     if not report:
         return
     gt = report["sources"].get("google_trends", {})
@@ -255,6 +256,8 @@ def append_validation_section(page_id, report, new_prob, old_prob):
             "icon": {"type": "emoji", "emoji": "🧪"}
         }},
     ]
+    if reasoning:
+        blocks.append({"quote": {"rich_text": [{"text": {"content": f"🤖 {reasoning}"}}]}})
 
     req = urllib.request.Request(
         f"https://api.notion.com/v1/blocks/{page_id}/children",
@@ -276,7 +279,7 @@ def process_project(p):
     print(f"Query: {p['query']}")
 
     report = run_validation(p["query"], p["subreddits"])
-    new_prob = calc_new_prob(p["prob"], report, p["name"], p.get("desc", ""))
+    new_prob, reasoning = calc_new_prob(p["prob"], report, p["name"], p.get("desc", ""))
     print(f"Probability: {p['prob']} → {new_prob}")
 
     # Update table probability
@@ -287,7 +290,7 @@ def process_project(p):
     update_prob_bullet(blocks, new_prob)
     update_callout(blocks, new_prob)
     remove_existing_validation_section(blocks)
-    append_validation_section(p["id"], report, new_prob, p["prob"])
+    append_validation_section(p["id"], report, new_prob, p["prob"], reasoning)
 
     summary = report.get("summary", {}) if report else {}
     print(f"Verdict: {summary.get('verdict', 'N/A')}")
@@ -295,7 +298,11 @@ def process_project(p):
 
 
 if __name__ == "__main__":
-    projects = fetch_top_projects(limit=20)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--limit", type=int, default=20)
+    args = parser.parse_args()
+    projects = fetch_top_projects(limit=args.limit)
     print(f"Fetched {len(projects)} projects to validate")
     for p in projects:
         try:
