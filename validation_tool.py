@@ -320,7 +320,7 @@ def cmd_report(args):
     }
 
     # Claude synthesis
-    claude_analysis = _claude_review(args.query, report)
+    claude_analysis = _claude_review(args.query, report, assume_tech_exists=getattr(args, "assume_tech_exists", False))
     if claude_analysis:
         report["claude_analysis"] = claude_analysis
 
@@ -331,7 +331,7 @@ def cmd_report(args):
 # Claude revenue/value synthesis
 # ---------------------------------------------------------------------------
 
-def _claude_review(query, report):
+def _claude_review(query, report, assume_tech_exists=False):
     """Call Claude via CLI to synthesize the report data into a revenue/value estimate."""
     import subprocess
     import shutil
@@ -340,7 +340,16 @@ def _claude_review(query, report):
     if not os.path.exists(claude_path):
         return None
 
+    tech_context = (
+        "IMPORTANT ASSUMPTION: Treat the technology as fully working and available. "
+        "Do NOT factor in technical feasibility or R&D risk — those are captured separately in the probability of success. "
+        "Focus purely on market demand: if this product existed today and worked perfectly, would people pay for it and how much?"
+        if assume_tech_exists else ""
+    )
+
     prompt = f"""You are a startup analyst. Given the following market research data for the idea "{query}", provide a concise revenue and value assessment.
+
+{tech_context}
 
 Research data:
 {json.dumps(report.get("sources", {}), indent=2)}
@@ -352,7 +361,7 @@ Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "pricing_recommendation": suggested price point and model (e.g. "$19/mo SaaS")
 - "mrr_12mo_estimate": realistic MRR after 12 months as a string range (e.g. "$500–$3,000")
-- "key_risks": list of 2-3 main risks to revenue
+- "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "roi_verdict": one of "strong", "moderate", "weak", "unclear"
 - "roi_reasoning": one sentence explaining the verdict
@@ -405,6 +414,8 @@ def main():
     p_report = subparsers.add_parser("report", help="Full multi-source validation report")
     p_report.add_argument("--query", required=True)
     p_report.add_argument("--reddit-subreddits", help="Comma-separated subreddits to search (optional)")
+    p_report.add_argument("--assume-tech-exists", action="store_true",
+                          help="Assume technology works — assess market demand only, not technical feasibility")
 
     args = parser.parse_args()
 
