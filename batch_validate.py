@@ -14,27 +14,53 @@ VALIDATION_TOOL = os.path.join(os.path.dirname(__file__), "validation_tool.py")
 PYTHON = sys.executable
 
 NOTION_PROJECTS_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
+VALIDATED_IDS_FILE = os.path.join(os.path.dirname(__file__), "validated_ids.json")
+
+
+def load_validated_ids():
+    if os.path.exists(VALIDATED_IDS_FILE):
+        with open(VALIDATED_IDS_FILE) as f:
+            return set(json.load(f))
+    return set()
+
+
+def save_validated_id(page_id):
+    ids = load_validated_ids()
+    ids.add(page_id)
+    with open(VALIDATED_IDS_FILE, "w") as f:
+        json.dump(list(ids), f)
 
 
 def fetch_top_projects(limit=20):
-    req = urllib.request.Request(
-        f"https://api.notion.com/v1/databases/{NOTION_PROJECTS_DB}/query",
-        data=json.dumps({
-            "sorts": [{"property": "ROI", "direction": "descending"}],
-            "page_size": limit,
-        }).encode(),
-        method="POST",
-        headers={
-            "Authorization": f"Bearer {NOTION_TOKEN}",
-            "Notion-Version": NOTION_VERSION,
-            "Content-Type": "application/json",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        data = json.loads(resp.read())
+    validated = load_validated_ids()
+    all_pages = []
+    cursor = None
+
+    while len(all_pages) < 200:  # safety cap
+        body = {"sorts": [{"property": "ROI", "direction": "descending"}], "page_size": 20}
+        if cursor:
+            body["start_cursor"] = cursor
+        req = urllib.request.Request(
+            f"https://api.notion.com/v1/databases/{NOTION_PROJECTS_DB}/query",
+            data=json.dumps(body).encode(),
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {NOTION_TOKEN}",
+                "Notion-Version": NOTION_VERSION,
+                "Content-Type": "application/json",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read())
+        all_pages.extend(data["results"])
+        if not data.get("has_more"):
+            break
+        cursor = data["next_cursor"]
 
     projects = []
-    for page in data["results"]:
+    for page in all_pages:
+        if page["id"] in validated:
+            continue
         props = page["properties"]
         name = "".join(t["plain_text"] for t in props.get("Project", {}).get("title", []))
         desc = "".join(t["plain_text"] for t in props.get("Description", {}).get("rich_text", []))
@@ -52,6 +78,8 @@ def fetch_top_projects(limit=20):
             "subreddits": subreddits,
             "prob": prob,
         })
+        if len(projects) >= limit:
+            break
     return projects
 
 
@@ -295,6 +323,7 @@ def process_project(p):
     remove_existing_validation_section(blocks)
     append_validation_section(p["id"], report, new_prob, p["prob"], reasoning)
 
+    save_validated_id(p["id"])
     summary = report.get("summary", {}) if report else {}
     print(f"Verdict: {summary.get('verdict', 'N/A')}")
     print(f"Signals: {summary.get('positive_signals', [])}")
