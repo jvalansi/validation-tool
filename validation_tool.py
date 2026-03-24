@@ -360,12 +360,14 @@ Revenue signals extracted:
 
 Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
+- "tam_customers": estimated number of potential customers as an integer (order-of-magnitude is fine)
+- "price_per_customer_annual": estimated annual revenue per customer in USD as a number (e.g. 228 for $19/mo)
 - "pricing_recommendation": suggested price point and model (e.g. "$19/mo SaaS")
-- "mrr_12mo_estimate": realistic MRR after 12 months as a string range (e.g. "$500–$3,000")
 - "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "roi_verdict": one of "strong", "moderate", "weak", "unclear"
 - "roi_reasoning": one sentence explaining the verdict
+- "suggested_probability": estimated probability (0.0–1.0) of capturing meaningful market share, based on signal strength, competition, and market readiness
 
 Return only valid JSON, no markdown."""
 
