@@ -114,9 +114,7 @@ Reads from the page:
 Writes numeric/select fields to the **table**:
 | Column | Source |
 |---|---|
-| `Probability` | Claude (`suggested_probability`) |
 | `Suggested Probability` | Claude (`suggested_probability`) |
-| `Value ($)` | Claude (`value` — annual revenue estimate) |
 | `Suggested Value ($)` | Claude (`value` — annual revenue estimate) |
 | `TAM Tier` | Rule-based (`mass` / `mid` / `niche`) |
 | `Market Signal` | Rule-based from signal count (≥3=strong, 1-2=moderate, 0=weak) |
