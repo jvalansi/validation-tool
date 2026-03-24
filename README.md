@@ -122,6 +122,12 @@ Writes numeric/select fields to the **table**:
 | `Market Signal` | Rule-based from signal count (≥3=strong, 1-2=moderate, 0=weak) |
 | `MRR Estimate` | Revenue estimate range (`conservative – optimistic`) |
 | `Pricing Recommendation` | Claude (`pricing_assessment`) |
+| `Trends Interest` | Google Trends 12-month average interest (0–100) |
+| `HN Results` | Total Hacker News posts matching the query |
+| `Reddit Results` | Total Reddit threads found |
+| `PH Products` | Number of existing Product Hunt products found |
+| `TAM Customers` | Claude's estimated addressable customer count |
+| `Price/Customer/yr ($)` | Claude's estimated annual revenue per customer |
 
 Writes text fields to the **page body** (Validation section):
 - Signal counts: Google Trends avg, HN results, Reddit results, PH competitors

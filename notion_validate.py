@@ -227,6 +227,7 @@ def main():
     # Extract fields
     claude = report.get("claude_analysis", {})
     rev = report.get("revenue_estimate", {})
+    sources = report.get("sources", {})
 
     tam_tier = rev.get("tam_tier", "")
     mrr = claude.get("mrr_12mo_estimate") or rev.get("conservative_mrr", "")
@@ -236,6 +237,11 @@ def main():
     price_annual = claude.get("price_per_customer_annual")
     value = claude.get("value")
     suggested_value = round(value) if value else None
+
+    trends_avg = sources.get("google_trends", {}).get("average_interest")
+    hn_results = sources.get("hacker_news", {}).get("total_results")
+    reddit_results = sources.get("reddit", {}).get("total_results")
+    ph_products = sources.get("product_hunt", {}).get("existing_products")
 
     print(f"\nResults:")
     print(f"  TAM Tier:             {tam_tier}")
@@ -279,6 +285,18 @@ def main():
         table_props["MRR Estimate"] = {"rich_text": [{"text": {"content": f"{cons_mrr} – {opt_mrr}"}}]}
     if pricing:
         table_props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing}}]}
+    if trends_avg is not None:
+        table_props["Trends Interest"] = {"number": float(trends_avg)}
+    if hn_results is not None:
+        table_props["HN Results"] = {"number": int(hn_results)}
+    if reddit_results is not None:
+        table_props["Reddit Results"] = {"number": int(reddit_results)}
+    if ph_products is not None:
+        table_props["PH Products"] = {"number": int(ph_products)}
+    if tam_customers is not None:
+        table_props["TAM Customers"] = {"number": int(tam_customers)}
+    if price_annual is not None:
+        table_props["Price/Customer/yr ($)"] = {"number": float(price_annual)}
 
     print("\nWriting table fields...")
     notion_patch(f"pages/{args.page_id}", {"properties": table_props})
