@@ -79,6 +79,13 @@ Validation data gathered from multiple sources:
 
 Based on this data, estimate the probability of commercial success (0.0 to 1.0).
 
+Calibration guidelines — anchor your estimate here:
+- Base rate: ~90% of startups fail. Even YC companies have ~10% chance of a meaningful exit.
+- A well-validated idea in a real market with no major red flags: ~0.15–0.25
+- Strong signals, clear differentiation, underserved niche: up to ~0.35
+- Crowded market, weak signals, or no clear moat: 0.05–0.10
+- Probabilities above 0.40 should be rare and require exceptional signal
+
 Consider:
 - Google Trends average interest and direction (growing vs declining demand)
 - Hacker News results count and top post engagement (developer interest)
