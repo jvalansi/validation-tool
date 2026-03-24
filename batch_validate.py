@@ -77,14 +77,11 @@ Description: {project_desc}
 Validation data gathered from multiple sources:
 {json.dumps(report["sources"], indent=2)}
 
-Based on this data, estimate the probability of commercial success (0.0 to 1.0).
+Based on this data, classify the probability of commercial success into exactly one of three tiers:
 
-Calibration guidelines — anchor your estimate here:
-- Base rate: ~90% of startups fail. Even YC companies have ~10% chance of a meaningful exit.
-- A well-validated idea in a real market with no major red flags: ~0.15–0.25
-- Strong signals, clear differentiation, underserved niche: up to ~0.35
-- Crowded market, weak signals, or no clear moat: 0.05–0.10
-- Probabilities above 0.40 should be rare and require exceptional signal
+- 0.01 — Moonshot: weak or noisy signals, crowded market, no clear moat or differentiation
+- 0.10 — Challenge: real demand exists, but significant competition or execution risk
+- 0.99 — Sure thing: exceptional signal, clear unmet need, little competition
 
 Consider:
 - Google Trends average interest and direction (growing vs declining demand)
@@ -95,7 +92,7 @@ Consider:
 - High competition can mean validated market OR hard to win — use context to judge
 
 Respond with ONLY a JSON object in this exact format:
-{{"probability": 0.XX, "reasoning": "one sentence explanation"}}"""
+{{"probability": 0.01|0.10|0.99, "reasoning": "one sentence explanation"}}"""
 
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     result = subprocess.run(
@@ -114,7 +111,7 @@ Respond with ONLY a JSON object in this exact format:
     # strip markdown code fences if present
     inner_text = inner_text.strip().strip("```json").strip("```").strip()
     inner = json.loads(inner_text)
-    new_prob = round(max(0.02, min(0.95, float(inner["probability"]))), 2)
+    new_prob = round(max(0.01, min(0.99, float(inner["probability"]))), 2)
     reasoning = inner.get("reasoning", "")
     print(f"  Reasoning: {reasoning}")
     return new_prob, reasoning
