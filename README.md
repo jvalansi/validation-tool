@@ -111,13 +111,17 @@ Reads from the page:
 - `Validation Query` — product-side search query
 - `Pain/Desire` — demand-side search query (triggers `--assume-tech-exists` mode)
 
-Writes numeric fields to the **table**:
+Writes numeric/select fields to the **table**:
 | Column | Source |
 |---|---|
 | `Probability` | Claude (`suggested_probability`) |
 | `Suggested Probability` | Claude (`suggested_probability`) |
+| `Value ($)` | Claude (`value` — annual revenue estimate) |
 | `Suggested Value ($)` | Claude (`value` — annual revenue estimate) |
 | `TAM Tier` | Rule-based (`mass` / `mid` / `niche`) |
+| `Market Signal` | Rule-based from signal count (≥3=strong, 1-2=moderate, 0=weak) |
+| `MRR Estimate` | Revenue estimate range (`conservative – optimistic`) |
+| `Pricing Recommendation` | Claude (`pricing_assessment`) |
 
 Writes text fields to the **page body** (Validation section):
 - Signal counts: Google Trends avg, HN results, Reddit results, PH competitors
@@ -125,7 +129,10 @@ Writes text fields to the **page body** (Validation section):
 - 🎲 Probability reasoning (quote)
 - 💰 Value reasoning (quote)
 - TAM assessment paragraph
+- TAM customer count and price per customer per year
 - Pricing assessment
+- ⚠️ Key risks (bulleted)
+- ✅ Key opportunities (bulleted)
 
 ---
 

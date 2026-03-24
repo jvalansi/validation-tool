@@ -139,6 +139,11 @@ def append_validation_section(page_id, report, new_prob, claude):
         value_reasoning = claude.get("value_reasoning", "")
         tam = claude.get("tam_assessment", "")
         pricing = claude.get("pricing_assessment", "")
+        tam_customers = claude.get("tam_customers")
+        price_annual = claude.get("price_per_customer_annual")
+        key_risks = claude.get("key_risks", [])
+        key_opportunities = claude.get("key_opportunities", [])
+
         if prob_reasoning:
             blocks.append({"quote": {"rich_text": [{"text": {"content": f"🎲 {prob_reasoning}"}}]}})
         if value_reasoning:
@@ -146,8 +151,20 @@ def append_validation_section(page_id, report, new_prob, claude):
         if tam:
             blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Market Analysis"}}]}})
             blocks.append({"paragraph": {"rich_text": [{"text": {"content": tam}}]}})
+        if tam_customers is not None:
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{tam_customers:,} customers"}}]}})
+        if price_annual is not None:
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💵 Price: ~${price_annual}/yr per customer"}}]}})
         if pricing:
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})
+        if key_risks:
+            blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Risks"}}]}})
+            for risk in key_risks:
+                blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"⚠️ {risk}"}}]}})
+        if key_opportunities:
+            blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Opportunities"}}]}})
+            for opp in key_opportunities:
+                blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"✅ {opp}"}}]}})
 
     req = urllib.request.Request(
         f"https://api.notion.com/v1/blocks/{page_id}/children",
@@ -236,15 +253,32 @@ def main():
         print("\n[dry-run] Skipping Notion update.")
         return
 
-    # Write numeric fields to table
+    # Derive market signal from signal count
+    signal_count = report.get("summary", {}).get("signal_count", 0)
+    if signal_count >= 3:
+        market_signal = "strong"
+    elif signal_count >= 1:
+        market_signal = "moderate"
+    else:
+        market_signal = "weak"
+
+    # Write numeric/select fields to table
     table_props = {}
     if tam_tier in ("mass", "mid", "niche"):
         table_props["TAM Tier"] = {"select": {"name": tam_tier}}
     if suggested_value is not None:
         table_props["Suggested Value ($)"] = {"number": suggested_value}
+        table_props["Value ($)"] = {"number": suggested_value}
     if suggested_probability is not None:
         table_props["Suggested Probability"] = {"number": float(suggested_probability)}
         table_props["Probability"] = {"number": float(suggested_probability)}
+    table_props["Market Signal"] = {"select": {"name": market_signal}}
+    cons_mrr = rev.get("conservative_mrr", "")
+    opt_mrr = rev.get("optimistic_mrr", "")
+    if cons_mrr and opt_mrr:
+        table_props["MRR Estimate"] = {"rich_text": [{"text": {"content": f"{cons_mrr} – {opt_mrr}"}}]}
+    if pricing:
+        table_props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing}}]}
 
     print("\nWriting table fields...")
     notion_patch(f"pages/{args.page_id}", {"properties": table_props})
