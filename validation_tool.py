@@ -210,11 +210,12 @@ def _mrr_range(tam_tier, prices):
 def cmd_report(args):
     import subprocess
 
-    report = {"query": args.query, "sources": {}}
+    search_query = args.pain_query if (getattr(args, "assume_tech_exists", False) and getattr(args, "pain_query", None)) else args.query
+    report = {"query": args.query, "search_query": search_query, "sources": {}}
 
     # HN
     try:
-        params = urllib.parse.urlencode({"query": args.query, "tags": "story", "hitsPerPage": 10})
+        params = urllib.parse.urlencode({"query": search_query, "tags": "story", "hitsPerPage": 10})
         with urllib.request.urlopen(f"{HN_SEARCH_URL}?{params}", timeout=10) as resp:
             data = json.loads(resp.read())
         hits = data.get("hits", [])
@@ -232,10 +233,10 @@ def cmd_report(args):
     try:
         from pytrends.request import TrendReq
         pytrends = TrendReq(hl="en-US", tz=360)
-        pytrends.build_payload([args.query], timeframe="today 12-m")
+        pytrends.build_payload([search_query], timeframe="today 12-m")
         interest = pytrends.interest_over_time()
         if not interest.empty:
-            col = args.query if args.query in interest.columns else interest.columns[0]
+            col = search_query if search_query in interest.columns else interest.columns[0]
             values = interest[col].tolist()
             recent = values[-4:]
             avg = round(sum(values) / len(values), 1)
@@ -252,7 +253,7 @@ def cmd_report(args):
 
     # Reddit (via DuckDuckGo site:reddit.com — no auth needed)
     try:
-        reddit_posts = _reddit_search(args.query, args.reddit_subreddits, limit=10)
+        reddit_posts = _reddit_search(search_query, args.reddit_subreddits, limit=10)
         report["sources"]["reddit"] = {
             "total_results": len(reddit_posts),
             "top_posts": [{"title": p["title"], "url": p["url"], "snippet": p["snippet"][:150]} for p in reddit_posts[:3]],
@@ -262,7 +263,7 @@ def cmd_report(args):
 
     # Product Hunt (via DDG)
     try:
-        ph_results = _ph_search(args.query, limit=5)
+        ph_results = _ph_search(search_query, limit=5)
         report["sources"]["product_hunt"] = {
             "existing_products": len(ph_results),
             "top_products": [{"name": r["title"], "url": r["url"], "snippet": r["snippet"][:100]} for r in ph_results[:3]],
@@ -416,6 +417,7 @@ def main():
     p_report.add_argument("--reddit-subreddits", help="Comma-separated subreddits to search (optional)")
     p_report.add_argument("--assume-tech-exists", action="store_true",
                           help="Assume technology works — assess market demand only, not technical feasibility")
+    p_report.add_argument("--pain-query", help="Pain/desire search query to use instead of product query (used with --assume-tech-exists)")
 
     args = parser.parse_args()
 
