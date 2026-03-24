@@ -51,6 +51,118 @@ def get_text(prop):
     return items[0].get("plain_text", "") if items else ""
 
 
+def notion_delete(path):
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/{path}",
+        headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": NOTION_VERSION},
+        method="DELETE",
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        resp.read()
+
+
+def get_page_blocks(page_id):
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/blocks/{page_id}/children",
+        headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": NOTION_VERSION},
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read()).get("results", [])
+
+
+def remove_existing_validation_section(blocks):
+    found = False
+    for b in blocks:
+        if not found:
+            t = b["type"]
+            text = "".join(x.get("plain_text", "") for x in b.get(t, {}).get("rich_text", []))
+            if t == "heading_2" and "Validation" in text:
+                found = True
+        if found:
+            try:
+                notion_delete(f"blocks/{b['id']}")
+            except Exception:
+                pass
+
+
+def append_validation_section(page_id, report, new_prob, claude):
+    gt = report["sources"].get("google_trends", {})
+    hn = report["sources"].get("hacker_news", {})
+    rd = report["sources"].get("reddit", {})
+    ph = report["sources"].get("product_hunt", {})
+
+    gt_line = (
+        f"📈 Google Trends: {gt['average_interest']}/100 avg, trend {gt.get('trend_direction', 'unknown')}"
+        if "average_interest" in gt else "📈 Google Trends: no data"
+    )
+    hn_line = f"🟡 Hacker News: {hn.get('total_results', 0)} results"
+    if hn.get("top_posts"):
+        top = hn["top_posts"][0]
+        hn_line += f" — top: \"{top['title']}\" ({top['points']} pts)"
+    rd_line = f"💬 Reddit: {rd.get('total_results', 0)} results"
+    if rd.get("top_posts"):
+        rd_line += f" — top: \"{rd['top_posts'][0]['title']}\""
+    ph_existing = ph.get("existing_products", -1)
+    if ph_existing == -1:
+        ph_line = "🔍 Product Hunt: skipped"
+    elif ph_existing == 0:
+        ph_line = "🔍 Product Hunt: no matching products found"
+    else:
+        ph_line = f"🔍 Product Hunt: {ph_existing} matching product(s)"
+        if ph.get("top_products"):
+            ph_line += f" — top: \"{ph['top_products'][0]['name']}\""
+
+    verdict = report.get("summary", {}).get("verdict", "")
+    signals = report.get("summary", {}).get("positive_signals", [])
+
+    blocks = [
+        {"heading_2": {"rich_text": [{"text": {"content": "Validation (Mar 2026)"}}]}},
+        {"heading_3": {"rich_text": [{"text": {"content": "Signals"}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": gt_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": hn_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": rd_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": ph_line}}]}},
+    ]
+    if signals:
+        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": "✅ " + ", ".join(signals)}}]}})
+
+    blocks += [
+        {"heading_3": {"rich_text": [{"text": {"content": "Verdict"}}]}},
+        {"callout": {
+            "rich_text": [{"text": {"content": f"{verdict}. Probability: {new_prob*100:.0f}%."}}],
+            "icon": {"type": "emoji", "emoji": "🧪"}
+        }},
+    ]
+
+    if claude:
+        prob_reasoning = claude.get("probability_reasoning", "")
+        value_reasoning = claude.get("value_reasoning", "")
+        tam = claude.get("tam_assessment", "")
+        pricing = claude.get("pricing_assessment", "")
+        if prob_reasoning:
+            blocks.append({"quote": {"rich_text": [{"text": {"content": f"🎲 {prob_reasoning}"}}]}})
+        if value_reasoning:
+            blocks.append({"quote": {"rich_text": [{"text": {"content": f"💰 {value_reasoning}"}}]}})
+        if tam:
+            blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Market Analysis"}}]}})
+            blocks.append({"paragraph": {"rich_text": [{"text": {"content": tam}}]}})
+        if pricing:
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/blocks/{page_id}/children",
+        data=json.dumps({"children": blocks}).encode(),
+        method="PATCH",
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Notion-Version": NOTION_VERSION,
+            "Content-Type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        resp.read()
+
+
 def run_validation(query, pain_query=None):
     cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query]
     if pain_query:
@@ -124,21 +236,24 @@ def main():
         print("\n[dry-run] Skipping Notion update.")
         return
 
-    # Write back to Notion
-    update = {"properties": {}}
+    # Write numeric fields to table
+    table_props = {}
     if tam_tier in ("mass", "mid", "niche"):
-        update["properties"]["TAM Tier"] = {"select": {"name": tam_tier}}
-    if mrr:
-        update["properties"]["MRR Estimate"] = {"rich_text": [{"text": {"content": str(mrr)}}]}
-    if pricing:
-        update["properties"]["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing[:2000]}}]}
+        table_props["TAM Tier"] = {"select": {"name": tam_tier}}
     if suggested_value is not None:
-        update["properties"]["Suggested Value ($)"] = {"number": suggested_value}
+        table_props["Suggested Value ($)"] = {"number": suggested_value}
     if suggested_probability is not None:
-        update["properties"]["Suggested Probability"] = {"number": float(suggested_probability)}
+        table_props["Suggested Probability"] = {"number": float(suggested_probability)}
+        table_props["Probability"] = {"number": float(suggested_probability)}
 
-    print("\nWriting to Notion...")
-    notion_patch(f"pages/{args.page_id}", update)
+    print("\nWriting table fields...")
+    notion_patch(f"pages/{args.page_id}", {"properties": table_props})
+
+    # Write text fields to page body
+    print("Writing page body...")
+    blocks = get_page_blocks(args.page_id)
+    remove_existing_validation_section(blocks)
+    append_validation_section(args.page_id, report, suggested_probability or 0.1, claude)
     print("Done.")
 
 

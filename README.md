@@ -111,16 +111,21 @@ Reads from the page:
 - `Validation Query` — product-side search query
 - `Pain/Desire` — demand-side search query (triggers `--assume-tech-exists` mode)
 
-Writes back to the **table**:
+Writes numeric fields to the **table**:
 | Column | Source |
 |---|---|
 | `Probability` | Claude (`suggested_probability`) |
 | `Suggested Probability` | Claude (`suggested_probability`) |
-| `Suggested Value ($)` | Computed: `tam_customers × price_per_customer_annual × 10` |
+| `Suggested Value ($)` | Claude (`value` — annual revenue estimate) |
 | `TAM Tier` | Rule-based (`mass` / `mid` / `niche`) |
-| `MRR Estimate` | Claude |
-| `Pricing Recommendation` | Claude |
-| `Market Signal` | Claude (`roi_verdict`: `strong` / `moderate` / `weak` / `unclear`) |
+
+Writes text fields to the **page body** (Validation section):
+- Signal counts: Google Trends avg, HN results, Reddit results, PH competitors
+- Verdict callout with probability
+- 🎲 Probability reasoning (quote)
+- 💰 Value reasoning (quote)
+- TAM assessment paragraph
+- Pricing assessment
 
 ---
 
@@ -135,13 +140,7 @@ python batch_validate.py [--limit N]   # default: 20
 
 Reads from each page: `Validation Query`, `Pain/Desire`, `Subreddits`
 
-Writes to the **table**: same columns as `notion_validate.py` above.
-
-Writes to the **page body** (Validation section):
-- Signal counts: Google Trends avg, HN results, Reddit results, PH competitors
-- Verdict callout with probability change
-- Claude reasoning (quote block)
-- TAM assessment and pricing recommendation
+Writes to the **table** and **page body**: same as `notion_validate.py` above.
 
 ## Setup
 

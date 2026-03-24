@@ -282,19 +282,10 @@ def update_notion_table(page_id, new_prob, claude, rev):
         if value:
             props["Suggested Value ($)"] = {"number": round(value)}
 
-        pricing = claude.get("pricing_assessment", "")
-        if pricing:
-            props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing[:2000]}}]}
-
     if rev:
         tam_tier = rev.get("tam_tier", "")
         if tam_tier in ("mass", "mid", "niche"):
             props["TAM Tier"] = {"select": {"name": tam_tier}}
-        mrr = claude.get("mrr_12mo_estimate") if claude else None
-        if not mrr:
-            mrr = rev.get("conservative_mrr", "")
-        if mrr:
-            props["MRR Estimate"] = {"rich_text": [{"text": {"content": str(mrr)[:2000]}}]}
 
     notion_patch(f"pages/{page_id}", {"properties": props})
 
