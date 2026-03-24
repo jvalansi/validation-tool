@@ -358,14 +358,16 @@ Research data:
 Revenue signals extracted:
 {json.dumps(report.get("revenue_estimate", {}), indent=2)}
 
+All numeric outputs must be rounded to the nearest power of 10 (e.g. 100, 1000, 10000, 100000, 1000000). Do not use precise figures — order-of-magnitude accuracy is the goal.
+
 Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
-- "tam_customers": estimated number of potential customers as an integer (order-of-magnitude is fine)
-- "price_per_customer_annual": estimated annual revenue per customer in USD as a number (e.g. 228 for $19/mo)
-- "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at $19/mo is realistic given competitor pricing")
+- "tam_customers": estimated number of potential customers, rounded to nearest power of 10
+- "price_per_customer_annual": estimated annual revenue per customer in USD, rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
+- "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
 - "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
-- "value": total addressable annual revenue in USD as an integer — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
+- "value": total addressable annual revenue in USD, rounded to nearest power of 10 — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
 - "value_reasoning": one sentence explaining the value estimate (reference tam_customers × price_per_customer_annual)
 - "suggested_probability": expected fraction of the total value that will actually be captured, using exactly one of these three values:
     0.01 — moonshot: paradigm shift required, or tiny realistic penetration (e.g. <1% of a niche market)
