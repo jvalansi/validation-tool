@@ -73,12 +73,11 @@ def calc_new_prob(current_prob, report, project_name, project_desc):
 
 Project: {project_name}
 Description: {project_desc}
-Current estimated probability of success: {current_prob*100:.0f}%
 
 Validation data gathered from multiple sources:
 {json.dumps(report["sources"], indent=2)}
 
-Based on this data, provide an updated probability of success (0.0 to 1.0).
+Based on this data, estimate the probability of commercial success (0.0 to 1.0).
 
 Consider:
 - Google Trends average interest and direction (growing vs declining demand)
