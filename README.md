@@ -65,7 +65,7 @@ python validation_tool.py report --query QUERY \
 
 ### `notion_validate.py`
 
-Runs validation for a Notion project page and writes results back to the database.
+Runs validation for a single Notion project page and writes results back.
 
 ```bash
 export NOTION_TOKEN=...
@@ -74,17 +74,39 @@ python notion_validate.py <page-id> [--dry-run]
 
 Reads from the page:
 - `Validation Query` — product-side search query
-- `Pain/Desire` — demand-side search query (used when set)
+- `Pain/Desire` — demand-side search query (triggers `--assume-tech-exists` mode)
 
-Writes back to the page:
+Writes back to the **table**:
 | Column | Source |
 |---|---|
-| `TAM Tier` | Rule-based (Google Trends score) |
+| `Probability` | Claude (`suggested_probability`) |
+| `Suggested Probability` | Claude (`suggested_probability`) |
+| `Suggested Value ($)` | Computed: `tam_customers × price_per_customer_annual × 10` |
+| `TAM Tier` | Rule-based (`mass` / `mid` / `niche`) |
 | `MRR Estimate` | Claude |
 | `Pricing Recommendation` | Claude |
-| `Market Signal` | Claude (`roi_verdict`) |
-| `Suggested Value ($)` | Computed: TAM × price × 10 |
-| `Suggested Probability` | Claude (fixed tiers: 0.01 / 0.10 / 0.99) |
+| `Market Signal` | Claude (`roi_verdict`: `strong` / `moderate` / `weak` / `unclear`) |
+
+---
+
+### `batch_validate.py`
+
+Validates all unvalidated projects in the Notion Projects DB (sorted by ROI desc). Tracks completed IDs in `validated_ids.json` so re-runs pick up where they left off, even as ROI sort order shifts.
+
+```bash
+export NOTION_TOKEN=...
+python batch_validate.py [--limit N]   # default: 20
+```
+
+Reads from each page: `Validation Query`, `Pain/Desire`, `Subreddits`
+
+Writes to the **table**: same columns as `notion_validate.py` above.
+
+Writes to the **page body** (Validation section):
+- Signal counts: Google Trends avg, HN results, Reddit results, PH competitors
+- Verdict callout with probability change
+- Claude reasoning (quote block)
+- TAM assessment and pricing recommendation
 
 ## Setup
 

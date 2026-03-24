@@ -375,14 +375,16 @@ Provide your assessment as JSON with these fields:
 
 Return only valid JSON, no markdown."""
 
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     try:
         result = subprocess.run(
-            [claude_path, "--print", "--output-format", "text", prompt],
-            capture_output=True, text=True, timeout=60
+            [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
+            capture_output=True, text=True, timeout=60,
+            env=env, cwd="/home/ubuntu"
         )
         if result.returncode == 0 and result.stdout.strip():
-            text = result.stdout.strip()
-            # Strip markdown code fences if present
+            outer = json.loads(result.stdout)
+            text = outer.get("result", "").strip()
             if text.startswith("```"):
                 text = "\n".join(text.split("\n")[1:])
                 text = text.rsplit("```", 1)[0].strip()

@@ -11,7 +11,7 @@ import urllib.request
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 NOTION_VERSION = "2022-06-28"
 VALIDATION_TOOL = os.path.join(os.path.dirname(__file__), "validation_tool.py")
-PYTHON = sys.executable
+PYTHON = "/home/ubuntu/miniconda3/bin/python"
 
 NOTION_PROJECTS_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
 VALIDATED_IDS_FILE = os.path.join(os.path.dirname(__file__), "validated_ids.json")
@@ -65,6 +65,7 @@ def fetch_top_projects(limit=20):
         name = "".join(t["plain_text"] for t in props.get("Project", {}).get("title", []))
         desc = "".join(t["plain_text"] for t in props.get("Description", {}).get("rich_text", []))
         query = "".join(t["plain_text"] for t in props.get("Validation Query", {}).get("rich_text", []))
+        pain_query = "".join(t["plain_text"] for t in props.get("Pain/Desire", {}).get("rich_text", []))
         subreddits = "".join(t["plain_text"] for t in props.get("Subreddits", {}).get("rich_text", []))
         prob = props.get("Probability", {}).get("number") or 0.1
         if not query:
@@ -75,6 +76,7 @@ def fetch_top_projects(limit=20):
             "name": name,
             "desc": desc,
             "query": query,
+            "pain_query": pain_query,
             "subreddits": subreddits,
             "prob": prob,
         })
@@ -83,66 +85,17 @@ def fetch_top_projects(limit=20):
     return projects
 
 
-def run_validation(query, subreddits):
+def run_validation(query, pain_query=None, subreddits=None):
     cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query]
+    if pain_query:
+        cmd += ["--pain-query", pain_query, "--assume-tech-exists"]
     if subreddits:
         cmd += ["--reddit-subreddits", subreddits]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
     if result.returncode != 0:
+        print(f"  Validation error: {result.stderr[:200]}")
         return None
     return json.loads(result.stdout)
-
-
-def calc_new_prob(current_prob, report, project_name, project_desc):
-    if not report:
-        return current_prob, ""
-
-    prompt = f"""You are evaluating the market validation signals for a software project idea.
-
-Project: {project_name}
-Description: {project_desc}
-
-Validation data gathered from multiple sources:
-{json.dumps(report["sources"], indent=2)}
-
-Based on this data, classify the probability of commercial success into exactly one of three tiers:
-
-- 0.01 — Moonshot: weak or noisy signals, crowded market, no clear moat or differentiation
-- 0.10 — Challenge: real demand exists, but significant competition or execution risk
-- 0.99 — Sure thing: exceptional signal, clear unmet need, little competition
-
-Consider:
-- Google Trends average interest and direction (growing vs declining demand)
-- Hacker News results count and top post engagement (developer interest)
-- Reddit discussion volume and relevance of top posts (real user pain points)
-- Product Hunt existing products (competition level and market validation)
-- Whether signals confirm real demand or just noise
-- High competition can mean validated market OR hard to win — use context to judge
-
-Respond with ONLY a JSON object in this exact format:
-{{"probability": 0.01|0.10|0.99, "reasoning": "one sentence explanation"}}"""
-
-    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
-    result = subprocess.run(
-        ["/home/ubuntu/.local/bin/claude", "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
-        capture_output=True, text=True, timeout=60,
-        env=env,
-        cwd="/home/ubuntu"
-    )
-    if result.returncode != 0 or not result.stdout.strip():
-        print(f"  Claude error: {result.stderr[:200] or 'no output'}")
-        return current_prob, ""
-
-    # claude --output-format json wraps in {"result": "...", ...}
-    outer = json.loads(result.stdout)
-    inner_text = outer.get("result", "{}")
-    # strip markdown code fences if present
-    inner_text = inner_text.strip().strip("```json").strip("```").strip()
-    inner = json.loads(inner_text)
-    new_prob = round(max(0.01, min(0.99, float(inner["probability"]))), 2)
-    reasoning = inner.get("reasoning", "")
-    print(f"  Reasoning: {reasoning}")
-    return new_prob, reasoning
 
 
 def notion_patch(path, body):
@@ -185,13 +138,12 @@ def update_callout(blocks, new_prob):
         if b["type"] == "callout":
             text = "".join(x.get("plain_text", "") for x in b["callout"].get("rich_text", []))
             if "ROI score" in text:
-                # Parse value and work weeks from surrounding bullets
+                import re
                 value, hours, diff = None, None, 0.4
                 for bb in blocks:
                     if bb["type"] == "bulleted_list_item":
                         t = "".join(x.get("plain_text", "") for x in bb["bulleted_list_item"].get("rich_text", []))
                         if "Yearly Revenue" in t:
-                            import re
                             m = re.search(r'\$([\d,]+)', t)
                             if m:
                                 value = int(m.group(1).replace(",", ""))
@@ -236,7 +188,7 @@ def remove_existing_validation_section(blocks):
                 pass
 
 
-def append_validation_section(page_id, report, new_prob, old_prob, reasoning=""):
+def append_validation_section(page_id, report, new_prob, old_prob, claude):
     if not report:
         return
     gt = report["sources"].get("google_trends", {})
@@ -244,18 +196,17 @@ def append_validation_section(page_id, report, new_prob, old_prob, reasoning="")
     rd = report["sources"].get("reddit", {})
     ph = report["sources"].get("product_hunt", {})
 
-    gt_line = f"📈 Google Trends: {gt.get('average_interest', 'N/A')}/100 avg, trend {gt.get('trend_direction', 'unknown')}" if "average_interest" in gt else "📈 Google Trends: no data"
-
+    gt_line = (
+        f"📈 Google Trends: {gt['average_interest']}/100 avg, trend {gt.get('trend_direction', 'unknown')}"
+        if "average_interest" in gt else "📈 Google Trends: no data"
+    )
     hn_line = f"🟡 Hacker News: {hn.get('total_results', 0)} results"
     if hn.get("top_posts"):
         top = hn["top_posts"][0]
         hn_line += f" — top: \"{top['title']}\" ({top['points']} pts)"
-
-    rd_total = rd.get("total_results", 0)
-    rd_line = f"💬 Reddit: {rd_total} results"
+    rd_line = f"💬 Reddit: {rd.get('total_results', 0)} results"
     if rd.get("top_posts"):
         rd_line += f" — top: \"{rd['top_posts'][0]['title']}\""
-
     ph_existing = ph.get("existing_products", -1)
     if ph_existing == -1:
         ph_line = "🔍 Product Hunt: skipped"
@@ -268,7 +219,7 @@ def append_validation_section(page_id, report, new_prob, old_prob, reasoning="")
 
     verdict = report.get("summary", {}).get("verdict", "")
     signals = report.get("summary", {}).get("positive_signals", [])
-    prob_note = f"Probability updated: {old_prob*100:.0f}% → {new_prob*100:.0f}%"
+    prob_note = f"Probability: {old_prob*100:.0f}% → {new_prob*100:.0f}%"
 
     blocks = [
         {"heading_2": {"rich_text": [{"text": {"content": "Validation (Mar 2026)"}}]}},
@@ -279,7 +230,8 @@ def append_validation_section(page_id, report, new_prob, old_prob, reasoning="")
         {"bulleted_list_item": {"rich_text": [{"text": {"content": ph_line}}]}},
     ]
     if signals:
-        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": "✅ Positive signals: " + ", ".join(signals)}}]}})
+        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": "✅ " + ", ".join(signals)}}]}})
+
     blocks += [
         {"heading_3": {"rich_text": [{"text": {"content": "Verdict"}}]}},
         {"callout": {
@@ -287,8 +239,18 @@ def append_validation_section(page_id, report, new_prob, old_prob, reasoning="")
             "icon": {"type": "emoji", "emoji": "🧪"}
         }},
     ]
-    if reasoning:
-        blocks.append({"quote": {"rich_text": [{"text": {"content": f"🤖 {reasoning}"}}]}})
+
+    if claude:
+        reasoning = claude.get("roi_reasoning", "")
+        tam = claude.get("tam_assessment", "")
+        pricing = claude.get("pricing_recommendation", "")
+        if reasoning:
+            blocks.append({"quote": {"rich_text": [{"text": {"content": f"🤖 {reasoning}"}}]}})
+        if tam:
+            blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Market Analysis"}}]}})
+            blocks.append({"paragraph": {"rich_text": [{"text": {"content": tam}}]}})
+        if pricing:
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})
 
     req = urllib.request.Request(
         f"https://api.notion.com/v1/blocks/{page_id}/children",
@@ -304,29 +266,78 @@ def append_validation_section(page_id, report, new_prob, old_prob, reasoning="")
         resp.read()
 
 
+def update_notion_table(page_id, new_prob, claude, rev):
+    """Write all structured fields back to the Notion table."""
+    props = {"Probability": {"number": new_prob}}
+
+    if claude:
+        sp = claude.get("suggested_probability")
+        if sp is not None:
+            props["Suggested Probability"] = {"number": float(sp)}
+
+        tam_customers = claude.get("tam_customers")
+        price_annual = claude.get("price_per_customer_annual")
+        if tam_customers and price_annual:
+            props["Suggested Value ($)"] = {"number": round(tam_customers * price_annual * 10)}
+
+        signal = claude.get("roi_verdict", "")
+        if signal in ("strong", "moderate", "weak", "unclear"):
+            props["Market Signal"] = {"select": {"name": signal}}
+
+        pricing = claude.get("pricing_recommendation", "")
+        if pricing:
+            props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing[:2000]}}]}
+
+    if rev:
+        tam_tier = rev.get("tam_tier", "")
+        if tam_tier in ("mass", "mid", "niche"):
+            props["TAM Tier"] = {"select": {"name": tam_tier}}
+        mrr = claude.get("mrr_12mo_estimate") if claude else None
+        if not mrr:
+            mrr = rev.get("conservative_mrr", "")
+        if mrr:
+            props["MRR Estimate"] = {"rich_text": [{"text": {"content": str(mrr)[:2000]}}]}
+
+    notion_patch(f"pages/{page_id}", {"properties": props})
+
+
 def process_project(p):
     print(f"\n{'='*60}")
     print(f"Project: {p['name']}")
     print(f"Query: {p['query']}")
 
-    report = run_validation(p["query"], p["subreddits"])
-    new_prob, reasoning = calc_new_prob(p["prob"], report, p["name"], p.get("desc", ""))
-    print(f"Probability: {p['prob']} → {new_prob}")
+    report = run_validation(p["query"], p.get("pain_query") or None, p.get("subreddits") or None)
+    if not report:
+        print("  No report — skipping")
+        return
 
-    # Update table probability
-    notion_patch(f"pages/{p['id']}", {"properties": {"Probability": {"number": new_prob}}})
+    claude = report.get("claude_analysis", {})
+    rev = report.get("revenue_estimate", {})
+
+    new_prob = float(claude.get("suggested_probability") or p["prob"])
+    new_prob = round(max(0.01, min(0.99, new_prob)), 2)
+
+    print(f"  Probability:     {p['prob']} → {new_prob}")
+    print(f"  Market Signal:   {claude.get('roi_verdict', 'n/a')}")
+    print(f"  TAM Customers:   {claude.get('tam_customers', 'n/a')}")
+    print(f"  Price/yr:        ${claude.get('price_per_customer_annual', 'n/a')}")
+    tam_c = claude.get("tam_customers")
+    price_a = claude.get("price_per_customer_annual")
+    if tam_c and price_a:
+        print(f"  Suggested Value: ${tam_c * price_a * 10:,.0f}")
+    print(f"  Reasoning:       {claude.get('roi_reasoning', '')}")
+
+    # Update table
+    update_notion_table(p["id"], new_prob, claude, rev)
 
     # Update page body
     blocks = get_page_blocks(p["id"])
     update_prob_bullet(blocks, new_prob)
     update_callout(blocks, new_prob)
     remove_existing_validation_section(blocks)
-    append_validation_section(p["id"], report, new_prob, p["prob"], reasoning)
+    append_validation_section(p["id"], report, new_prob, p["prob"], claude)
 
     save_validated_id(p["id"])
-    summary = report.get("summary", {}) if report else {}
-    print(f"Verdict: {summary.get('verdict', 'N/A')}")
-    print(f"Signals: {summary.get('positive_signals', [])}")
 
 
 if __name__ == "__main__":
