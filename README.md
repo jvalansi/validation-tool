@@ -84,17 +84,17 @@ python validation_tool.py report --query QUERY \
 | `tam_customers` | number | Estimated addressable customer count |
 | `price_per_customer_annual` | number | Estimated revenue per customer per year ($) |
 | `pricing_assessment` | text | Pricing strategy and willingness to pay rationale |
-| `value` | number | Estimated realistic annual revenue ($) at 1–5% market penetration |
+| `value` | number | Full TAM potential in annual revenue ($) — `tam_customers × price_per_customer_annual`, NOT discounted for penetration |
 | `value_reasoning` | text | Explanation of value estimate |
-| `suggested_probability` | number | Success probability (fixed tiers: 0.01 / 0.10 / 0.99) |
-| `probability_reasoning` | text | Explanation of probability choice |
+| `suggested_probability` | number | Expected fraction of total value actually captured (fixed tiers: 0.01 / 0.10 / 0.99) |
+| `probability_reasoning` | text | Explanation of probability choice, including expected penetration rate |
 
-**`suggested_probability`** tiers:
-- `0.01` — moonshot: weak signals, crowded market, no clear moat
-- `0.10` — challenge: real demand, significant competition or execution risk
-- `0.99` — sure thing: exceptional signal, clear unmet need, little competition
+**`suggested_probability`** encodes both execution probability and realistic market penetration:
+- `0.01` — moonshot: paradigm shift required, or <1% realistic penetration of a niche market
+- `0.10` — challenge: real demand + proven tech, but significant competition (~5–15% penetration)
+- `0.99` — sure thing: clear unmet demand, proven solution, little competition (high penetration likely)
 
-**`Suggested Value ($)`** = `value` (Claude's direct estimate, not a formula).
+**Expected value** = `Value ($) × Probability` — used directly in the `Weeks of Freedom` and `ROI` formulas.
 
 ---
 

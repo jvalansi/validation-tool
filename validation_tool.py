@@ -365,14 +365,14 @@ Provide your assessment as JSON with these fields:
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at $19/mo is realistic given competitor pricing")
 - "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
-- "value": estimated realistic annual revenue in USD as an integer (not a multiple — this is yearly revenue if the product achieves modest market penetration, e.g. 1-5% of TAM)
-- "value_reasoning": one sentence explaining the value estimate
-- "suggested_probability": probability of success using exactly one of these three values:
-    0.01 — moonshot (paradigm shift required, no proven path)
-    0.10 — regular challenge (tech exists, market exists, execution risk)
-    0.99 — low-hanging fruit (clear demand, proven solution, just needs building)
-  Choose the closest tier and return the number only.
-- "probability_reasoning": one sentence explaining the probability choice
+- "value": total addressable annual revenue in USD as an integer — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
+- "value_reasoning": one sentence explaining the value estimate (reference tam_customers × price_per_customer_annual)
+- "suggested_probability": expected fraction of the total value that will actually be captured, using exactly one of these three values:
+    0.01 — moonshot: paradigm shift required, or tiny realistic penetration (e.g. <1% of a niche market)
+    0.10 — regular challenge: real demand and proven tech, but significant competition or execution risk (realistic penetration ~5-15%)
+    0.99 — low-hanging fruit: clear unmet demand, proven solution, little competition (high penetration likely)
+  This encodes both probability of success AND realistic market penetration. Choose the closest tier.
+- "probability_reasoning": one sentence explaining the probability choice, including the expected penetration rate
 
 Return only valid JSON, no markdown."""
 
