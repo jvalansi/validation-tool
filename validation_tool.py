@@ -367,7 +367,11 @@ Provide your assessment as JSON with these fields:
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "roi_verdict": one of "strong", "moderate", "weak", "unclear"
 - "roi_reasoning": one sentence explaining the verdict
-- "suggested_probability": estimated probability (0.0–1.0) of capturing meaningful market share, based on signal strength, competition, and market readiness
+- "suggested_probability": probability of success using exactly one of these three values:
+    0.01 — moonshot (paradigm shift required, no proven path)
+    0.10 — regular challenge (tech exists, market exists, execution risk)
+    0.99 — low-hanging fruit (clear demand, proven solution, just needs building)
+  Choose the closest tier and return the number only.
 
 Return only valid JSON, no markdown."""
 
