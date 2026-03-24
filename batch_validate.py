@@ -241,11 +241,14 @@ def append_validation_section(page_id, report, new_prob, old_prob, claude):
     ]
 
     if claude:
-        reasoning = claude.get("roi_reasoning", "")
+        prob_reasoning = claude.get("probability_reasoning", "")
+        value_reasoning = claude.get("value_reasoning", "")
         tam = claude.get("tam_assessment", "")
-        pricing = claude.get("pricing_recommendation", "")
-        if reasoning:
-            blocks.append({"quote": {"rich_text": [{"text": {"content": f"🤖 {reasoning}"}}]}})
+        pricing = claude.get("pricing_assessment", "")
+        if prob_reasoning:
+            blocks.append({"quote": {"rich_text": [{"text": {"content": f"🎲 {prob_reasoning}"}}]}})
+        if value_reasoning:
+            blocks.append({"quote": {"rich_text": [{"text": {"content": f"💰 {value_reasoning}"}}]}})
         if tam:
             blocks.append({"heading_3": {"rich_text": [{"text": {"content": "Market Analysis"}}]}})
             blocks.append({"paragraph": {"rich_text": [{"text": {"content": tam}}]}})
@@ -275,16 +278,11 @@ def update_notion_table(page_id, new_prob, claude, rev):
         if sp is not None:
             props["Suggested Probability"] = {"number": float(sp)}
 
-        tam_customers = claude.get("tam_customers")
-        price_annual = claude.get("price_per_customer_annual")
-        if tam_customers and price_annual:
-            props["Suggested Value ($)"] = {"number": round(tam_customers * price_annual * 10)}
+        value = claude.get("value")
+        if value:
+            props["Suggested Value ($)"] = {"number": round(value)}
 
-        signal = claude.get("roi_verdict", "")
-        if signal in ("strong", "moderate", "weak", "unclear"):
-            props["Market Signal"] = {"select": {"name": signal}}
-
-        pricing = claude.get("pricing_recommendation", "")
+        pricing = claude.get("pricing_assessment", "")
         if pricing:
             props["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing[:2000]}}]}
 
@@ -317,15 +315,12 @@ def process_project(p):
     new_prob = float(claude.get("suggested_probability") or p["prob"])
     new_prob = round(max(0.01, min(0.99, new_prob)), 2)
 
-    print(f"  Probability:     {p['prob']} → {new_prob}")
-    print(f"  Market Signal:   {claude.get('roi_verdict', 'n/a')}")
-    print(f"  TAM Customers:   {claude.get('tam_customers', 'n/a')}")
-    print(f"  Price/yr:        ${claude.get('price_per_customer_annual', 'n/a')}")
-    tam_c = claude.get("tam_customers")
-    price_a = claude.get("price_per_customer_annual")
-    if tam_c and price_a:
-        print(f"  Suggested Value: ${tam_c * price_a * 10:,.0f}")
-    print(f"  Reasoning:       {claude.get('roi_reasoning', '')}")
+    print(f"  Probability:      {p['prob']} → {new_prob}")
+    print(f"  TAM Customers:    {claude.get('tam_customers', 'n/a')}")
+    print(f"  Price/yr:         ${claude.get('price_per_customer_annual', 'n/a')}")
+    print(f"  Value/yr:         ${claude.get('value', 'n/a')}")
+    print(f"  Value reasoning:  {claude.get('value_reasoning', '')}")
+    print(f"  Prob reasoning:   {claude.get('probability_reasoning', '')}")
 
     # Update table
     update_notion_table(p["id"], new_prob, claude, rev)

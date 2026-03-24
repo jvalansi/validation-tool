@@ -59,12 +59,13 @@ python validation_tool.py report --query QUERY \
     "tam_assessment": "one sentence on market size with evidence",
     "tam_customers": 500000,
     "price_per_customer_annual": 228,
-    "pricing_recommendation": "$19/mo SaaS",
+    "pricing_assessment": "one sentence on pricing strategy and willingness to pay",
     "key_risks": ["crowded market", "low willingness to pay"],
     "key_opportunities": ["growing search interest", "no clear market leader"],
-    "roi_verdict": "strong | moderate | weak | unclear",
-    "roi_reasoning": "one sentence verdict explanation",
-    "suggested_probability": 0.01
+    "value": 1200000,
+    "value_reasoning": "one sentence explaining the value estimate",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "one sentence explaining the probability choice"
   }
 }
 ```
@@ -78,19 +79,22 @@ python validation_tool.py report --query QUERY \
 | `product_hunt.existing_products` | Number of competing products on PH |
 
 **Claude outputs:**
-| Field | Meaning |
-|---|---|
-| `tam_customers` | Estimated addressable customer count |
-| `price_per_customer_annual` | Estimated revenue per customer per year ($) |
-| `suggested_probability` | Success probability (fixed tiers: 0.01 / 0.10 / 0.99) |
-| `roi_verdict` | `strong` / `moderate` / `weak` / `unclear` |
+| Field | Type | Meaning |
+|---|---|---|
+| `tam_customers` | number | Estimated addressable customer count |
+| `price_per_customer_annual` | number | Estimated revenue per customer per year ($) |
+| `pricing_assessment` | text | Pricing strategy and willingness to pay rationale |
+| `value` | number | Estimated realistic annual revenue ($) at 1–5% market penetration |
+| `value_reasoning` | text | Explanation of value estimate |
+| `suggested_probability` | number | Success probability (fixed tiers: 0.01 / 0.10 / 0.99) |
+| `probability_reasoning` | text | Explanation of probability choice |
 
 **`suggested_probability`** tiers:
 - `0.01` — moonshot: weak signals, crowded market, no clear moat
 - `0.10` — challenge: real demand, significant competition or execution risk
 - `0.99` — sure thing: exceptional signal, clear unmet need, little competition
 
-**`Suggested Value ($)`** = `tam_customers × price_per_customer_annual × 10` (10× revenue multiple).
+**`Suggested Value ($)`** = `value` (Claude's direct estimate, not a formula).
 
 ---
 

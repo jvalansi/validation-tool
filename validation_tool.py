@@ -362,16 +362,17 @@ Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "tam_customers": estimated number of potential customers as an integer (order-of-magnitude is fine)
 - "price_per_customer_annual": estimated annual revenue per customer in USD as a number (e.g. 228 for $19/mo)
-- "pricing_recommendation": suggested price point and model (e.g. "$19/mo SaaS")
+- "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at $19/mo is realistic given competitor pricing")
 - "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
-- "roi_verdict": one of "strong", "moderate", "weak", "unclear"
-- "roi_reasoning": one sentence explaining the verdict
+- "value": estimated realistic annual revenue in USD as an integer (not a multiple — this is yearly revenue if the product achieves modest market penetration, e.g. 1-5% of TAM)
+- "value_reasoning": one sentence explaining the value estimate
 - "suggested_probability": probability of success using exactly one of these three values:
     0.01 — moonshot (paradigm shift required, no proven path)
     0.10 — regular challenge (tech exists, market exists, execution risk)
     0.99 — low-hanging fruit (clear demand, proven solution, just needs building)
   Choose the closest tier and return the number only.
+- "probability_reasoning": one sentence explaining the probability choice
 
 Return only valid JSON, no markdown."""
 

@@ -101,22 +101,23 @@ def main():
 
     tam_tier = rev.get("tam_tier", "")
     mrr = claude.get("mrr_12mo_estimate") or rev.get("conservative_mrr", "")
-    pricing = claude.get("pricing_recommendation", "")
-    signal = claude.get("roi_verdict", "")
+    pricing = claude.get("pricing_assessment", "")
     suggested_probability = claude.get("suggested_probability")
-
     tam_customers = claude.get("tam_customers")
     price_annual = claude.get("price_per_customer_annual")
-    suggested_value = round(tam_customers * price_annual * 10) if tam_customers and price_annual else None
+    value = claude.get("value")
+    suggested_value = round(value) if value else None
 
     print(f"\nResults:")
     print(f"  TAM Tier:             {tam_tier}")
     print(f"  MRR Estimate:         {mrr}")
     print(f"  Pricing:              {pricing}")
-    print(f"  Market Signal:        {signal}")
     print(f"  Suggested Probability:{suggested_probability}")
+    print(f"  Prob reasoning:       {claude.get('probability_reasoning', '')}")
     print(f"  TAM Customers:        {tam_customers}")
     print(f"  Price/Customer/Year:  ${price_annual}")
+    print(f"  Value/yr:             ${value}")
+    print(f"  Value reasoning:      {claude.get('value_reasoning', '')}")
     print(f"  Suggested Value ($):  ${suggested_value:,}" if suggested_value else "  Suggested Value ($):  n/a")
 
     if args.dry_run:
@@ -128,11 +129,9 @@ def main():
     if tam_tier in ("mass", "mid", "niche"):
         update["properties"]["TAM Tier"] = {"select": {"name": tam_tier}}
     if mrr:
-        update["properties"]["MRR Estimate"] = {"rich_text": [{"text": {"content": mrr}}]}
+        update["properties"]["MRR Estimate"] = {"rich_text": [{"text": {"content": str(mrr)}}]}
     if pricing:
         update["properties"]["Pricing Recommendation"] = {"rich_text": [{"text": {"content": pricing[:2000]}}]}
-    if signal in ("strong", "moderate", "weak", "unclear"):
-        update["properties"]["Market Signal"] = {"select": {"name": signal}}
     if suggested_value is not None:
         update["properties"]["Suggested Value ($)"] = {"number": suggested_value}
     if suggested_probability is not None:
