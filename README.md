@@ -32,34 +32,65 @@ python validation_tool.py report --query QUERY \
 {
   "query": "...",
   "search_query": "...",
-  "sources": { "hacker_news": {}, "google_trends": {}, "reddit": {}, "product_hunt": {} },
-  "revenue_estimate": {
-    "tam_tier": "mass | mid | niche",
-    "competitor_prices_found": [],
-    "conservative_mrr": "$100–$1,000",
-    "optimistic_mrr": "$2,000–$10,000"
+  "sources": {
+    "google_trends": {
+      "average_interest": 69,
+      "trend_direction": "up | down | flat"
+    },
+    "hacker_news": {
+      "total_results": 29,
+      "top_posts": [{ "title": "...", "points": 12 }]
+    },
+    "reddit": {
+      "total_results": 7,
+      "top_posts": [{ "title": "..." }]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [{ "name": "..." }]
+    }
   },
-  "summary": { "positive_signals": [], "signal_count": 0, "verdict": "..." },
+  "summary": {
+    "positive_signals": ["active Reddit discussion", "high HN interest"],
+    "signal_count": 3,
+    "verdict": "validate further | weak signal — reconsider or reframe"
+  },
   "claude_analysis": {
-    "tam_assessment": "...",
+    "tam_assessment": "one sentence on market size with evidence",
     "tam_customers": 500000,
     "price_per_customer_annual": 228,
     "pricing_recommendation": "$19/mo SaaS",
-    "key_risks": [],
-    "key_opportunities": [],
+    "key_risks": ["crowded market", "low willingness to pay"],
+    "key_opportunities": ["growing search interest", "no clear market leader"],
     "roi_verdict": "strong | moderate | weak | unclear",
-    "roi_reasoning": "...",
+    "roi_reasoning": "one sentence verdict explanation",
     "suggested_probability": 0.01
   }
 }
 ```
 
-**`suggested_probability`** uses three fixed tiers:
-- `0.01` — moonshot (paradigm shift required, no proven path)
-- `0.10` — regular challenge (tech exists, market exists, execution risk)
-- `0.99` — low-hanging fruit (clear demand, proven solution, just needs building)
+**Signal inputs to Claude:**
+| Field | Meaning |
+|---|---|
+| `google_trends.average_interest` | Search interest 0–100 over past 12 months |
+| `hacker_news.total_results` | Number of HN posts matching the query |
+| `reddit.total_results` | Number of Reddit threads found |
+| `product_hunt.existing_products` | Number of competing products on PH |
 
-**`Suggested Value ($)`** is computed as: `tam_customers × price_per_customer_annual × 10` (10× revenue multiple to estimate company value).
+**Claude outputs:**
+| Field | Meaning |
+|---|---|
+| `tam_customers` | Estimated addressable customer count |
+| `price_per_customer_annual` | Estimated revenue per customer per year ($) |
+| `suggested_probability` | Success probability (fixed tiers: 0.01 / 0.10 / 0.99) |
+| `roi_verdict` | `strong` / `moderate` / `weak` / `unclear` |
+
+**`suggested_probability`** tiers:
+- `0.01` — moonshot: weak signals, crowded market, no clear moat
+- `0.10` — challenge: real demand, significant competition or execution risk
+- `0.99` — sure thing: exceptional signal, clear unmet need, little competition
+
+**`Suggested Value ($)`** = `tam_customers × price_per_customer_annual × 10` (10× revenue multiple).
 
 ---
 
