@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -139,6 +140,69 @@ def cmd_producthunt(args):
 
 
 # ---------------------------------------------------------------------------
+# Revenue signal helpers
+# ---------------------------------------------------------------------------
+
+_PRICE_RE = re.compile(
+    r'\$\s*(\d+(?:\.\d+)?)\s*(?:per\s+)?(?:/\s*)?(mo(?:nth)?|yr|year|user|seat|month)?',
+    re.IGNORECASE
+)
+
+def _extract_prices(texts):
+    """Extract price mentions from a list of strings. Returns list of dicts."""
+    found = []
+    for text in texts:
+        for m in _PRICE_RE.finditer(text or ""):
+            amount = float(m.group(1))
+            period = (m.group(2) or "").lower()
+            if period in ("yr", "year"):
+                amount_mo = round(amount / 12, 2)
+            else:
+                amount_mo = amount
+            if 1 <= amount_mo <= 10000:  # filter noise
+                found.append({"raw": m.group(0).strip(), "monthly_equiv": amount_mo})
+    # deduplicate
+    seen = set()
+    unique = []
+    for p in found:
+        key = p["raw"]
+        if key not in seen:
+            seen.add(key)
+            unique.append(p)
+    return unique
+
+
+def _tam_tier(trends_avg):
+    if trends_avg >= 50:
+        return "mass"
+    if trends_avg >= 20:
+        return "mid"
+    return "niche"
+
+
+def _mrr_range(tam_tier, prices):
+    monthly_prices = [p["monthly_equiv"] for p in prices] if prices else []
+    price_anchor = sorted(monthly_prices)[len(monthly_prices) // 2] if monthly_prices else None
+
+    ranges = {
+        "mass":  {"conservative": (500, 5000),  "optimistic": (10000, 50000)},
+        "mid":   {"conservative": (100, 1000),  "optimistic": (2000, 10000)},
+        "niche": {"conservative": (50,  500),   "optimistic": (500,  3000)},
+    }
+    r = ranges[tam_tier]
+
+    # scale up if competitors charge premium prices
+    if price_anchor and price_anchor > 50:
+        r = {k: (v[0] * 2, v[1] * 2) for k, v in r.items()}
+
+    return {
+        "conservative_mrr": f"${r['conservative'][0]}–${r['conservative'][1]}",
+        "optimistic_mrr":   f"${r['optimistic'][0]}–${r['optimistic'][1]}",
+        "price_anchor_used": f"${price_anchor}/mo" if price_anchor else "no prices found — used defaults",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Full validation report
 # ---------------------------------------------------------------------------
 
@@ -205,6 +269,30 @@ def cmd_report(args):
         }
     except Exception as e:
         report["sources"]["product_hunt"] = {"error": str(e)}
+
+    # Revenue estimate
+    all_snippets = []
+    for ph_item in report["sources"].get("product_hunt", {}).get("top_products", []):
+        all_snippets.append(ph_item.get("snippet", ""))
+    for hn_item in report["sources"].get("hacker_news", {}).get("top_posts", []):
+        all_snippets.append(hn_item.get("title", ""))
+    for rd_item in report["sources"].get("reddit", {}).get("top_posts", []):
+        all_snippets.append(rd_item.get("snippet", ""))
+
+    competitor_prices = _extract_prices(all_snippets)
+    trends_avg = report["sources"].get("google_trends", {}).get("average_interest", 0)
+    tam = _tam_tier(trends_avg)
+    mrr = _mrr_range(tam, competitor_prices)
+
+    report["revenue_estimate"] = {
+        "tam_tier": tam,
+        "competitor_prices_found": competitor_prices,
+        **mrr,
+        "note": (
+            "Rough estimate based on TAM tier (Google Trends) and competitor pricing extracted from snippets. "
+            "Assumes 2–5% free→paid conversion and ~100–500 monthly visitors at conservative end."
+        ),
+    }
 
     # Summary signal
     signals = []
