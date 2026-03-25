@@ -54,17 +54,34 @@ def cmd_hn(args):
 # Google Trends (pytrends)
 # ---------------------------------------------------------------------------
 
+def _fetch_trends(query, timeframe="today 12-m", retries=5, backoff=10):
+    """Fetch Google Trends with exponential backoff on 429 / TooManyRequestsError."""
+    import time
+    from pytrends.request import TrendReq
+    for attempt in range(retries):
+        try:
+            pytrends = TrendReq(hl="en-US", tz=360)
+            pytrends.build_payload([query], timeframe=timeframe)
+            return pytrends.interest_over_time()
+        except Exception as e:
+            msg = str(e)
+            if attempt < retries - 1 and ("429" in msg or "Too Many" in msg or "timeout" in msg.lower()):
+                wait = backoff * (2 ** attempt)
+                sys.stderr.write(f"[trends] rate limited, retrying in {wait}s (attempt {attempt+1}/{retries})\n")
+                time.sleep(wait)
+            else:
+                raise
+    raise RuntimeError("Google Trends: max retries exceeded")
+
+
 def cmd_trends(args):
     try:
-        from pytrends.request import TrendReq
+        from pytrends.request import TrendReq  # noqa — just checking install
     except ImportError:
         print(json.dumps({"error": "pytrends not installed. Run: pip install pytrends"}))
         sys.exit(1)
 
-    pytrends = TrendReq(hl="en-US", tz=360)
-    pytrends.build_payload([args.query], timeframe=args.timeframe)
-
-    interest = pytrends.interest_over_time()
+    interest = _fetch_trends(args.query, args.timeframe)
     if interest.empty:
         print(json.dumps({"query": args.query, "trend": [], "average": 0, "note": "No data returned"}))
         return
@@ -231,10 +248,7 @@ def cmd_report(args):
 
     # Google Trends
     try:
-        from pytrends.request import TrendReq
-        pytrends = TrendReq(hl="en-US", tz=360)
-        pytrends.build_payload([search_query], timeframe="today 12-m")
-        interest = pytrends.interest_over_time()
+        interest = _fetch_trends(search_query)
         if not interest.empty:
             col = search_query if search_query in interest.columns else interest.columns[0]
             values = interest[col].tolist()
@@ -382,7 +396,7 @@ Return only valid JSON, no markdown."""
     try:
         result = subprocess.run(
             [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True, text=True, timeout=120,
             env=env, cwd="/home/ubuntu"
         )
         if result.returncode == 0 and result.stdout.strip():
