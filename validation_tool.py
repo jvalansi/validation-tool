@@ -246,24 +246,31 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["hacker_news"] = {"error": str(e)}
 
-    # Google Trends
-    try:
-        interest = _fetch_trends(search_query)
-        if not interest.empty:
-            col = search_query if search_query in interest.columns else interest.columns[0]
-            values = interest[col].tolist()
-            recent = values[-4:]
-            avg = round(sum(values) / len(values), 1)
-            trend_dir = "up" if recent[-1] > recent[0] else "down" if recent[-1] < recent[0] else "flat"
-            report["sources"]["google_trends"] = {
-                "average_interest": avg,
-                "trend_direction": trend_dir,
-                "signal": "strong" if avg > 50 else "moderate" if avg > 20 else "weak",
-            }
-        else:
-            report["sources"]["google_trends"] = {"signal": "no data"}
-    except Exception as e:
-        report["sources"]["google_trends"] = {"error": str(e)}
+    # Google Trends (with pain_query fallback if primary returns no data)
+    pain_query = getattr(args, "pain_query", None)
+    trends_queries = [search_query]
+    if pain_query and pain_query != search_query:
+        trends_queries.append(pain_query)
+    trends_result = None
+    for tq in trends_queries:
+        try:
+            interest = _fetch_trends(tq)
+            if not interest.empty:
+                col = tq if tq in interest.columns else interest.columns[0]
+                values = interest[col].tolist()
+                recent = values[-4:]
+                avg = round(sum(values) / len(values), 1)
+                trend_dir = "up" if recent[-1] > recent[0] else "down" if recent[-1] < recent[0] else "flat"
+                trends_result = {
+                    "average_interest": avg,
+                    "trend_direction": trend_dir,
+                    "signal": "strong" if avg > 50 else "moderate" if avg > 20 else "weak",
+                    "query_used": tq,
+                }
+                break
+        except Exception as e:
+            trends_result = {"error": str(e)}
+    report["sources"]["google_trends"] = trends_result or {"signal": "no data"}
 
     # Reddit (via DuckDuckGo site:reddit.com — no auth needed)
     try:
