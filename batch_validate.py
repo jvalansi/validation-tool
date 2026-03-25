@@ -85,12 +85,14 @@ def fetch_top_projects(limit=20):
     return projects
 
 
-def run_validation(query, pain_query=None, subreddits=None):
+def run_validation(query, pain_query=None, subreddits=None, trends_query=None):
     cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query]
     if pain_query:
         cmd += ["--pain-query", pain_query, "--assume-tech-exists"]
     if subreddits:
         cmd += ["--reddit-subreddits", subreddits]
+    if trends_query:
+        cmd += ["--trends-query", trends_query]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
     if result.returncode != 0:
         print(f"  Validation error: {result.stderr[:200]}")
@@ -296,8 +298,6 @@ def update_notion_table(page_id, new_prob, claude, rev, report):
         ph = report.get("sources", {}).get("product_hunt", {})
         if "average_interest" in gt:
             props["Trends Interest"] = {"number": float(gt["average_interest"])}
-        if "query_used" in gt:
-            props["Trends Query"] = {"rich_text": [{"text": {"content": gt["query_used"]}}]}
         hn_count = hn.get("total_results")
         if hn_count is not None:
             props["HN Results"] = {"number": int(hn_count)}
@@ -324,7 +324,7 @@ def process_project(p):
     print(f"Project: {p['name']}")
     print(f"Query: {p['query']}")
 
-    report = run_validation(p["query"], p.get("pain_query") or None, p.get("subreddits") or None)
+    report = run_validation(p["query"], p.get("pain_query") or None, p.get("subreddits") or None, p.get("trends_query") or None)
     if not report:
         print("  No report — skipping")
         return

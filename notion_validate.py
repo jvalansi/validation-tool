@@ -242,7 +242,6 @@ def main():
     suggested_value = round(value) if value else None
 
     trends_avg = sources.get("google_trends", {}).get("average_interest")
-    trends_query_used = sources.get("google_trends", {}).get("query_used")
     hn_results = sources.get("hacker_news", {}).get("total_results")
     reddit_results = sources.get("reddit", {}).get("total_results")
     ph_products = sources.get("product_hunt", {}).get("existing_products")
@@ -283,8 +282,6 @@ def main():
     table_props["Market Signal"] = {"select": {"name": market_signal}}
     if trends_avg is not None:
         table_props["Trends Interest"] = {"number": float(trends_avg)}
-    if trends_query_used:
-        table_props["Trends Query"] = {"rich_text": [{"text": {"content": trends_query_used}}]}
     if hn_results is not None:
         table_props["HN Results"] = {"number": int(hn_results)}
     if reddit_results is not None:
