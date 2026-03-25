@@ -246,10 +246,11 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["hacker_news"] = {"error": str(e)}
 
-    # Google Trends (with pain_query fallback if primary returns no data)
+    # Google Trends (explicit trends_query takes priority, then search_query, then pain_query fallback)
     pain_query = getattr(args, "pain_query", None)
-    trends_queries = [search_query]
-    if pain_query and pain_query != search_query:
+    explicit_trends_query = getattr(args, "trends_query", None)
+    trends_queries = [explicit_trends_query or search_query]
+    if pain_query and pain_query != trends_queries[0]:
         trends_queries.append(pain_query)
     trends_result = None
     for tq in trends_queries:
@@ -450,6 +451,7 @@ def main():
     p_report.add_argument("--assume-tech-exists", action="store_true",
                           help="Assume technology works — assess market demand only, not technical feasibility")
     p_report.add_argument("--pain-query", help="Pain/desire search query to use instead of product query (used with --assume-tech-exists)")
+    p_report.add_argument("--trends-query", help="Specific short query to use for Google Trends (overrides default query)")
 
     args = parser.parse_args()
 

@@ -180,10 +180,12 @@ def append_validation_section(page_id, report, new_prob, claude):
         resp.read()
 
 
-def run_validation(query, pain_query=None):
+def run_validation(query, pain_query=None, trends_query=None):
     cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query]
     if pain_query:
         cmd += ["--pain-query", pain_query, "--assume-tech-exists"]
+    if trends_query:
+        cmd += ["--trends-query", trends_query]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
     if result.returncode != 0:
         print(f"Validation error: {result.stderr[:200]}", file=sys.stderr)
@@ -209,6 +211,7 @@ def main():
     name = get_text(props.get("Project", {})) or get_text(props.get("Name", {}))
     validation_query = get_text(props.get("Validation Query", {}))
     pain_query = get_text(props.get("Pain/Desire", {}))
+    trends_query = get_text(props.get("Trends Query", {}))
 
     print(f"Project: {name}")
     print(f"Validation Query: {validation_query}")
@@ -220,7 +223,7 @@ def main():
 
     # Run validation
     print("\nRunning validation...")
-    report = run_validation(validation_query, pain_query or None)
+    report = run_validation(validation_query, pain_query or None, trends_query or None)
     if not report:
         sys.exit(1)
 
