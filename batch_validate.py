@@ -269,23 +269,52 @@ def append_validation_section(page_id, report, new_prob, old_prob, claude):
         resp.read()
 
 
-def update_notion_table(page_id, new_prob, claude, rev):
+def update_notion_table(page_id, new_prob, claude, rev, report):
     """Write all structured fields back to the Notion table."""
     props = {"Probability": {"number": new_prob}}
 
     if claude:
-        sp = claude.get("suggested_probability")
-        if sp is not None:
-            props["Suggested Probability"] = {"number": float(sp)}
-
         value = claude.get("value")
         if value:
-            props["Suggested Value ($)"] = {"number": round(value)}
+            props["Value ($)"] = {"number": round(value)}
+        tam_customers = claude.get("tam_customers")
+        if tam_customers is not None:
+            props["TAM Customers"] = {"number": int(tam_customers)}
+        price_annual = claude.get("price_per_customer_annual")
+        if price_annual is not None:
+            props["Price/Customer/yr ($)"] = {"number": float(price_annual)}
 
     if rev:
         tam_tier = rev.get("tam_tier", "")
         if tam_tier in ("mass", "mid", "niche"):
             props["TAM Tier"] = {"select": {"name": tam_tier}}
+
+    if report:
+        gt = report.get("sources", {}).get("google_trends", {})
+        hn = report.get("sources", {}).get("hacker_news", {})
+        rd = report.get("sources", {}).get("reddit", {})
+        ph = report.get("sources", {}).get("product_hunt", {})
+        if "average_interest" in gt:
+            props["Trends Interest"] = {"number": float(gt["average_interest"])}
+        if "query_used" in gt:
+            props["Trends Query"] = {"rich_text": [{"text": {"content": gt["query_used"]}}]}
+        hn_count = hn.get("total_results")
+        if hn_count is not None:
+            props["HN Results"] = {"number": int(hn_count)}
+        rd_count = rd.get("total_results")
+        if rd_count is not None:
+            props["Reddit Results"] = {"number": int(rd_count)}
+        ph_count = ph.get("existing_products")
+        if ph_count is not None and ph_count >= 0:
+            props["PH Products"] = {"number": int(ph_count)}
+
+        signal_count = report.get("summary", {}).get("signal_count", 0)
+        if signal_count >= 3:
+            props["Market Signal"] = {"select": {"name": "strong"}}
+        elif signal_count >= 1:
+            props["Market Signal"] = {"select": {"name": "moderate"}}
+        else:
+            props["Market Signal"] = {"select": {"name": "weak"}}
 
     notion_patch(f"pages/{page_id}", {"properties": props})
 
@@ -314,7 +343,7 @@ def process_project(p):
     print(f"  Prob reasoning:   {claude.get('probability_reasoning', '')}")
 
     # Update table
-    update_notion_table(p["id"], new_prob, claude, rev)
+    update_notion_table(p["id"], new_prob, claude, rev, report)
 
     # Update page body
     blocks = get_page_blocks(p["id"])
