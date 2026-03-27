@@ -16,7 +16,6 @@ Usage:
 
 import argparse
 import json
-import math
 import os
 import shutil
 import subprocess
@@ -65,26 +64,9 @@ def notion_patch(path, data):
 # Rounding helpers
 # ---------------------------------------------------------------------------
 
-def oom_round(n):
-    """Round to nearest order of magnitude: 1, 10, 100, 1000, ..."""
-    if not n or n <= 0:
-        return n
-    return int(10 ** round(math.log10(n)))
-
-
 def round_ww(ww):
     """Round work weeks to nearest 5 (min 5)."""
     return max(5, round(ww / 5) * 5)
-
-
-def prob_oom(suggested):
-    """Map Claude's 0.01/0.10/0.99 to user's OOM scale: 0.01/0.10/1.0."""
-    if suggested >= 0.5:
-        return 1.0
-    elif suggested >= 0.05:
-        return 0.1
-    else:
-        return 0.01
 
 
 # ---------------------------------------------------------------------------
@@ -262,14 +244,10 @@ def main():
     signal_count = (report or {}).get("summary", {}).get("signal_count", 0)
     tam_tier = (report or {}).get("revenue_estimate", {}).get("tam_tier", "niche")
 
-    raw_price = claude_analysis.get("price_per_customer_annual") or 100
-    raw_tam = claude_analysis.get("tam_customers") or 10000
-    raw_prob = claude_analysis.get("suggested_probability") or 0.01
-
-    price_rounded = oom_round(raw_price)
-    tam_rounded = oom_round(raw_tam)
+    price_rounded = claude_analysis.get("price_per_customer_annual") or 100
+    tam_rounded = claude_analysis.get("tam_customers") or 10000
+    probability = claude_analysis.get("suggested_probability") or 0.01
     ww_rounded = round_ww(enriched["work_weeks"])
-    probability = prob_oom(raw_prob)
 
     trends_avg = sources.get("google_trends", {}).get("average_interest")
     hn_results = sources.get("hacker_news", {}).get("total_results")

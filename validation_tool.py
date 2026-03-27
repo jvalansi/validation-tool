@@ -345,6 +345,16 @@ def cmd_report(args):
     # Claude synthesis
     claude_analysis = _claude_review(args.query, report, assume_tech_exists=getattr(args, "assume_tech_exists", False))
     if claude_analysis:
+        # OOM-round numeric fields so callers get canonical values
+        for field in ("tam_customers", "price_per_customer_annual", "value"):
+            v = claude_analysis.get(field)
+            if isinstance(v, (int, float)) and v > 0:
+                import math as _math
+                claude_analysis[field] = int(10 ** round(_math.log10(v)))
+        # Map probability to OOM scale: 0.01 moonshot / 0.10 standard / 1.0 straightforward
+        prob = claude_analysis.get("suggested_probability")
+        if prob is not None:
+            claude_analysis["suggested_probability"] = 1.0 if prob >= 0.5 else 0.1 if prob >= 0.05 else 0.01
         report["claude_analysis"] = claude_analysis
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
