@@ -89,10 +89,12 @@ python validation_tool.py report --query QUERY \
 | `suggested_probability` | number | Expected fraction of total value actually captured (fixed tiers: 0.01 / 0.10 / 0.99) |
 | `probability_reasoning` | text | Explanation of probability choice, including expected penetration rate |
 
-**`suggested_probability`** encodes both execution probability and realistic market penetration:
+**`suggested_probability`** encodes both execution probability and realistic market penetration. The report normalises Claude's output to exactly one of three OOM values:
 - `0.01` — moonshot: paradigm shift required, or <1% realistic penetration of a niche market
 - `0.10` — challenge: real demand + proven tech, but significant competition (~5–15% penetration)
-- `0.99` — sure thing: clear unmet demand, proven solution, little competition (high penetration likely)
+- `1.0` — sure thing: clear unmet demand, proven solution, little competition (high penetration likely)
+
+All numeric fields (`tam_customers`, `price_per_customer_annual`, `value`) are OOM-rounded to the nearest power of 10 inside the report, so callers receive canonical values directly.
 
 **Expected value** = `Value ($) × Probability` — used directly in the `Weeks of Freedom` and `ROI` formulas.
 
@@ -150,10 +152,8 @@ python notion_create.py --name "My Project" --idea "..." [--dry-run]
 
 Pipeline steps:
 1. Claude generates `validation_query`, `trends_query`, `pain_desire`, `work_weeks`, `description`, `target_customer`, `what_it_is`, `work_plan`
-2. Runs `validation_tool.py report` with those queries
-3. OOM-rounds numbers (prices to nearest power of 10, WW to nearest 5)
-4. Maps probability to OOM scale: `0.01` moonshot / `0.10` standard startup / `1.0` straightforward
-5. Creates Notion page with all properties + body sections (What It Is, Target Customer, Validation Signals, Key Risks, Opportunities, Work Plan)
+2. Runs `validation_tool.py report` with those queries (numbers are OOM-rounded and probability mapped inside the report)
+3. Creates Notion page with all properties + body sections (What It Is, Target Customer, Validation Signals, Key Risks, Opportunities, Work Plan)
 
 ---
 
