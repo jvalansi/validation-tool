@@ -138,6 +138,25 @@ Writes text fields to the **page body** (Validation section):
 
 ---
 
+### `notion_create.py`
+
+**Full pipeline**: takes a raw idea and does everything end-to-end — Claude generates queries and work plan, validation tool fetches signals, Notion page is created with all fields and body filled.
+
+```bash
+export NOTION_TOKEN=...
+python notion_create.py "My Project" "A system that does X for Y customers"
+python notion_create.py --name "My Project" --idea "..." [--dry-run]
+```
+
+Pipeline steps:
+1. Claude generates `validation_query`, `trends_query`, `pain_desire`, `work_weeks`, `description`, `target_customer`, `what_it_is`, `work_plan`
+2. Runs `validation_tool.py report` with those queries
+3. OOM-rounds numbers (prices to nearest power of 10, WW to nearest 5)
+4. Maps probability to OOM scale: `0.01` moonshot / `0.10` standard startup / `1.0` straightforward
+5. Creates Notion page with all properties + body sections (What It Is, Target Customer, Validation Signals, Key Risks, Opportunities, Work Plan)
+
+---
+
 ### `batch_validate.py`
 
 Validates all unvalidated projects in the Notion Projects DB (sorted by ROI desc). Tracks completed IDs in `validated_ids.json` so re-runs pick up where they left off, even as ROI sort order shifts.
