@@ -49,7 +49,12 @@ def gh_request(method, path, data=None):
 
 
 def build_html(project_name, description, pain_desire, price_per_year, form_url, features=None):
-    price_per_mo = round(price_per_year / 12) if price_per_year else None
+    def _saas_price(annual):
+        raw = annual / 12
+        anchors = [9, 19, 29, 49, 79, 99, 149, 199, 299, 499, 799, 999]
+        return min(anchors, key=lambda x: abs(x - raw))
+
+    price_per_mo = _saas_price(price_per_year) if price_per_year else None
 
     if form_url:
         cta_block = f"""
