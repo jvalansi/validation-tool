@@ -79,13 +79,32 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       }}
     </script>"""
 
+    # Inline SVG icons keyed by name — safe cross-platform alternative to emoji
+    svg_icons = {
+        "chart": '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+        "zap":   '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+        "shield":'<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+        "cpu":   '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+        "eye":   '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+        "layers":'<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+        "dollar":'<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+        "code":  '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+        "arrow": '<svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+    }
+    default_icon_keys = ["zap", "layers", "chart"]
+
     features = features or []
     feature_cards = ""
     if features:
-        cards_html = "\n".join(
-            f'    <div class="card"><span class="icon">{f["icon"]}</span><strong>{f["title"]}</strong><p>{f["body"]}</p></div>'
-            for f in features
-        )
+        cards = []
+        for i, f in enumerate(features):
+            key = f.get("icon_key") or default_icon_keys[i % len(default_icon_keys)]
+            svg = svg_icons.get(key, svg_icons["zap"])
+            cards.append(
+                f'    <div class="card"><span class="icon">{svg}</span>'
+                f'<strong>{f["title"]}</strong><p>{f["body"]}</p></div>'
+            )
+        cards_html = "\n".join(cards)
         feature_cards = f"""
   <section class="features">
 {cards_html}
@@ -134,10 +153,11 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 1.25rem;
-      background: linear-gradient(135deg, #f8fafc 0%, #7dd3fc 100%);
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      color: #ffffff;
     }}
     .hero .subtitle {{
       font-size: 1.15rem;
@@ -207,7 +227,8 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       border-radius: 12px;
       padding: 1.25rem;
     }}
-    .card .icon {{ font-size: 1.6rem; display: block; margin-bottom: 0.6rem; }}
+    .card .icon {{ display: block; margin-bottom: 0.75rem; width: 28px; height: 28px; }}
+    .card .icon svg {{ width: 28px; height: 28px; }}
     .card strong {{ display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: #f1f5f9; }}
     .card p {{ font-size: 0.85rem; color: #94a3b8; line-height: 1.5; }}
 

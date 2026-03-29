@@ -132,7 +132,7 @@ Description: {description}
 Pain it solves: {pain_desire}
 
 Return JSON array of 3 objects with keys:
-- "icon": a single relevant emoji
+- "icon_key": one of: chart, zap, shield, cpu, eye, layers, dollar, code, arrow
 - "title": 3-5 word feature title
 - "body": one sentence benefit (max 12 words)
 
