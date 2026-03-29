@@ -2,6 +2,11 @@
 
 Multi-source project idea validator. Gathers market signals from HN, Google Trends, Reddit, and Product Hunt, then uses Claude to produce a revenue and ROI assessment.
 
+## Validation Phases
+
+- **Phase 1 — Passive signals** (this tool): HN, Reddit, Google Trends, Product Hunt → market signal + ROI score
+- **Phase 2 — Active intent** ([Google Ads + Landing Page](docs/google-ads-validation.md)): paid search → clicks → email signups → pre-orders. Run when Phase 1 returns strong signal.
+
 ## Tools
 
 ### `validation_tool.py`
