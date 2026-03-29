@@ -56,8 +56,14 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
 
     price_per_mo = _saas_price(price_per_year) if price_per_year else None
 
-    signup_endpoint = form_url or "https://cycadlike-invisibly-gaylene.ngrok-free.dev/signup"
-    cta_block = f"""
+    if form_url:
+        cta_block = f"""
+    <iframe src="{form_url}" width="100%" frameborder="0" marginheight="0" marginwidth="0"
+            style="border-radius:8px;min-height:300px;" onload="window.parent.scrollTo(0,0)">
+    </iframe>
+    <script src="https://tally.so/widgets/embed.js" async></script>"""
+    else:
+        cta_block = """
     <form class="signup-form" onsubmit="handleSubmit(event)">
       <input type="email" name="email" placeholder="your@email.com" required />
       <button type="submit">Join the waitlist &rarr;</button>
@@ -66,16 +72,8 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       &#10003; You're on the list — we'll be in touch!
     </p>
     <script>
-      async function handleSubmit(e) {{
+      function handleSubmit(e) {{
         e.preventDefault();
-        const email = e.target.querySelector('input[type=email]').value;
-        try {{
-          await fetch("{signup_endpoint}", {{
-            method: "POST",
-            headers: {{"Content-Type": "application/json"}},
-            body: JSON.stringify({{email, project: "{project_name}"}})
-          }});
-        }} catch(_) {{}}
         document.querySelector('.signup-form').style.display = 'none';
         document.getElementById('submitted').style.display = 'block';
       }}

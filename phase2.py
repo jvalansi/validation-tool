@@ -166,16 +166,31 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
     features = generate_features(project_name, description, pain_desire)
     if features:
         print(f"  Got {len(features)} feature cards from Claude")
+
+    print(f"[Step 2] Creating Tally signup form...")
+    form_result = step2_tally_form(project_name, pain_desire, price_per_year, dry_run)
+    embed_url = form_result.get("embed_url")
+
     print(f"[Step 1] Deploying landing page for: {project_name}")
     result = deploy_landing_page(
         project_name=project_name,
         description=subtitle,
         pain_desire=headline,
         price_per_year=price_per_year,
-        form_url=None,
+        form_url=embed_url,
         features=features,
         dry_run=dry_run,
     )
+    result["form"] = form_result
+    return result
+
+
+def step2_tally_form(project_name, pain_desire, price_per_year, dry_run):
+    from phase2.forms import create_signup_form
+    if dry_run:
+        return {"status": "dry_run", "embed_url": None}
+    result = create_signup_form(project_name, pain_desire, price_per_year)
+    print(f"  Form: {result['form_url']}")
     return result
 
 
