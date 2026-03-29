@@ -89,6 +89,8 @@ DM/email top signups:
 
 Full automation is feasible but overkill for one project at a time. Build the template and manual process first; automate the reporting loop once the playbook is proven.
 
+See [phase2-implementation-plan.md](phase2-implementation-plan.md) for the step-by-step build plan.
+
 ---
 
 ## Project Queue
