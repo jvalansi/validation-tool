@@ -59,6 +59,36 @@ def get_text(prop):
     return items[0].get("plain_text", "") if items else ""
 
 
+def generate_headline(project_name, description, pain_desire):
+    """Use Claude to distill pain/desire into a punchy 6-10 word hero headline."""
+    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
+    if not os.path.exists(claude_path):
+        return pain_desire
+
+    prompt = f"""Write a single hero headline for a landing page. 6-10 words max. No punctuation at the end.
+It should express the core pain or desire — something a visitor instantly recognizes as their problem.
+
+Project: {project_name}
+Description: {description}
+Pain/desire research: {pain_desire}
+
+Return only the headline text, nothing else."""
+
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+    try:
+        result = subprocess.run(
+            [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
+            capture_output=True, text=True, timeout=30,
+            env=env, cwd="/home/ubuntu"
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            outer = json.loads(result.stdout)
+            return outer.get("result", "").strip().strip('"')
+    except Exception:
+        pass
+    return pain_desire
+
+
 def generate_features(project_name, description, pain_desire):
     """Use Claude to generate 3 feature cards for the landing page."""
     claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
@@ -98,7 +128,9 @@ Return only valid JSON array, no markdown."""
 
 def step1_landing_page(project_name, description, pain_desire, price_per_year, dry_run):
     from phase2.landing import deploy_landing_page
-    print(f"\n[Step 1] Generating feature cards...")
+    print(f"\n[Step 1] Generating copy...")
+    headline = generate_headline(project_name, description, pain_desire)
+    print(f"  Headline: {headline}")
     features = generate_features(project_name, description, pain_desire)
     if features:
         print(f"  Got {len(features)} feature cards from Claude")
@@ -106,7 +138,7 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
     result = deploy_landing_page(
         project_name=project_name,
         description=description,
-        pain_desire=pain_desire,
+        pain_desire=headline,
         price_per_year=price_per_year,
         form_url=None,
         features=features,
