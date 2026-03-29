@@ -17,6 +17,8 @@ Steps:
 import argparse
 import json
 import os
+import shutil
+import subprocess
 import sys
 import urllib.request
 
@@ -57,15 +59,57 @@ def get_text(prop):
     return items[0].get("plain_text", "") if items else ""
 
 
+def generate_features(project_name, description, pain_desire):
+    """Use Claude to generate 3 feature cards for the landing page."""
+    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
+    if not os.path.exists(claude_path):
+        return None
+
+    prompt = f"""Generate exactly 3 short feature/benefit cards for a landing page.
+
+Project: {project_name}
+Description: {description}
+Pain it solves: {pain_desire}
+
+Return JSON array of 3 objects with keys:
+- "icon": a single relevant emoji
+- "title": 3-5 word feature title
+- "body": one sentence benefit (max 12 words)
+
+Return only valid JSON array, no markdown."""
+
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+    try:
+        result = subprocess.run(
+            [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
+            capture_output=True, text=True, timeout=30,
+            env=env, cwd="/home/ubuntu"
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            outer = json.loads(result.stdout)
+            text = outer.get("result", "").strip()
+            if text.startswith("```"):
+                text = "\n".join(text.split("\n")[1:]).rsplit("```", 1)[0].strip()
+            return json.loads(text)
+    except Exception:
+        pass
+    return None
+
+
 def step1_landing_page(project_name, description, pain_desire, price_per_year, dry_run):
     from phase2.landing import deploy_landing_page
-    print(f"\n[Step 1] Deploying landing page for: {project_name}")
+    print(f"\n[Step 1] Generating feature cards...")
+    features = generate_features(project_name, description, pain_desire)
+    if features:
+        print(f"  Got {len(features)} feature cards from Claude")
+    print(f"[Step 1] Deploying landing page for: {project_name}")
     result = deploy_landing_page(
         project_name=project_name,
         description=description,
         pain_desire=pain_desire,
         price_per_year=price_per_year,
         form_url=None,
+        features=features,
         dry_run=dry_run,
     )
     return result

@@ -48,16 +48,47 @@ def gh_request(method, path, data=None):
         return payload, e.code
 
 
-def build_html(project_name, description, pain_desire, price_per_year, form_url):
-    price_line = ""
-    if price_per_year is not None:
-        price_per_mo = round(price_per_year / 12)
-        price_line = f'<p class="price">Coming soon &mdash; early access from ${price_per_mo}/mo</p>'
+def build_html(project_name, description, pain_desire, price_per_year, form_url, features=None):
+    price_per_mo = round(price_per_year / 12) if price_per_year else None
 
     if form_url:
-        cta_section = f'<iframe src="{form_url}" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading form...</iframe>'
+        cta_block = f"""
+    <form class="signup-form" action="{form_url}" method="POST" target="_blank">
+      <input type="email" name="email" placeholder="your@email.com" required />
+      <button type="submit">Join the waitlist &rarr;</button>
+    </form>"""
     else:
-        cta_section = '<p class="placeholder">Signup form coming soon</p>'
+        cta_block = """
+    <form class="signup-form" onsubmit="handleSubmit(event)">
+      <input type="email" name="email" placeholder="your@email.com" required />
+      <button type="submit">Join the waitlist &rarr;</button>
+    </form>
+    <p id="submitted" style="display:none;color:#4ade80;margin-top:1rem;text-align:center;">
+      &#10003; You're on the list — we'll be in touch!
+    </p>
+    <script>
+      function handleSubmit(e) {{
+        e.preventDefault();
+        document.querySelector('.signup-form').style.display = 'none';
+        document.getElementById('submitted').style.display = 'block';
+      }}
+    </script>"""
+
+    features = features or []
+    feature_cards = ""
+    if features:
+        cards_html = "\n".join(
+            f'    <div class="card"><span class="icon">{f["icon"]}</span><strong>{f["title"]}</strong><p>{f["body"]}</p></div>'
+            for f in features
+        )
+        feature_cards = f"""
+  <section class="features">
+{cards_html}
+  </section>"""
+
+    price_note = ""
+    if price_per_mo:
+        price_note = f'<p class="price-note">Early access from <strong>${price_per_mo}/mo</strong> &mdash; lock in founder pricing</p>'
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -75,82 +106,133 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url)
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1rem;
+      padding: 2rem 1rem 4rem;
     }}
-    .container {{
-      max-width: 640px;
-      width: 100%;
-      margin: 0 auto;
-    }}
-    .hero {{
-      text-align: center;
-      padding: 4rem 0 2rem;
-    }}
-    .hero h1 {{
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-      color: #f8fafc;
-    }}
-    .hero .subtitle {{
-      font-size: 1.1rem;
-      color: #94a3b8;
-      line-height: 1.6;
+    .container {{ max-width: 640px; width: 100%; margin: 0 auto; }}
+
+    /* Hero */
+    .hero {{ text-align: center; padding: 5rem 0 2.5rem; }}
+    .badge {{
+      display: inline-block;
+      background: #1e3a5f;
+      color: #7dd3fc;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 9999px;
       margin-bottom: 1.5rem;
     }}
-    .price {{
-      display: inline-block;
+    .hero h1 {{
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #7dd3fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }}
+    .hero .subtitle {{
+      font-size: 1.15rem;
+      color: #94a3b8;
+      line-height: 1.65;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }}
+
+    /* Signup form */
+    .signup-form {{
+      display: flex;
+      gap: 0.5rem;
+      max-width: 480px;
+      margin: 0 auto 1rem;
+    }}
+    .signup-form input {{
+      flex: 1;
       background: #1e293b;
       border: 1px solid #334155;
-      border-radius: 9999px;
-      padding: 0.4rem 1.2rem;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #f1f5f9;
+      font-size: 1rem;
+      outline: none;
+    }}
+    .signup-form input:focus {{ border-color: #38bdf8; }}
+    .signup-form button {{
+      background: #0ea5e9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
       font-size: 0.95rem;
-      color: #7dd3fc;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }}
+    .signup-form button:hover {{ background: #38bdf8; }}
+    .signup-hint {{
+      text-align: center;
+      font-size: 0.82rem;
+      color: #475569;
       margin-bottom: 2.5rem;
     }}
-    .cta {{
-      margin: 2rem 0;
-    }}
-    .placeholder {{
+
+    /* Price note */
+    .price-note {{
       text-align: center;
+      font-size: 0.9rem;
       color: #64748b;
-      font-style: italic;
-      padding: 3rem 0;
-      border: 1px dashed #334155;
-      border-radius: 8px;
+      margin-bottom: 3rem;
     }}
-    footer {{
-      margin-top: auto;
-      padding-top: 3rem;
-      text-align: center;
-      color: #475569;
-      font-size: 0.85rem;
+    .price-note strong {{ color: #7dd3fc; }}
+
+    /* Feature cards */
+    .features {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
     }}
-    iframe {{
-      border-radius: 8px;
-      display: block;
+    .card {{
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+    }}
+    .card .icon {{ font-size: 1.6rem; display: block; margin-bottom: 0.6rem; }}
+    .card strong {{ display: block; font-size: 0.95rem; margin-bottom: 0.35rem; color: #f1f5f9; }}
+    .card p {{ font-size: 0.85rem; color: #94a3b8; line-height: 1.5; }}
+
+    /* Footer */
+    footer {{ text-align: center; color: #334155; font-size: 0.8rem; padding-top: 1rem; }}
+
+    @media (max-width: 480px) {{
+      .signup-form {{ flex-direction: column; }}
     }}
   </style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
+      <span class="badge">Early access</span>
       <h1>{pain_desire}</h1>
       <p class="subtitle">{description}</p>
-      {price_line}
+      {cta_block}
+      <p class="signup-hint">No spam &middot; Unsubscribe anytime</p>
+      {price_note}
     </section>
-    <div class="cta">
-      {cta_section}
-    </div>
+    {feature_cards}
   </div>
-  <footer>Powered by independent makers</footer>
+  <footer>Built by independent makers</footer>
 </body>
 </html>
 """
 
 
-def deploy_landing_page(project_name, description, pain_desire, price_per_year, form_url=None, dry_run=False):
+def deploy_landing_page(project_name, description, pain_desire, price_per_year, form_url=None, features=None, dry_run=False):
     """
     Deploy a landing page to GitHub Pages.
 
@@ -165,7 +247,7 @@ def deploy_landing_page(project_name, description, pain_desire, price_per_year, 
     Returns:
         dict with keys: repo_name, repo_url, pages_url, status
     """
-    html_content = build_html(project_name, description, pain_desire, price_per_year, form_url)
+    html_content = build_html(project_name, description, pain_desire, price_per_year, form_url, features)
 
     if dry_run:
         print(html_content)
@@ -238,7 +320,7 @@ def deploy_landing_page(project_name, description, pain_desire, price_per_year, 
     if pages_status in (200, 201):
         pages_url = pages_data.get("html_url", f"https://{owner}.github.io/{repo_name}")
         print(f"Enabled GitHub Pages: {pages_url}")
-    elif pages_status == 422:
+    elif pages_status in (409, 422):
         # Already enabled — fetch existing URL
         existing_pages, ep_status = gh_request("GET", f"/repos/{owner}/{repo_name}/pages")
         if ep_status == 200:
