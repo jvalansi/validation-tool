@@ -5,6 +5,7 @@ Reads Tally form responses, computes metrics, posts summary to Slack.
 
 import json
 import os
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -65,20 +66,64 @@ def days_elapsed(start_date_iso):
     return (datetime.now(timezone.utc) - start).days
 
 
-def get_formspree_responses(project_name):
-    """Fetch submissions for a project from Formspree."""
-    from phase2.landing import FORMSPREE_ID
-    api_key = os.environ.get("FORMSPREE_API_KEY", "")
-    if not api_key:
-        return []
-    req = urllib.request.Request(
-        f"https://api.formspree.io/forms/{FORMSPREE_ID}/submissions",
-        headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
-    )
+SHEETS_ID = "1UO2fp_kUUj2Go8VZ6nJtdoYhzJDAvrUIVM0Wvp5fg_Y"
+SA_KEY_FILE = "/home/ubuntu/google-service-account.json"
+
+
+def _sheets_token():
+    """Get a Google API access token using the service account."""
+    import time, base64, hashlib, hmac
+    with open(SA_KEY_FILE) as f:
+        sa = json.load(f)
+    now = int(time.time())
+    header = base64.urlsafe_b64encode(json.dumps({"alg": "RS256", "typ": "JWT"}).encode()).rstrip(b"=")
+    payload = base64.urlsafe_b64encode(json.dumps({
+        "iss": sa["client_email"],
+        "scope": "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "aud": "https://oauth2.googleapis.com/token",
+        "iat": now, "exp": now + 3600,
+    }).encode()).rstrip(b"=")
+    from cryptography.hazmat.primitives import serialization, hashes
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.backends import default_backend
+    key = serialization.load_pem_private_key(sa["private_key"].encode(), password=None, backend=default_backend())
+    sig = base64.urlsafe_b64encode(key.sign(header + b"." + payload, padding.PKCS1v15(), hashes.SHA256())).rstrip(b"=")
+    jwt = (header + b"." + payload + b"." + sig).decode()
+    body = urllib.parse.urlencode({
+        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "assertion": jwt,
+    }).encode()
+    req = urllib.request.Request("https://oauth2.googleapis.com/token", data=body,
+                                  headers={"Content-Type": "application/x-www-form-urlencoded"})
     with urllib.request.urlopen(req, timeout=10) as r:
-        data = json.loads(r.read())
-    submissions = data.get("submissions", [])
-    return [s for s in submissions if s.get("data", {}).get("project") == project_name]
+        return json.loads(r.read())["access_token"]
+
+
+def get_formspree_responses(project_name):
+    """Fetch signups for a project from Google Sheets."""
+    import urllib.parse
+    if not os.path.exists(SA_KEY_FILE):
+        print("  No service account key — skipping response fetch")
+        return []
+    try:
+        token = _sheets_token()
+        url = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEETS_ID}/values/A:F"
+        req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read())
+        rows = data.get("values", [])
+        if not rows:
+            return []
+        headers = [h.strip().lower() for h in rows[0]]
+        results = []
+        for row in rows[1:]:
+            d = dict(zip(headers, row + [""] * len(headers)))
+            if d.get("project", "").strip().lower() == project_name.strip().lower():
+                results.append({"data": d})
+        return results
+    except Exception as e:
+        print(f"  Sheets read failed: {e}")
+        return []
 
 
 def run_monitor(dry_run=False):
@@ -107,7 +152,7 @@ def run_monitor(dry_run=False):
         total = len(responses)
         spend_counts = {}
         for r in responses:
-            v = r.get("data", {}).get("spend", "")
+            v = r.get("data", {}).get("how much would you pay for this service?", "")
             if v:
                 spend_counts[v] = spend_counts.get(v, 0) + 1
 

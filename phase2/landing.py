@@ -48,8 +48,11 @@ def gh_request(method, path, data=None):
         return payload, e.code
 
 
-FORMSPREE_ID = "xkoprppp"
-FORMSPREE_URL = f"https://formspree.io/f/{FORMSPREE_ID}"
+GFORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdcB5WBoYURDCSRP0LmlLmMnx4lL_n1Er2eKKsQ35HGvE5e2w/formResponse"
+GFORM_EMAIL   = "entry.49684355"
+GFORM_SPEND   = "entry.441218212"
+GFORM_ROLE    = "entry.629651604"
+GFORM_PROJECT = "entry.202204044"
 
 
 def build_html(project_name, description, pain_desire, price_per_year, form_url=None, features=None):
@@ -115,13 +118,17 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url=
       function submitForm() {{
         var email = document.getElementById('email-val').value;
         var role  = document.getElementById('role-val').value;
-        var data  = {{ email: email, spend: selectedSpend, role: role, project: '{project_name}' }};
         document.getElementById('step2').style.display = 'none';
         document.getElementById('done-msg').style.display = 'block';
-        fetch('{FORMSPREE_URL}', {{
+        var body = '{GFORM_EMAIL}=' + encodeURIComponent(email)
+                 + '&{GFORM_SPEND}=' + encodeURIComponent(selectedSpend)
+                 + '&{GFORM_ROLE}='  + encodeURIComponent(role)
+                 + '&{GFORM_PROJECT}=' + encodeURIComponent('{project_name}');
+        fetch('{GFORM_ACTION}', {{
           method: 'POST',
-          headers: {{ 'Content-Type': 'application/json', 'Accept': 'application/json' }},
-          body: JSON.stringify(data)
+          mode: 'no-cors',
+          headers: {{ 'Content-Type': 'application/x-www-form-urlencoded' }},
+          body: body
         }});
       }}
     </script>"""
