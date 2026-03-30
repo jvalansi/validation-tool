@@ -81,6 +81,34 @@ Return only valid JSON, no markdown."""
     return _claude_json(prompt)
 
 
+def generate_business_description(project_name, description, pain_desire):
+    prompt = f"""Write a Google Ads business description for the "Describe what makes your business unique" field.
+
+Project: {project_name}
+Description: {description}
+Pain it solves: {pain_desire}
+
+Rules:
+- 2-3 sentences max, under 200 words
+- Lead with what makes it unique / the core mechanism
+- Mention the pain it solves and who it's for
+- Plain English, no jargon, no exclamation marks
+
+Return only the description text, nothing else."""
+
+    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
+    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+    result = subprocess.run(
+        [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
+        capture_output=True, text=True, timeout=120,
+        env=env, cwd="/home/ubuntu",
+    )
+    if result.returncode != 0:
+        return description
+    outer = json.loads(result.stdout)
+    return outer.get("result", "").strip().strip('"')
+
+
 def generate_ad_copy(project_name, description, pain_desire, landing_url):
     prompt = f"""Generate a Google Responsive Search Ad (RSA) for a Search campaign.
 
@@ -121,7 +149,10 @@ def generate_ads_config(
     daily_budget=15,
     dry_run=False,
 ):
-    print(f"\n[Ads] Generating keywords for {project_name}...")
+    print(f"\n[Ads] Generating business description for {project_name}...")
+    business_desc = generate_business_description(project_name, description, pain_desire)
+
+    print(f"[Ads] Generating keywords...")
     keywords = generate_keywords(project_name, validation_query or pain_desire, pain_desire)
 
     print(f"[Ads] Generating RSA ad copy...")
@@ -151,6 +182,7 @@ def generate_ads_config(
             "final_url": landing_url or "",
         },
         "suggested_price_anchor": f"${price_mo}/mo" if price_mo else None,
+        "business_description": business_desc,
     }
 
     # Save to data/
@@ -177,6 +209,7 @@ def generate_ads_config(
         f"<{ads_ui_url}|Create campaign in Google Ads UI> — paste the keywords and copy below"
     )
 
+    msg_business = f"*Business description* (paste into \"Describe what makes your business unique\")\n```{business_desc}```"
     msg_keywords = f"*Keywords*\n```{kw_lines}```"
     msg_copy = f"*RSA Headlines* (15 — paste all, Google picks best combos)\n```{headlines_str}```\n\n*Descriptions*\n```{descs_str}```"
     msg_settings = (
@@ -193,11 +226,13 @@ def generate_ads_config(
     if dry_run:
         print(msg_header)
         print(f"Create campaign: {ads_ui_url}")
+        print(msg_business)
         print(msg_keywords)
         print(msg_copy)
         print(msg_settings)
     else:
         ts = _slack(msg_header)
+        _slack(msg_business, thread_ts=ts)
         _slack(msg_keywords, thread_ts=ts)
         _slack(msg_copy, thread_ts=ts)
         _slack(msg_settings, thread_ts=ts)
