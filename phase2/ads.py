@@ -170,10 +170,11 @@ def generate_ads_config(
     headlines_str = "\n".join(f"  {i+1}. {h}" for i, h in enumerate(ad_copy.get("headlines", [])))
     descs_str = "\n".join(f"  {i+1}. {d}" for i, d in enumerate(ad_copy.get("descriptions", [])))
 
+    ads_ui_url = "https://ads.google.com/aw/campaigns/new/express?campaignType=SEARCH"
     msg_header = (
         f"*{project_name} — Google Ads Config*\n"
         f"Budget: ${daily_budget}/day  |  Landing page: {landing_url or '(none yet)'}\n"
-        f"_Paste into Google Ads UI: New Campaign → Search → manually enter below_"
+        f"<{ads_ui_url}|Create campaign in Google Ads UI> — paste the keywords and copy below"
     )
 
     msg_keywords = f"*Keywords*\n```{kw_lines}```"
@@ -191,6 +192,7 @@ def generate_ads_config(
 
     if dry_run:
         print(msg_header)
+        print(f"Create campaign: {ads_ui_url}")
         print(msg_keywords)
         print(msg_copy)
         print(msg_settings)
