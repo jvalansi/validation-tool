@@ -4,14 +4,15 @@ Phase 2: Launch campaign for a validated Notion project.
 
 Usage:
   python phase2.py <notion-page-id> [--budget 100] [--days 7] [--dry-run]
+  python phase2.py monitor [--dry-run]
 
 Steps:
   1. Deploy landing page (GitHub Pages)   ← implemented
-  2. Reddit posts                         ← stub
-  3. HN Show HN post                      ← stub
+  2. Tally signup form                    ← implemented
+  3. Daily monitor                        ← implemented
   4. Google Ads                           ← stub
-  5. Email capture follow-up             ← stub
-  6. Report signups                       ← stub
+  5. Outreach drafts                      ← stub
+  6. Day 7 decision                       ← stub
 """
 
 import argparse
@@ -182,6 +183,17 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
         dry_run=dry_run,
     )
     result["form"] = form_result
+
+    # Register campaign for daily monitoring
+    if not dry_run and result.get("status") == "deployed" and form_result.get("form_id"):
+        from phase2.monitor import register_campaign
+        register_campaign(
+            project_name=project_name,
+            form_id=form_result["form_id"],
+            pages_url=result["pages_url"],
+        )
+        print(f"  Campaign registered for daily monitoring")
+
     return result
 
 
@@ -221,11 +233,19 @@ def step6_report(project_name, dry_run):
 
 def main():
     parser = argparse.ArgumentParser(description="Phase 2 launch campaign for a Notion project")
-    parser.add_argument("page_id", help="Notion page ID")
+    parser.add_argument("page_id", nargs="?", help="Notion page ID, or 'monitor' to run daily monitor")
     parser.add_argument("--budget", type=float, default=100, help="Ad budget in USD (default: 100)")
     parser.add_argument("--days", type=int, default=7, help="Campaign duration in days (default: 7)")
     parser.add_argument("--dry-run", action="store_true", help="Print output without deploying or posting")
     args = parser.parse_args()
+
+    if args.page_id == "monitor":
+        from phase2.monitor import run_monitor
+        run_monitor(dry_run=args.dry_run)
+        return
+
+    if not args.page_id:
+        parser.error("page_id is required (or use 'monitor')")
 
     if not NOTION_TOKEN:
         print("Error: NOTION_TOKEN not set", file=sys.stderr)

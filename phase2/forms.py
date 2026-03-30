@@ -137,23 +137,28 @@ def create_signup_form(project_name, description, price_per_year=None):
 
 def get_responses(form_id):
     """
-    Fetch all responses from a Tally form.
+    Fetch all submissions from a Tally form.
 
-    Returns list of dicts: {email, spend, role, submitted_at}
+    Returns list of dicts: {spend, role, submitted_at}
     """
-    result, status = _tally("GET", f"/forms/{form_id}/responses?limit=100")
+    result, status = _tally("GET", f"/forms/{form_id}/submissions?limit=100")
     if status != 200:
         raise RuntimeError(f"Failed to fetch responses ({status}): {result}")
 
+    questions = {q["id"]: q for q in result.get("questions", [])}
     responses = []
-    for r in result.get("items", []):
-        row = {"submitted_at": r.get("createdAt", "")}
-        for field in r.get("fields", []):
-            label = field.get("label", "")
+    for sub in result.get("submissions", []):
+        row = {"submitted_at": sub.get("createdAt", "")}
+        for field in sub.get("fields", []):
+            q = questions.get(field.get("questionId", ""), {})
+            q_type = q.get("type", "")
             value = field.get("value", "")
             if isinstance(value, list):
                 value = ", ".join(str(v) for v in value)
-            row[label] = value
+            if q_type == "MULTIPLE_CHOICE":
+                row["spend"] = value
+            elif q_type == "INPUT_TEXT":
+                row["role"] = value
         responses.append(row)
 
     return responses
