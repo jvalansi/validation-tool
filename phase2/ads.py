@@ -48,7 +48,7 @@ def _claude_json(prompt):
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     result = subprocess.run(
         [claude_path, "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions"],
-        capture_output=True, text=True, timeout=60,
+        capture_output=True, text=True, timeout=120,
         env=env, cwd="/home/ubuntu",
     )
     if result.returncode != 0:
