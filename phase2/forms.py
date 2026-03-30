@@ -56,7 +56,7 @@ def create_signup_form(project_name, description, price_per_year=None):
 
     def label_block(text):
         uid = _uid()
-        return {"type": "LABEL", "uuid": uid, "groupUuid": uid, "groupType": "LABEL",
+        return {"type": "TEXT", "uuid": uid, "groupUuid": uid, "groupType": "TEXT",
                 "payload": {"html": text}}
 
     title_uid = _uid()
@@ -80,15 +80,13 @@ def create_signup_form(project_name, description, price_per_year=None):
             "groupType": "FORM_TITLE",
             "payload": {"html": f"<b>{project_name} — Early Access Waitlist</b>"},
         },
+        label_block(f"How much would you pay for {project_name}?"),
         {
             "type": "MULTIPLE_CHOICE",
             "uuid": spend_uid,
             "groupUuid": spend_uid,
             "groupType": "MULTIPLE_CHOICE",
-            "payload": {
-                "html": f"How much would you pay for {project_name}?",
-                "isRequired": False,
-            },
+            "payload": {"isRequired": False},
         },
         *[
             {
@@ -105,15 +103,13 @@ def create_signup_form(project_name, description, price_per_year=None):
             }
             for i, text in enumerate(spend_options)
         ],
+        label_block("Your role (optional)"),
         {
             "type": "INPUT_TEXT",
             "uuid": role_uid,
             "groupUuid": role_uid,
             "groupType": "INPUT_TEXT",
-            "payload": {
-                "placeholder": "Your role (optional)",
-                "isRequired": False,
-            },
+            "payload": {"isRequired": False},
         },
     ]
 
