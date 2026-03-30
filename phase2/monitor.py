@@ -43,7 +43,7 @@ def save_campaigns(campaigns):
         json.dump(campaigns, f, indent=2)
 
 
-def register_campaign(project_name, form_id, pages_url, days=7):
+def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pain_desire=None, price_per_year=None, days=7):
     """Called after a successful deploy to track the campaign."""
     campaigns = load_campaigns()
     # Replace existing entry for same project
@@ -52,6 +52,9 @@ def register_campaign(project_name, form_id, pages_url, days=7):
         "project": project_name,
         "form_id": form_id,
         "pages_url": pages_url,
+        "notion_page_id": notion_page_id,
+        "pain_desire": pain_desire,
+        "price_per_year": price_per_year,
         "start_date": datetime.now(timezone.utc).isoformat(),
         "days": days,
         "status": "active",
@@ -184,6 +187,34 @@ def run_monitor(dry_run=False):
 
         if not dry_run:
             _slack(msg)
+
+        # Day 5: auto-generate outreach drafts
+        if day == 5 and not campaign.get("outreach_sent"):
+            print(f"  Day 5 — generating outreach drafts...")
+            try:
+                from phase2.outreach import run_outreach
+                run_outreach(
+                    project, campaign.get("pain_desire", ""),
+                    campaign.get("price_per_year"), dry_run=dry_run,
+                )
+                campaign["outreach_sent"] = True
+            except Exception as e:
+                print(f"  Outreach failed: {e}")
+
+        # Day 7: auto-run kill/build decision
+        if day >= total_days and not campaign.get("decision_sent"):
+            print(f"  Day 7 — running kill/build decision...")
+            try:
+                from phase2.decision import run_decision
+                run_decision(
+                    project, campaign.get("notion_page_id"),
+                    campaign.get("pain_desire", ""), campaign.get("price_per_year"),
+                    dry_run=dry_run,
+                )
+                campaign["decision_sent"] = True
+                campaign["status"] = "ended"
+            except Exception as e:
+                print(f"  Decision failed: {e}")
 
         # Mark campaign as ended if past duration
         if day > total_days:

@@ -185,6 +185,9 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
             project_name=project_name,
             form_id=None,
             pages_url=result["pages_url"],
+            notion_page_id=args.page_id,
+            pain_desire=pain_desire,
+            price_per_year=price_per_year,
         )
         print(f"  Campaign registered for daily monitoring")
 
