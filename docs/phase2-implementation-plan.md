@@ -1,121 +1,131 @@
 # Phase 2 Implementation Plan
 
-Automate the Google Ads + Landing Page validation pipeline as a new command in `validation_tool.py` (or a standalone `phase2.py`), driven by data already in the Notion Projects table.
+Automate the landing page + signup + monitoring validation pipeline as a standalone `phase2.py`, driven by data already in the Notion Projects table.
 
-## New Command
+## Command Reference
 
 ```bash
-python phase2.py <notion-page-id> [--budget 100] [--days 7] [--dry-run]
-```
+# One-time machine setup
+bash setup_phase2.sh
 
-Reads from Notion, spins up all the pieces, monitors daily, reports to Slack.
+# Launch a new campaign (deploys landing page, registers campaign)
+python phase2.py <notion-page-id> [--days 7] [--dry-run]
+
+# Run daily monitor manually (also runs automatically via cron at 7 AM)
+python phase2.py monitor [--dry-run]
+
+# Generate outreach drafts for existing signups (auto-runs on day 5)
+python phase2.py <notion-page-id> --outreach [--dry-run]
+
+# Run day-7 kill/build decision (auto-runs on day 7)
+python phase2.py <notion-page-id> --decide [--dry-run]
+```
 
 ---
 
 ## Step-by-Step Implementation
 
-### Step 1 — Landing Page Generator
+### Step 1 — Landing Page Generator ✅
 
 **Input:** Notion page fields (`Project`, `Description`, `Pain/Desire`, `Price/Customer/yr`)
-**Output:** A deployed GitHub Pages site at `jvalansi.github.io/validate-<project-slug>`
+**Output:** Deployed GitHub Pages site at `jvalansi.github.io/validate-<project-slug>`
 
-- Create a parameterized HTML template (single file, no framework) with hero, CTA, and form embed
-- Use GitHub API to create a new repo `validate-<project-slug>`, push the rendered HTML as `index.html`, enable GitHub Pages
-- Embed a Typeform or Google Form for email + spend collection
+- Parameterized HTML template (single file, no framework) with hero, feature cards, and multi-step signup form
+- Claude generates headline (6–10 words from Pain/Desire), subtitle (≤15 words), and 3 feature cards
+- GitHub API creates `validate-<slug>` repo, pushes `index.html`, enables GitHub Pages
+- Price anchor rounded to nearest SaaS tier ($9, $19, $29, $49, $79, $99...)
+- Inline SVG icons (no emoji — cross-platform safe)
 
-**APIs needed:** GitHub API (already authenticated via `GH_TOKEN`)
-
----
-
-### Step 2 — Signup Form
-
-**Input:** Project name, spend question
-**Output:** Form URL to embed in landing page
-
-Two options:
-- **Google Forms API** — free, no extra credentials, responses go to Google Sheets
-- **Typeform API** — cleaner UX, requires `TYPEFORM_TOKEN`
-
-Recommendation: Google Forms — simpler auth, responses readable via Google Sheets API.
-
-**APIs needed:** Google Forms API + Google Sheets API (OAuth or service account)
+**Key file:** `phase2/landing.py`
 
 ---
 
-### Step 3 — Google Ads Campaign
+### Step 2 — Signup Form ✅
+
+**Input:** Project name, price
+**Output:** Inline multi-step form on the landing page (email → spend options → role)
+
+- Custom HTML/CSS/JS form embedded directly in the landing page (same dark theme, no iframe)
+- Step 1: email input → Step 2: 4 spend option cards + role text field
+- Submits via `fetch()` with `mode: no-cors` to a single shared Google Form
+- Google Form: `https://forms.gle/1L82UYjVALwZcQ6Y6` (fields: email, spend, role, project)
+- Responses stored in Google Sheet: `1UO2fp_kUUj2Go8VZ6nJtdoYhzJDAvrUIVM0Wvp5fg_Y`
+- Form entry IDs: email=`49684355`, spend=`441218212`, role=`629651604`, project=`202204044`
+- "How much would you pay?" field is **Short answer** (not multiple choice) — accepts any value
+
+**Key file:** `phase2/landing.py` (`GFORM_ACTION`, `GFORM_*` constants)
+
+---
+
+### Step 3 — Google Ads Campaign ⏳ (stub)
 
 **Input:** `Validation Query`, `Pain/Desire`, landing page URL, daily budget
 **Output:** Campaign ID, ad group ID
 
 - Create Search campaign via Google Ads API
-- Generate keyword list from `Validation Query` + `Pain/Desire` using Claude (broad + exact match)
+- Generate keyword list from `Validation Query` + `Pain/Desire` using Claude
 - Generate 3 ad variants using Claude (headline from pain, solution, CTA)
 - Set daily budget, geo targeting, device targeting
 
-**APIs needed:** Google Ads API (requires Google Ads developer token + OAuth)
+**APIs needed:** Google Ads API (requires developer token + OAuth) — not yet implemented
 
 ---
 
-### Step 4 — Daily Monitor
+### Step 4 — Daily Monitor ✅
 
-**Input:** Campaign ID, form ID
-**Output:** Slack message to `#proj-<project-slug>`
+**Input:** Active campaigns from `data/campaigns.json`
+**Output:** Slack message to `#proj-project-validation`
 
-Runs daily via cron (same pattern as `reddit-tool/monitor.py`):
-- Pull Google Ads metrics: impressions, clicks, CTR, CPC, spend
-- Pull form responses: new signups, spend answers
-- Compute: spend per signup, days remaining, projected total signups
-- Post summary to Slack with kill/continue recommendation
+Runs daily at 7 AM via cron. For each active campaign:
+- Reads signups from Google Sheets (filtered by project name)
+- Computes: total signups, pace/day, projected 7-day total
+- Posts summary + kill/continue recommendation to Slack
+- **Day 5:** auto-triggers outreach drafts
+- **Day 7:** auto-triggers kill/build decision, marks campaign as ended
 
-**APIs needed:** Google Ads API, Google Sheets API (for form responses)
-
----
-
-### Step 5 — Outreach Drafts (Day 4–5)
-
-**Input:** Signup responses (name, email, spend)
-**Output:** Personalised outreach message per signup, posted to Slack for review
-
-- Claude generates a DM/email draft per signup using their stated spend and the project's `Pain/Desire`
-- Posted to Slack as a thread for the user to copy/send manually
-- Includes a pre-order ask at `Price/Customer/yr ÷ 12` per month
-
-**APIs needed:** Google Sheets API (to read responses), Claude API
+**Key file:** `phase2/monitor.py`
 
 ---
 
-### Step 6 — Day 7 Decision
+### Step 5 — Outreach Drafts ✅
 
-**Input:** Total signups, pre-orders, spend
-**Output:** Kill/build recommendation posted to Slack + Notion status updated
+**Input:** Signup responses (email, spend, role) from Google Sheets
+**Output:** Personalised outreach email draft per signup, posted as Slack thread
 
-- If <5 signups: update Notion `סטטוס` → `killed`, suggest next project by ROI
-- If 3+ pre-orders: update `סטטוס` → `building`, post next steps to Slack
-- Pause Google Ads campaign
+- Claude generates a 4–6 sentence cold email per signup
+- Uses spend intent and role for personalisation
+- Includes soft pre-order ask at the monthly founder price
+- Posted to `#proj-project-validation` as a thread for manual review + sending
+- Auto-triggered on day 5 by the monitor cron
+
+**Key file:** `phase2/outreach.py`
 
 ---
 
-## Credentials Needed
+### Step 6 — Day 7 Decision ✅
+
+**Input:** Total signups + spend intent breakdown
+**Output:** Kill/build verdict posted to Slack + Notion `סטטוס` updated
+
+- **≥3 strong signals** (Around/More than price): verdict = `build` → Notion status → `building`
+- **≥5 signups, <3 strong**: verdict = `validate_more` → Notion status → `validating`
+- **<5 signups**: verdict = `kill` → Notion status → `killed`
+- Auto-triggered on day 7 by the monitor cron
+
+**Key file:** `phase2/decision.py`
+
+---
+
+## Credentials & Setup
 
 | Service | Credential | Status |
 |---|---|---|
-| GitHub | `GH_TOKEN` | ✅ already in `.env` |
-| Notion | `NOTION_TOKEN` | ✅ already in `.env` |
-| Slack | `SLACK_BOT_TOKEN` | ✅ already in `.env` |
-| Google Ads | Developer token + OAuth | ❌ needs setup |
-| Google Forms/Sheets | OAuth or service account | ❌ needs setup |
-| Typeform | `TYPEFORM_TOKEN` | ❌ optional alternative to Google Forms |
-
----
-
-## Build Order
-
-1. **Landing page generator** — highest leverage, no new credentials needed (GitHub API)
-2. **Google Forms + Sheets** — free, one-time OAuth setup
-3. **Daily monitor** — simple cron once forms are set up
-4. **Google Ads** — most complex auth, do last; can run ads manually while pipeline is being built
-5. **Outreach drafts** — Claude generation, straightforward once signups are flowing
-6. **Day 7 decision** — automatic once monitor is running
+| GitHub | `GH_TOKEN` | ✅ in `.env` |
+| Notion | `NOTION_TOKEN` | ✅ in `.env` |
+| Slack | `SLACK_BOT_TOKEN` | ✅ in `.env` |
+| Google Sheets (read) | Service account key | ✅ `/home/ubuntu/google-service-account.json` |
+| Google Forms (update) | Same service account | ✅ form shared with `gclaude@optimum-lodge-278819.iam.gserviceaccount.com` |
+| Google Ads | Developer token + OAuth | ❌ not yet implemented |
 
 ---
 
@@ -123,15 +133,35 @@ Runs daily via cron (same pattern as `reddit-tool/monitor.py`):
 
 ```
 validation-tool/
-  phase2.py              # main entry point
+  phase2.py              # main entry point + CLI
+  setup_phase2.sh        # one-time setup: checks env, installs deps, sets up cron
+  data/
+    campaigns.json       # active/ended campaign state (auto-managed)
   phase2/
-    landing.py           # GitHub Pages deployment
-    forms.py             # Google Forms creation
-    ads.py               # Google Ads campaign management
-    monitor.py           # daily metrics + Slack reporting
-    outreach.py          # Claude-generated DM drafts
-    decision.py          # day 7 kill/build logic
+    landing.py           # HTML generator + GitHub Pages deployment
+    monitor.py           # daily metrics, Sheets reader, auto-triggers
+    outreach.py          # Claude-generated outreach drafts → Slack
+    decision.py          # day-7 kill/build logic → Slack + Notion
+    forms.py             # (legacy Tally helpers, no longer used in main flow)
   docs/
-    google-ads-validation.md   # process overview
-    phase2-implementation-plan.md  # this file
+    phase2-implementation-plan.md   # this file
 ```
+
+---
+
+## Automated Campaign Lifecycle
+
+```
+Day 0  →  python phase2.py <page-id>   Deploy landing page, register campaign
+Day 1–4 →  cron 7 AM                   Daily Slack summary (signups, pace, projection)
+Day 5   →  cron 7 AM (auto)            Outreach drafts posted to Slack
+Day 6   →  cron 7 AM                   Final day summary
+Day 7   →  cron 7 AM (auto)            Kill/build decision → Slack + Notion updated
+```
+
+---
+
+## What's Left
+
+- **Google Ads integration** — most complex; can validate manually without it for now
+- **Multi-project Notion view** — show all campaigns and their status in one Notion dashboard
