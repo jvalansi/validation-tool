@@ -80,27 +80,40 @@ def create_signup_form(project_name, description, price_per_year=None):
             "groupType": "FORM_TITLE",
             "payload": {"html": f"<b>{project_name} — Early Access Waitlist</b>"},
         },
-        label_block(f"How much would you pay for {project_name}?"),
         {
             "type": "MULTIPLE_CHOICE",
             "uuid": spend_uid,
             "groupUuid": spend_uid,
             "groupType": "MULTIPLE_CHOICE",
             "payload": {
+                "html": f"How much would you pay for {project_name}?",
                 "isRequired": False,
-                "options": [
-                    {"uuid": opt_uids[i], "text": text, "index": i}
-                    for i, text in enumerate(spend_options)
-                ],
             },
         },
-        label_block("Your role (optional)"),
+        *[
+            {
+                "type": "MULTIPLE_CHOICE_OPTION",
+                "uuid": opt_uids[i],
+                "groupUuid": spend_uid,
+                "groupType": "MULTIPLE_CHOICE",
+                "payload": {
+                    "text": text,
+                    "index": i,
+                    "isFirst": i == 0,
+                    "isLast": i == len(spend_options) - 1,
+                },
+            }
+            for i, text in enumerate(spend_options)
+        ],
         {
             "type": "INPUT_TEXT",
             "uuid": role_uid,
             "groupUuid": role_uid,
             "groupType": "INPUT_TEXT",
-            "payload": {"isRequired": False},
+            "payload": {
+                "placeholder": "Your role (optional)",
+                "isRequired": False,
+            },
         },
     ]
 
