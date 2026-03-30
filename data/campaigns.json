@@ -1,0 +1,13 @@
+[
+  {
+    "project": "Promptware",
+    "form_id": null,
+    "pages_url": "https://jvalansi.github.io/validate-promptware/",
+    "notion_page_id": "33005a1b-5e01-814c-9852-e37b3d3e26a8",
+    "pain_desire": "Companies spending $10k\u2013$100k+/mo on LLM API calls face exploding inference costs. Multiple independent builders (Switchpoint AI, PureRouter, Humiris, NadirClaw, RouteLLM by UC Berkeley/Anyscale) confirm the pain is real. Feb 2026 Reddit threads still active on honest LLM API cost comparisons. Enterprise teams want automated cost reduction with zero code changes \u2014 just swap the API endpoint.",
+    "price_per_year": 1000,
+    "start_date": "2026-03-30T23:47:55.786138+00:00",
+    "days": 7,
+    "status": "active"
+  }
+]

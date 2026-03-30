@@ -157,7 +157,7 @@ Return only valid JSON array, no markdown."""
     return None
 
 
-def step1_landing_page(project_name, description, pain_desire, price_per_year, dry_run):
+def step1_landing_page(project_name, description, pain_desire, price_per_year, notion_page_id, dry_run):
     from phase2.landing import deploy_landing_page
     print(f"\n[Step 1] Generating copy...")
     headline = generate_headline(project_name, description, pain_desire)
@@ -185,7 +185,7 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
             project_name=project_name,
             form_id=None,
             pages_url=result["pages_url"],
-            notion_page_id=args.page_id,
+            notion_page_id=notion_page_id,
             pain_desire=pain_desire,
             price_per_year=price_per_year,
         )
@@ -303,7 +303,7 @@ def main():
     results = {}
 
     # Step 1: Landing page
-    landing_result = step1_landing_page(project_name, description, pain_desire, price_per_year, args.dry_run)
+    landing_result = step1_landing_page(project_name, description, pain_desire, price_per_year, args.page_id, args.dry_run)
     results["landing"] = landing_result
 
     # Steps 2-6: stubs

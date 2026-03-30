@@ -1,0 +1,66 @@
+{
+  "project": "Promptware",
+  "generated_at": "2026-03-30T23:48:41.371031+00:00",
+  "campaign": {
+    "name": "Validate - Promptware",
+    "type": "Search",
+    "daily_budget_usd": 14,
+    "geo": "United States, United Kingdom, Canada, Australia",
+    "language": "English",
+    "bidding": "Maximize Clicks",
+    "start_immediately": true
+  },
+  "ad_group": {
+    "name": "Promptware",
+    "keywords": {
+      "broad": [
+        "reduce openai api costs",
+        "llm inference cost optimization",
+        "lower ai api spending",
+        "openai api too expensive alternative",
+        "ai model routing cost savings"
+      ],
+      "phrase": [
+        "\"reduce llm api costs\"",
+        "\"llm cost optimization\"",
+        "\"openai api cost reduction\"",
+        "\"ai inference cost management\"",
+        "\"cheaper llm api calls\""
+      ],
+      "exact": [
+        "[llm cost optimization]",
+        "[reduce openai api costs]",
+        "[ai api cost reduction]",
+        "[llm routing cost savings]",
+        "[lower ai inference costs]"
+      ]
+    }
+  },
+  "rsa": {
+    "headlines": [
+      "Cut LLM API Costs by 60%",
+      "Drop-In LLM Cost Gateway",
+      "Route Queries to Cheap Models",
+      "No Code Changes Required",
+      "Smart Prompt Compression",
+      "Prompt Caching Built In",
+      "AI Cost Analytics Dashboard",
+      "Spending 10K+/Mo on LLMs",
+      "Reduce Inference Costs Now",
+      "Few-Shot Prompt Optimizer",
+      "Swap Endpoint, Save Thousands",
+      "LLM Cost Reduction at Scale",
+      "Join the Promptware Beta",
+      "Get Early Access Today",
+      "See How Promptware Works"
+    ],
+    "descriptions": [
+      "LLM bills eating your budget? Promptware routes and compresses to cut costs by 40-60%.",
+      "Drop-in API gateway for teams spending $10k+/mo on LLMs. No code changes needed.",
+      "Smart query routing sends each request to the cheapest capable model automatically.",
+      "Join the beta. Get a full cost analytics dashboard and start saving on day one."
+    ],
+    "final_url": "https://jvalansi.github.io/validate-promptware/"
+  },
+  "suggested_price_anchor": "$79/mo"
+}
