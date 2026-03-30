@@ -46,8 +46,18 @@ def create_signup_form(project_name, description, price_per_year=None):
     Returns:
         dict with keys: form_id, form_url, embed_url
     """
-    price_per_mo = round(price_per_year / 12) if price_per_year else None
+    def _saas_price(annual):
+        raw = annual / 12
+        anchors = [9, 19, 29, 49, 79, 99, 149, 199, 299, 499, 799, 999]
+        return min(anchors, key=lambda x: abs(x - raw))
+
+    price_per_mo = _saas_price(price_per_year) if price_per_year else None
     price_str = f"${price_per_mo}/mo" if price_per_mo else "this"
+
+    def label_block(text):
+        uid = _uid()
+        return {"type": "LABEL", "uuid": uid, "groupUuid": uid, "groupType": "LABEL",
+                "payload": {"html": text}}
 
     title_uid = _uid()
     email_uid = _uid()
@@ -70,6 +80,7 @@ def create_signup_form(project_name, description, price_per_year=None):
             "groupType": "FORM_TITLE",
             "payload": {"html": f"<b>{project_name} — Early Access Waitlist</b>"},
         },
+        label_block("Your work email *"),
         {
             "type": "INPUT_EMAIL",
             "uuid": email_uid,
@@ -102,6 +113,7 @@ def create_signup_form(project_name, description, price_per_year=None):
             }
             for i, text in enumerate(spend_options)
         ],
+        label_block("Your role (optional)"),
         {
             "type": "INPUT_TEXT",
             "uuid": role_uid,
