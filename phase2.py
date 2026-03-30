@@ -231,12 +231,16 @@ def main():
     parser.add_argument("--budget", type=float, default=100, help="Ad budget in USD (default: 100)")
     parser.add_argument("--days", type=int, default=7, help="Campaign duration in days (default: 7)")
     parser.add_argument("--dry-run", action="store_true", help="Print output without deploying or posting")
+    parser.add_argument("--outreach", action="store_true", help="Generate outreach drafts for existing signups")
     args = parser.parse_args()
 
     if args.page_id == "monitor":
         from phase2.monitor import run_monitor
         run_monitor(dry_run=args.dry_run)
         return
+
+    if args.page_id == "outreach":
+        parser.error("outreach requires a notion page_id: python phase2.py <page_id> --outreach")
 
     if not args.page_id:
         parser.error("page_id is required (or use 'monitor')")
@@ -266,6 +270,12 @@ def main():
     if not project_name:
         print("Error: no Project/Name on this Notion page", file=sys.stderr)
         sys.exit(1)
+
+    # Outreach-only mode
+    if args.outreach:
+        from phase2.outreach import run_outreach
+        run_outreach(project_name, pain_desire, price_per_year, dry_run=args.dry_run)
+        return
 
     results = {}
 
