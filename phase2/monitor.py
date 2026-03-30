@@ -65,8 +65,23 @@ def days_elapsed(start_date_iso):
     return (datetime.now(timezone.utc) - start).days
 
 
+def get_formspree_responses(project_name):
+    """Fetch submissions for a project from Formspree."""
+    from phase2.landing import FORMSPREE_ID
+    api_key = os.environ.get("FORMSPREE_API_KEY", "")
+    if not api_key:
+        return []
+    req = urllib.request.Request(
+        f"https://api.formspree.io/forms/{FORMSPREE_ID}/submissions",
+        headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=10) as r:
+        data = json.loads(r.read())
+    submissions = data.get("submissions", [])
+    return [s for s in submissions if s.get("data", {}).get("project") == project_name]
+
+
 def run_monitor(dry_run=False):
-    from phase2.forms import get_responses
 
     campaigns = load_campaigns()
     active = [c for c in campaigns if c.get("status") == "active"]
@@ -77,7 +92,6 @@ def run_monitor(dry_run=False):
 
     for campaign in active:
         project = campaign["project"]
-        form_id = campaign["form_id"]
         pages_url = campaign["pages_url"]
         total_days = campaign.get("days", 7)
         day = days_elapsed(campaign["start_date"]) + 1
@@ -85,7 +99,7 @@ def run_monitor(dry_run=False):
         print(f"\nChecking campaign: {project} (day {day}/{total_days})")
 
         try:
-            responses = get_responses(form_id)
+            responses = get_formspree_responses(project)
         except Exception as e:
             print(f"  Failed to fetch responses: {e}")
             responses = []
@@ -93,7 +107,7 @@ def run_monitor(dry_run=False):
         total = len(responses)
         spend_counts = {}
         for r in responses:
-            v = r.get("spend", "")
+            v = r.get("data", {}).get("spend", "")
             if v:
                 spend_counts[v] = spend_counts.get(v, 0) + 1
 

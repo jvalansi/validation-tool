@@ -168,28 +168,22 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, d
     if features:
         print(f"  Got {len(features)} feature cards from Claude")
 
-    print(f"[Step 2] Creating Tally signup form...")
-    form_result = step2_tally_form(project_name, pain_desire, price_per_year, dry_run)
-    embed_url = form_result.get("embed_url")
-
     print(f"[Step 1] Deploying landing page for: {project_name}")
     result = deploy_landing_page(
         project_name=project_name,
         description=subtitle,
         pain_desire=headline,
         price_per_year=price_per_year,
-        form_url=embed_url,
         features=features,
         dry_run=dry_run,
     )
-    result["form"] = form_result
 
     # Register campaign for daily monitoring
-    if not dry_run and result.get("status") == "deployed" and form_result.get("form_id"):
+    if not dry_run and result.get("status") == "deployed":
         from phase2.monitor import register_campaign
         register_campaign(
             project_name=project_name,
-            form_id=form_result["form_id"],
+            form_id=None,
             pages_url=result["pages_url"],
         )
         print(f"  Campaign registered for daily monitoring")

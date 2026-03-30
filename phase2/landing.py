@@ -48,36 +48,81 @@ def gh_request(method, path, data=None):
         return payload, e.code
 
 
-def build_html(project_name, description, pain_desire, price_per_year, form_url, features=None):
+FORMSPREE_ID = "xkoprppp"
+FORMSPREE_URL = f"https://formspree.io/f/{FORMSPREE_ID}"
+
+
+def build_html(project_name, description, pain_desire, price_per_year, form_url=None, features=None):
     def _saas_price(annual):
         raw = annual / 12
         anchors = [9, 19, 29, 49, 79, 99, 149, 199, 299, 499, 799, 999]
         return min(anchors, key=lambda x: abs(x - raw))
 
     price_per_mo = _saas_price(price_per_year) if price_per_year else None
+    price_str = f"${price_per_mo}/mo" if price_per_mo else "this"
 
-    if form_url:
-        # Convert embed URL back to regular form URL for the "tell us more" link
-        form_direct_url = form_url.replace("/embed/", "/r/").split("?")[0]
-        more_link = f'<p class="more-link" id="more-link" style="display:none">Got 30 seconds? <a href="{form_direct_url}" target="_blank">Tell us more about your use case &rarr;</a></p>'
-    else:
-        more_link = ""
+    spend_options = [
+        f"Less than {price_str}",
+        f"Around {price_str}",
+        f"More than {price_str}",
+        "Need to see it first",
+    ]
+    spend_buttons = "\n".join(
+        f'        <button type="button" class="spend-opt" onclick="selectSpend(this)">{opt}</button>'
+        for opt in spend_options
+    )
 
     cta_block = f"""
-    <form class="signup-form" onsubmit="handleSubmit(event)">
-      <input type="email" name="email" placeholder="your@email.com" required />
-      <button type="submit">Join the waitlist &rarr;</button>
+    <!-- Step 1: email -->
+    <form id="step1" class="signup-form" onsubmit="goStep2(event)">
+      <input type="email" id="email-val" placeholder="your@email.com" required />
+      <button type="submit">Continue &rarr;</button>
     </form>
-    <p id="submitted" style="display:none;color:#4ade80;margin-top:1rem;text-align:center;">
+
+    <!-- Step 2: spend + role -->
+    <div id="step2" style="display:none;max-width:480px;margin:0 auto;">
+      <p class="step-q">How much would you pay for {project_name}?</p>
+      <div class="spend-grid">
+{spend_buttons}
+      </div>
+      <input id="role-val" type="text" class="role-input" placeholder="Your role (optional)" />
+      <button id="submit-btn" class="submit-btn" onclick="submitForm()" disabled>Join the waitlist &rarr;</button>
+    </div>
+
+    <!-- Done -->
+    <p id="done-msg" style="display:none;color:#4ade80;margin-top:1rem;text-align:center;font-size:1.05rem;">
       &#10003; You're on the list &mdash; we'll be in touch!
     </p>
-    {more_link}
+
     <script>
-      function handleSubmit(e) {{
+      var selectedSpend = null;
+
+      function goStep2(e) {{
         e.preventDefault();
-        document.querySelector('.signup-form').style.display = 'none';
-        document.getElementById('submitted').style.display = 'block';
-        document.getElementById('more-link').style.display = 'block';
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+      }}
+
+      function selectSpend(btn) {{
+        document.querySelectorAll('.spend-opt').forEach(function(b) {{
+          b.classList.remove('selected');
+        }});
+        btn.classList.add('selected');
+        selectedSpend = btn.textContent;
+        document.getElementById('submit-btn').disabled = false;
+      }}
+
+      function submitForm() {{
+        var email = document.getElementById('email-val').value;
+        var role  = document.getElementById('role-val').value;
+        var data  = {{ email: email, spend: selectedSpend, role: role, project: '{project_name}' }};
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('done-msg').style.display = 'block';
+        fetch('{FORMSPREE_URL}', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json', 'Accept': 'application/json' }},
+          body: JSON.stringify(data)
+        }});
       }}
     </script>"""
 
@@ -206,14 +251,59 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       color: #475569;
       margin-bottom: 2.5rem;
     }}
-    .more-link {{
-      text-align: center;
-      font-size: 0.85rem;
-      color: #475569;
-      margin-top: 0.75rem;
+    /* Multi-step form */
+    .step-q {{
+      font-size: 1rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+      text-align: left;
     }}
-    .more-link a {{ color: #38bdf8; text-decoration: none; }}
-    .more-link a:hover {{ text-decoration: underline; }}
+    .spend-grid {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }}
+    .spend-opt {{
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 0.65rem 0.5rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      text-align: center;
+    }}
+    .spend-opt:hover {{ border-color: #38bdf8; color: #f1f5f9; }}
+    .spend-opt.selected {{ border-color: #38bdf8; background: #0f2d45; color: #f1f5f9; }}
+    .role-input {{
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 0.75rem;
+    }}
+    .role-input:focus {{ border-color: #38bdf8; }}
+    .submit-btn {{
+      width: 100%;
+      background: #0ea5e9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }}
+    .submit-btn:hover:not(:disabled) {{ background: #38bdf8; }}
+    .submit-btn:disabled {{ opacity: 0.4; cursor: default; }}
 
     /* Price note */
     .price-note {{
