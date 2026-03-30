@@ -213,9 +213,20 @@ def step3_hn(project_name, dry_run):
     return {"status": "stub"}
 
 
-def step4_ads(project_name, budget, days, dry_run):
-    print("\n[Step 4] Google Ads — stub (not yet implemented)")
-    return {"status": "stub"}
+def step4_ads(project_name, description, pain_desire, validation_query, price_per_year, landing_url, budget, days, dry_run):
+    from phase2.ads import generate_ads_config
+    print("\n[Step 4] Generating Google Ads config...")
+    daily_budget = round(budget / days) if days else 15
+    return generate_ads_config(
+        project_name=project_name,
+        description=description,
+        pain_desire=pain_desire,
+        validation_query=validation_query,
+        price_per_year=price_per_year,
+        landing_url=landing_url,
+        daily_budget=daily_budget,
+        dry_run=dry_run,
+    )
 
 
 def step5_email(project_name, dry_run):
@@ -261,6 +272,7 @@ def main():
     project_name = get_text(props.get("Project", {})) or get_text(props.get("Name", {}))
     description = get_text(props.get("Description", {}))
     pain_desire = get_text(props.get("Pain/Desire", {}))
+    validation_query = get_text(props.get("Validation Query", {}))
 
     # Price/Customer/yr ($) is a number property
     price_prop = props.get("Price/Customer/yr ($)", {})
@@ -269,6 +281,7 @@ def main():
     print(f"Project:        {project_name}")
     print(f"Description:    {description}")
     print(f"Pain/Desire:    {pain_desire}")
+    print(f"Validation Q:   {validation_query}")
     print(f"Price/yr:       {price_per_year}")
 
     if not project_name:
@@ -296,7 +309,8 @@ def main():
     # Steps 2-6: stubs
     results["reddit"] = step2_reddit(project_name, args.dry_run)
     results["hn"] = step3_hn(project_name, args.dry_run)
-    results["ads"] = step4_ads(project_name, args.budget, args.days, args.dry_run)
+    landing_url = landing_result.get("pages_url", "") if landing_result.get("status") == "deployed" else ""
+    results["ads"] = step4_ads(project_name, description, pain_desire, validation_query, price_per_year, landing_url, args.budget, args.days, args.dry_run)
     results["email"] = step5_email(project_name, args.dry_run)
     results["report"] = step6_report(project_name, args.dry_run)
 
