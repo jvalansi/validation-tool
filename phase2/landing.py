@@ -57,25 +57,27 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
     price_per_mo = _saas_price(price_per_year) if price_per_year else None
 
     if form_url:
-        cta_block = f"""
-    <iframe src="{form_url}" width="100%" frameborder="0" marginheight="0" marginwidth="0"
-            style="border-radius:8px;min-height:300px;" onload="window.parent.scrollTo(0,0)">
-    </iframe>
-    <script src="https://tally.so/widgets/embed.js" async></script>"""
+        # Convert embed URL back to regular form URL for the "tell us more" link
+        form_direct_url = form_url.replace("/embed/", "/r/").split("?")[0]
+        more_link = f'<p class="more-link" id="more-link" style="display:none">Got 30 seconds? <a href="{form_direct_url}" target="_blank">Tell us more about your use case &rarr;</a></p>'
     else:
-        cta_block = """
+        more_link = ""
+
+    cta_block = f"""
     <form class="signup-form" onsubmit="handleSubmit(event)">
       <input type="email" name="email" placeholder="your@email.com" required />
       <button type="submit">Join the waitlist &rarr;</button>
     </form>
     <p id="submitted" style="display:none;color:#4ade80;margin-top:1rem;text-align:center;">
-      &#10003; You're on the list — we'll be in touch!
+      &#10003; You're on the list &mdash; we'll be in touch!
     </p>
+    {more_link}
     <script>
       function handleSubmit(e) {{
         e.preventDefault();
         document.querySelector('.signup-form').style.display = 'none';
         document.getElementById('submitted').style.display = 'block';
+        document.getElementById('more-link').style.display = 'block';
       }}
     </script>"""
 
@@ -204,6 +206,14 @@ def build_html(project_name, description, pain_desire, price_per_year, form_url,
       color: #475569;
       margin-bottom: 2.5rem;
     }}
+    .more-link {{
+      text-align: center;
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 0.75rem;
+    }}
+    .more-link a {{ color: #38bdf8; text-decoration: none; }}
+    .more-link a:hover {{ text-decoration: underline; }}
 
     /* Price note */
     .price-note {{
