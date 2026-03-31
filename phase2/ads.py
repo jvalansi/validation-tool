@@ -182,20 +182,24 @@ def write_csv_to_sheet(csv_content: str, tab_name: str, sheet_id: str = ADS_SHEE
         with urllib.request.urlopen(req, timeout=15) as r:
             return json.loads(r.read())
 
-    # Add new sheet tab (delete existing one with same name first if present)
+    # Find or create the sheet tab
     meta = sheets_request("GET", "")
-    existing = [s["properties"]["sheetId"] for s in meta["sheets"]
+    existing = [(s["properties"]["title"], s["properties"]["sheetId"]) for s in meta["sheets"]
                 if s["properties"]["title"] == tab_name]
-    requests = []
     if existing:
-        requests.append({"deleteSheet": {"sheetId": existing[0]}})
-    requests.append({"addSheet": {"properties": {"title": tab_name}}})
-    result = sheets_request("POST", ":batchUpdate", {"requests": requests})
-
-    new_sheet_id = next(
-        r["addSheet"]["properties"]["sheetId"]
-        for r in result["replies"] if "addSheet" in r
-    )
+        new_sheet_id = existing[0][1]
+        # Clear existing content
+        body = json.dumps({}).encode()
+        req = urllib.request.Request(
+            f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/"
+            f"{urllib.parse.quote(tab_name)}:clear",
+            data=body, headers=headers, method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15):
+            pass
+    else:
+        result = sheets_request("POST", ":batchUpdate", {"requests": [{"addSheet": {"properties": {"title": tab_name}}}]})
+        new_sheet_id = result["replies"][0]["addSheet"]["properties"]["sheetId"]
 
     # Parse CSV into rows
     rows = list(csv.reader(io.StringIO(csv_content)))
@@ -225,7 +229,8 @@ def build_editor_csv(config: dict) -> str:
     headers = [
         "Campaign", "Campaign type", "Campaign status",
         "Budget", "Budget type", "Bid strategy type",
-        "Languages", "Ad group", "Ad group status",
+        "Languages", "Location", "Location type",
+        "Ad group", "Ad group status",
         "Keyword", "Match type", "Keyword status",
         "Ad type", "Ad status",
         *[f"Headline {i}" for i in range(1, 16)],
@@ -248,6 +253,14 @@ def build_editor_csv(config: dict) -> str:
         "Bid strategy type": "Maximize clicks",
         "Languages": "English",
     }))
+
+    # Location targeting rows
+    for location in ["United States", "United Kingdom", "Canada", "Australia"]:
+        rows.append(row(**{
+            "Campaign": campaign["name"],
+            "Location": location,
+            "Location type": "Include",
+        }))
 
     # Ad group row
     rows.append(row(**{
