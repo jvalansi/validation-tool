@@ -379,49 +379,9 @@ def generate_ads_config(
             f.write(csv_content)
         print(f"[Ads] CSV saved locally (dry-run): {csv_path}")
 
-    # Build Slack message
-    kw = keywords
-    kw_lines = (
-        "\n".join(f"  {k}" for k in kw.get("broad", []))
-        + "\n".join(f"  {k}" for k in kw.get("phrase", []))
-        + "\n".join(f"  {k}" for k in kw.get("exact", []))
-    )
-    headlines_str = "\n".join(f"  {i+1}. {h}" for i, h in enumerate(ad_copy.get("headlines", [])))
-    descs_str = "\n".join(f"  {i+1}. {d}" for i, d in enumerate(ad_copy.get("descriptions", [])))
-
     ads_ui_url = "https://ads.google.com/aw/campaigns/new/express?campaignType=SEARCH"
-    msg_header = (
-        f"*{project_name} — Google Ads Config*\n"
-        f"Budget: ${daily_budget}/day  |  Landing page: {landing_url or '(none yet)'}\n"
-        f"<{ads_ui_url}|Create campaign in Google Ads UI> — paste the keywords and copy below"
-    )
-
-    msg_business = f"*Business description* (paste into \"Describe what makes your business unique\")\n```{business_desc}```"
-    msg_keywords = f"*Keywords*\n```{kw_lines}```"
-    msg_copy = f"*RSA Headlines* (15 — paste all, Google picks best combos)\n```{headlines_str}```\n\n*Descriptions*\n```{descs_str}```"
-    msg_settings = (
-        f"*Campaign settings*\n"
-        f"• Type: Search\n"
-        f"• Budget: ${daily_budget}/day\n"
-        f"• Bidding: Maximize Clicks\n"
-        f"• Geo: {config['campaign']['geo']}\n"
-        f"• Language: English\n"
-        + (f"• Price anchor on landing page: {config['suggested_price_anchor']}\n" if config['suggested_price_anchor'] else "")
-        + (f"\n<{sheet_url}|Open Google Ads Editor CSV in Sheets> — File → Download → CSV" if sheet_url else "")
-    )
-
-    if dry_run:
-        print(msg_header)
-        print(f"Create campaign: {ads_ui_url}")
-        print(msg_business)
-        print(msg_keywords)
-        print(msg_copy)
-        print(msg_settings)
-    else:
-        ts = _slack(msg_header)
-        _slack(msg_business, thread_ts=ts)
-        _slack(msg_keywords, thread_ts=ts)
-        _slack(msg_copy, thread_ts=ts)
-        _slack(msg_settings, thread_ts=ts)
+    print(f"[Ads] Campaign UI: {ads_ui_url}")
+    if sheet_url:
+        print(f"[Ads] CSV in Sheets: {sheet_url} — File → Download → CSV → import into Google Ads Editor")
 
     return {"status": "generated", "config_path": out_path, "config": config}
