@@ -133,7 +133,7 @@ Return only valid JSON, no markdown."""
 
 
 SA_KEY_FILE = "/home/ubuntu/google-service-account.json"
-ADS_SHEET_ID = "1UO2fp_kUUj2Go8VZ6nJtdoYhzJDAvrUIVM0Wvp5fg_Y"
+ADS_SHEET_ID = "1J7xl36Jl9vAK5ax2WHItcqlaniw-9c1kmb18wafdDB0"
 
 
 def _sheets_token():
