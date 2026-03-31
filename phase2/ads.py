@@ -230,7 +230,7 @@ def build_editor_csv(config: dict) -> str:
         "Campaign", "Campaign type", "Campaign status",
         "Budget", "Budget type", "Bid strategy type",
         "Languages", "Location", "Location type",
-        "Ad group", "Ad group status",
+        "Ad group", "Ad group status", "Default max. CPC",
         "Keyword", "Match type", "Keyword status",
         "Ad type", "Ad status",
         *[f"Headline {i}" for i in range(1, 16)],
@@ -267,6 +267,7 @@ def build_editor_csv(config: dict) -> str:
         "Campaign": campaign["name"],
         "Ad group": ad_group["name"],
         "Ad group status": "Enabled",
+        "Default max. CPC": "1.00",
     }))
 
     # Keyword rows — strip quote/bracket syntax, set Match type column
