@@ -14,6 +14,7 @@ import os
 import re
 import shutil
 import subprocess
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -131,6 +132,162 @@ Return only valid JSON, no markdown."""
     return _claude_json(prompt)
 
 
+SA_KEY_FILE = "/home/ubuntu/google-service-account.json"
+ADS_SHEET_ID = "1UO2fp_kUUj2Go8VZ6nJtdoYhzJDAvrUIVM0Wvp5fg_Y"
+
+
+def _sheets_token():
+    import time, base64
+    with open(SA_KEY_FILE) as f:
+        sa = json.load(f)
+    now = int(time.time())
+    header = base64.urlsafe_b64encode(json.dumps({"alg": "RS256", "typ": "JWT"}).encode()).rstrip(b"=")
+    payload = base64.urlsafe_b64encode(json.dumps({
+        "iss": sa["client_email"],
+        "scope": "https://www.googleapis.com/auth/spreadsheets",
+        "aud": "https://oauth2.googleapis.com/token",
+        "iat": now, "exp": now + 3600,
+    }).encode()).rstrip(b"=")
+    from cryptography.hazmat.primitives import serialization, hashes
+    from cryptography.hazmat.primitives.asymmetric import padding
+    from cryptography.hazmat.backends import default_backend
+    key = serialization.load_pem_private_key(sa["private_key"].encode(), password=None, backend=default_backend())
+    sig = base64.urlsafe_b64encode(key.sign(header + b"." + payload, padding.PKCS1v15(), hashes.SHA256())).rstrip(b"=")
+    jwt = (header + b"." + payload + b"." + sig).decode()
+    body = urllib.parse.urlencode({
+        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "assertion": jwt,
+    }).encode()
+    req = urllib.request.Request(
+        "https://oauth2.googleapis.com/token", data=body,
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    with urllib.request.urlopen(req, timeout=10) as r:
+        return json.loads(r.read())["access_token"]
+
+
+def write_csv_to_sheet(csv_content: str, tab_name: str, sheet_id: str = ADS_SHEET_ID) -> str:
+    """Write CSV data to a new tab in an existing Google Sheet. Returns the sheet URL."""
+    import csv, io
+
+    token = _sheets_token()
+    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+    def sheets_request(method, path, data=None):
+        body = json.dumps(data).encode() if data else None
+        req = urllib.request.Request(
+            f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}{path}",
+            data=body, headers=headers, method=method,
+        )
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return json.loads(r.read())
+
+    # Add new sheet tab (delete existing one with same name first if present)
+    meta = sheets_request("GET", "")
+    existing = [s["properties"]["sheetId"] for s in meta["sheets"]
+                if s["properties"]["title"] == tab_name]
+    requests = []
+    if existing:
+        requests.append({"deleteSheet": {"sheetId": existing[0]}})
+    requests.append({"addSheet": {"properties": {"title": tab_name}}})
+    result = sheets_request("POST", ":batchUpdate", {"requests": requests})
+
+    new_sheet_id = next(
+        r["addSheet"]["properties"]["sheetId"]
+        for r in result["replies"] if "addSheet" in r
+    )
+
+    # Parse CSV into rows
+    rows = list(csv.reader(io.StringIO(csv_content)))
+
+    # Write data
+    body = json.dumps({"values": rows, "majorDimension": "ROWS"}).encode()
+    req = urllib.request.Request(
+        f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/"
+        f"{urllib.parse.quote(tab_name)}!A1?valueInputOption=RAW",
+        data=body, headers=headers, method="PUT",
+    )
+    with urllib.request.urlopen(req, timeout=15):
+        pass
+
+    return f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit#gid={new_sheet_id}"
+
+
+def build_editor_csv(config: dict) -> str:
+    """Build a Google Ads Editor bulk-import CSV from an ads config dict."""
+    import csv, io
+
+    campaign = config["campaign"]
+    ad_group = config["ad_group"]
+    rsa = config["rsa"]
+    keywords = ad_group["keywords"]
+
+    headers = [
+        "Campaign", "Campaign type", "Campaign status",
+        "Budget", "Budget type", "Bid strategy type",
+        "Languages", "Ad group", "Ad group status",
+        "Keyword", "Match type", "Keyword status",
+        "Ad type", "Ad status",
+        *[f"Headline {i}" for i in range(1, 16)],
+        *[f"Description {i}" for i in range(1, 5)],
+        "Final URL",
+    ]
+
+    def row(**kwargs):
+        return {h: kwargs.get(h, "") for h in headers}
+
+    rows = []
+
+    # Campaign row
+    rows.append(row(**{
+        "Campaign": campaign["name"],
+        "Campaign type": "Search",
+        "Campaign status": "Enabled",
+        "Budget": str(campaign["daily_budget_usd"]),
+        "Budget type": "Daily",
+        "Bid strategy type": "Maximize clicks",
+        "Languages": "English",
+    }))
+
+    # Ad group row
+    rows.append(row(**{
+        "Campaign": campaign["name"],
+        "Ad group": ad_group["name"],
+        "Ad group status": "Enabled",
+    }))
+
+    # Keyword rows — strip quote/bracket syntax, set Match type column
+    for kw in keywords.get("broad", []):
+        rows.append(row(**{"Campaign": campaign["name"], "Ad group": ad_group["name"],
+                           "Keyword": kw, "Match type": "Broad", "Keyword status": "Enabled"}))
+    for kw in keywords.get("phrase", []):
+        rows.append(row(**{"Campaign": campaign["name"], "Ad group": ad_group["name"],
+                           "Keyword": kw.strip('"'), "Match type": "Phrase", "Keyword status": "Enabled"}))
+    for kw in keywords.get("exact", []):
+        rows.append(row(**{"Campaign": campaign["name"], "Ad group": ad_group["name"],
+                           "Keyword": kw.strip("[]"), "Match type": "Exact", "Keyword status": "Enabled"}))
+
+    # RSA row
+    headlines = rsa.get("headlines", [])
+    descriptions = rsa.get("descriptions", [])
+    ad_row = row(**{
+        "Campaign": campaign["name"],
+        "Ad group": ad_group["name"],
+        "Ad type": "Responsive search ad",
+        "Ad status": "Enabled",
+        "Final URL": rsa.get("final_url", ""),
+        **{f"Headline {i+1}": h for i, h in enumerate(headlines)},
+        **{f"Description {i+1}": d for i, d in enumerate(descriptions)},
+    })
+    rows.append(ad_row)
+
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=headers)
+    writer.writeheader()
+    writer.writerows(rows)
+    return buf.getvalue()
+
+
 def _saas_price(annual):
     if not annual:
         return None
@@ -185,12 +342,28 @@ def generate_ads_config(
         "business_description": business_desc,
     }
 
-    # Save to data/
+    # Save JSON locally
     os.makedirs(DATA_DIR, exist_ok=True)
     out_path = os.path.join(DATA_DIR, f"ads_{_slug(project_name)}.json")
     with open(out_path, "w") as f:
         json.dump(config, f, indent=2)
     print(f"[Ads] Saved to {out_path}")
+
+    # Generate CSV and write to Google Sheet tab
+    csv_content = build_editor_csv(config)
+    sheet_url = None
+    tab_name = f"ads_{_slug(project_name)}"
+    if not dry_run:
+        try:
+            sheet_url = write_csv_to_sheet(csv_content, tab_name)
+            print(f"[Ads] CSV written to sheet tab '{tab_name}': {sheet_url}")
+        except Exception as e:
+            print(f"[Ads] Sheet write failed: {e}")
+    else:
+        csv_path = os.path.join(DATA_DIR, f"ads_{_slug(project_name)}.csv")
+        with open(csv_path, "w") as f:
+            f.write(csv_content)
+        print(f"[Ads] CSV saved locally (dry-run): {csv_path}")
 
     # Build Slack message
     kw = keywords
@@ -220,7 +393,7 @@ def generate_ads_config(
         f"• Geo: {config['campaign']['geo']}\n"
         f"• Language: English\n"
         + (f"• Price anchor on landing page: {config['suggested_price_anchor']}\n" if config['suggested_price_anchor'] else "")
-        + f"\nFull config saved to `{out_path}`"
+        + (f"\n<{sheet_url}|Open Google Ads Editor CSV in Sheets> — File → Download → CSV" if sheet_url else "")
     )
 
     if dry_run:
