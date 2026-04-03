@@ -43,6 +43,39 @@ def save_campaigns(campaigns):
         json.dump(campaigns, f, indent=2)
 
 
+CRON_MARKER = "# slack-claude-bot: validation-monitor"
+CRON_CMD = (
+    "47 8 * * * /bin/bash -c 'set -a; source /home/ubuntu/slack-claude-bot/.env; set +a; "
+    "cd /home/ubuntu/validation-tool && "
+    "/home/ubuntu/miniconda3/bin/python phase2.py monitor'"
+    f"  {CRON_MARKER}"
+)
+
+
+def _install_cron():
+    """Add the daily monitor cron entry if not already present."""
+    import subprocess
+    result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    existing = result.stdout if result.returncode == 0 else ""
+    if CRON_MARKER in existing:
+        return
+    new_crontab = existing.rstrip("\n") + ("\n" if existing else "") + CRON_CMD + "\n"
+    subprocess.run(["crontab", "-"], input=new_crontab, text=True, check=True)
+    print("  System cron installed for daily monitor (8:47 AM)")
+
+
+def _uninstall_cron():
+    """Remove the daily monitor cron entry."""
+    import subprocess
+    result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    if result.returncode != 0 or CRON_MARKER not in result.stdout:
+        return
+    lines = [l for l in result.stdout.splitlines() if CRON_MARKER not in l]
+    new_crontab = "\n".join(lines) + ("\n" if lines else "")
+    subprocess.run(["crontab", "-"], input=new_crontab, text=True, check=True)
+    print("  System cron removed (no active campaigns)")
+
+
 def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pain_desire=None, price_per_year=None, days=7):
     """Called after a successful deploy to track the campaign."""
     campaigns = load_campaigns()
@@ -60,6 +93,7 @@ def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pai
         "status": "active",
     })
     save_campaigns(campaigns)
+    _install_cron()
 
 
 def days_elapsed(start_date_iso):
@@ -221,3 +255,7 @@ def run_monitor(dry_run=False):
             campaign["status"] = "ended"
 
     save_campaigns(campaigns)
+
+    # Remove cron if no active campaigns remain
+    if not any(c.get("status") == "active" for c in campaigns):
+        _uninstall_cron()
