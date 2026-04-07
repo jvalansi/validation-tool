@@ -155,7 +155,7 @@ def get_formspree_responses(project_name):
         results = []
         for row in rows[1:]:
             d = dict(zip(headers, row + [""] * len(headers)))
-            if d.get("project", "").strip().lower() == project_name.strip().lower():
+            if d.get("project id", d.get("project", "")).strip().lower() == project_name.strip().lower():
                 results.append({"data": d})
         return results
     except Exception as e:
