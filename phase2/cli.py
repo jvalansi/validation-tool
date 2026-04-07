@@ -158,7 +158,7 @@ Return only valid JSON array, no markdown."""
 
 
 def step1_landing_page(project_name, description, pain_desire, price_per_year, notion_page_id, dry_run):
-    from phase2.landing import deploy_landing_page
+    from .landing import deploy_landing_page
     print(f"\n[Step 1] Generating copy...")
     headline = generate_headline(project_name, description, pain_desire)
     print(f"  Headline: {headline}")
@@ -180,7 +180,7 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, n
 
     # Register campaign for daily monitoring
     if not dry_run and result.get("status") == "deployed":
-        from phase2.monitor import register_campaign
+        from .monitor import register_campaign
         register_campaign(
             project_name=project_name,
             form_id=None,
@@ -195,7 +195,7 @@ def step1_landing_page(project_name, description, pain_desire, price_per_year, n
 
 
 def step2_tally_form(project_name, pain_desire, price_per_year, dry_run):
-    from phase2.forms import create_signup_form
+    from .forms import create_signup_form
     if dry_run:
         return {"status": "dry_run", "embed_url": None}
     result = create_signup_form(project_name, pain_desire, price_per_year)
@@ -214,7 +214,7 @@ def step3_hn(project_name, dry_run):
 
 
 def step4_ads(project_name, description, pain_desire, validation_query, price_per_year, landing_url, budget, days, dry_run):
-    from phase2.ads import generate_ads_config
+    from .ads import generate_ads_config
     print("\n[Step 4] Generating Google Ads config...")
     daily_budget = round(budget / days) if days else 15
     return generate_ads_config(
@@ -250,7 +250,7 @@ def main():
     args = parser.parse_args()
 
     if args.page_id == "monitor":
-        from phase2.monitor import run_monitor
+        from .monitor import run_monitor
         run_monitor(dry_run=args.dry_run)
         return
 
@@ -290,13 +290,13 @@ def main():
 
     # Outreach-only mode
     if args.outreach:
-        from phase2.outreach import run_outreach
+        from .outreach import run_outreach
         run_outreach(project_name, pain_desire, price_per_year, dry_run=args.dry_run)
         return
 
     # Day-7 decision mode
     if args.decide:
-        from phase2.decision import run_decision
+        from .decision import run_decision
         run_decision(project_name, args.page_id, pain_desire, price_per_year, dry_run=args.dry_run)
         return
 

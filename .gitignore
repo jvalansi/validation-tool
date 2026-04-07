@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+monitor.log
+signups.jsonl
+validated_ids.json.bak

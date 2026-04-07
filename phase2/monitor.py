@@ -47,7 +47,7 @@ CRON_MARKER = "# slack-claude-bot: validation-monitor"
 CRON_CMD = (
     "47 8 * * * /bin/bash -c 'set -a; source /home/ubuntu/slack-claude-bot/.env; set +a; "
     "cd /home/ubuntu/validation-tool && "
-    "/home/ubuntu/miniconda3/bin/python phase2.py monitor'"
+    "/home/ubuntu/miniconda3/bin/python -m phase2.cli monitor'"
     f"  {CRON_MARKER}"
 )
 

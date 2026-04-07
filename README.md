@@ -4,24 +4,24 @@ Multi-source project idea validator. Gathers market signals from HN, Google Tren
 
 ## Validation Phases
 
-- **Phase 1 — Passive signals** (this tool): HN, Reddit, Google Trends, Product Hunt → market signal + ROI score
-- **Phase 2 — Active intent** ([Google Ads + Landing Page](docs/google-ads-validation.md)): paid search → clicks → email signups → pre-orders. Run when Phase 1 returns strong signal.
+- **Phase 1 — Passive signals** (`phase1/`): HN, Reddit, Google Trends, Product Hunt → market signal + ROI score
+- **Phase 2 — Active intent** ([Google Ads + Landing Page](docs/phase2.md)): paid search → clicks → email signups → pre-orders. Run when Phase 1 returns strong signal.
 
 ## Tools
 
-### `validation_tool.py`
+### `phase1/validation_tool.py`
 
 Searches market signals and produces a validation report.
 
 ```bash
 # Single source searches
-python validation_tool.py hn --query QUERY [--limit N]
-python validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
-python validation_tool.py reddit --query QUERY [--subreddits r/sub1,r/sub2] [--limit N]
-python validation_tool.py producthunt --query QUERY [--limit N]
+python phase1/validation_tool.py hn --query QUERY [--limit N]
+python phase1/validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
+python phase1/validation_tool.py reddit --query QUERY [--subreddits r/sub1,r/sub2] [--limit N]
+python phase1/validation_tool.py producthunt --query QUERY [--limit N]
 
 # Full report (all sources + Claude analysis)
-python validation_tool.py report --query QUERY \
+python phase1/validation_tool.py report --query QUERY \
   [--reddit-subreddits r/sub1,r/sub2] \
   [--assume-tech-exists] \
   [--pain-query "fear of death want to live forever"]
@@ -105,13 +105,13 @@ All numeric fields (`tam_customers`, `price_per_customer_annual`, `value`) are O
 
 ---
 
-### `notion_validate.py`
+### `phase1/notion_validate.py`
 
 Runs validation for a single Notion project page and writes results back.
 
 ```bash
 export NOTION_TOKEN=...
-python notion_validate.py <page-id> [--dry-run]
+python phase1/notion_validate.py <page-id> [--dry-run]
 ```
 
 Reads from the page:
@@ -145,14 +145,14 @@ Writes text fields to the **page body** (Validation section):
 
 ---
 
-### `notion_create.py`
+### `phase1/notion_create.py`
 
 **Full pipeline**: takes a raw idea and does everything end-to-end — Claude generates queries and work plan, validation tool fetches signals, Notion page is created with all fields and body filled.
 
 ```bash
 export NOTION_TOKEN=...
-python notion_create.py "My Project" "A system that does X for Y customers"
-python notion_create.py --name "My Project" --idea "..." [--dry-run]
+python phase1/notion_create.py "My Project" "A system that does X for Y customers"
+python phase1/notion_create.py --name "My Project" --idea "..." [--dry-run]
 ```
 
 Pipeline steps:
@@ -162,18 +162,30 @@ Pipeline steps:
 
 ---
 
-### `batch_validate.py`
+### `phase1/batch_validate.py`
 
 Validates all unvalidated projects in the Notion Projects DB (sorted by ROI desc). Tracks completed IDs in `validated_ids.json` so re-runs pick up where they left off, even as ROI sort order shifts.
 
 ```bash
 export NOTION_TOKEN=...
-python batch_validate.py [--limit N]   # default: 20
+python phase1/batch_validate.py [--limit N]   # default: 20
 ```
 
 Reads from each page: `Validation Query`, `Pain/Desire`, `Subreddits`
 
 Writes to the **table** and **page body**: same as `notion_validate.py` above.
+
+## Phase 2
+
+See [docs/phase2.md](docs/phase2.md) for the full playbook. Quick start:
+
+```bash
+bash phase2/setup.sh                                    # one-time setup
+python -m phase2.cli <notion-page-id> [--dry-run]       # launch campaign
+python -m phase2.cli monitor [--dry-run]                # check signups
+```
+
+---
 
 ## Resources
 
