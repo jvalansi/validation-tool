@@ -175,6 +175,11 @@ Reads from each page: `Validation Query`, `Pain/Desire`, `Subreddits`
 
 Writes to the **table** and **page body**: same as `notion_validate.py` above.
 
+## Resources
+
+- **Notion Projects DB** — https://notion.so/17731083-1fdd-4c06-a3c3-c87aa758703a — project ideas with validation scores, ROI estimates, and work plans
+- **Validation campaigns** — https://drive.google.com/drive/u/0/folders/1qwD7Nv1MWRv3H8ZeUPqfjMnX8VZTPTVH — Google Ads campaigns, validation form, and form responses per project
+
 ## Setup
 
 ```bash
