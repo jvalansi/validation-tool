@@ -8,6 +8,7 @@
     "price_per_year": 1000,
     "start_date": "2026-04-07T18:30:37.083528+00:00",
     "days": 7,
-    "status": "active"
+    "status": "ended",
+    "decision_sent": true
   }
 ]

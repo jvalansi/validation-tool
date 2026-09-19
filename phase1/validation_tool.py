@@ -6,6 +6,7 @@ Usage:
   python validation_tool.py hn --query QUERY [--limit N]
   python validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
   python validation_tool.py producthunt --query QUERY [--limit N]
+  python validation_tool.py incumbents --query QUERY [--limit N]
   python validation_tool.py report --query QUERY [--reddit-subreddits r/sub1,r/sub2]
 """
 
@@ -158,6 +159,128 @@ def cmd_producthunt(args):
 
 
 # ---------------------------------------------------------------------------
+# Incumbents (businesses currently selling — Product Hunt only indexes launches)
+# ---------------------------------------------------------------------------
+
+FUNDED_INCUMBENT_USD = 10_000_000
+CROWDED_OPERATORS = 5
+
+_FUNDING_RE = re.compile(r'\$\s*(\d+(?:\.\d+)?)\s*(million|billion|m\b|b\b)', re.IGNORECASE)
+_FUNDING_CONTEXT = ("raise", "raised", "raises", "funding", "series ", "seed round", "venture", "backed")
+
+# Hosts that aggregate or discuss vendors rather than being vendors themselves.
+_DIRECTORY_HOSTS = (
+    "wikipedia.org", "reddit.com", "youtube.com", "producthunt.com", "linkedin.com",
+    "facebook.com", "twitter.com", "x.com", "quora.com", "medium.com", "g2.com",
+    "capterra.com", "crunchbase.com", "pitchbook.com", "glassdoor.com", "indeed.com",
+    "news.ycombinator.com", "substack.com",
+)
+
+
+def _parse_funding(text):
+    """Largest USD funding amount mentioned in text, or None.
+
+    Requires funding language nearby so '$400 million saved for customers' is
+    ignored while '$50 million Series B' is not.
+    """
+    if not text:
+        return None
+    if not any(k in text.lower() for k in _FUNDING_CONTEXT):
+        return None
+    best = None
+    for m in _FUNDING_RE.finditer(text):
+        unit = m.group(2).lower()
+        usd = float(m.group(1)) * (1_000_000_000 if unit.startswith("b") else 1_000_000)
+        if best is None or usd > best:
+            best = usd
+    return best
+
+
+def _host(url):
+    try:
+        return urllib.parse.urlparse(url).netloc.lower().removeprefix("www.")
+    except Exception:
+        return ""
+
+
+def _incumbent_search(query, limit=8):
+    """Find who is already selling this, and how much they have raised.
+
+    Product Hunt indexes launches, so a company that launched years ago and now
+    dominates the market never shows up there. These probes target pricing pages
+    and funding news instead.
+    """
+    from ddgs import DDGS
+
+    operators, funding = {}, []
+    probes = [
+        (f"{query} pricing", "pricing"),
+        (f"{query} service cost fee", "pricing"),
+        (f"{query} startup raised funding round", "funding"),
+    ]
+    for probe, kind in probes:
+        try:
+            hits = list(DDGS().text(probe, max_results=limit))
+        except Exception:
+            continue
+        for r in hits:
+            url = r.get("href", "")
+            title = (r.get("title") or "").strip()
+            snippet = (r.get("body") or "").strip()
+            host = _host(url)
+            if not host or any(host == d or host.endswith("." + d) for d in _DIRECTORY_HOSTS):
+                continue
+            amount = _parse_funding(f"{title} {snippet}")
+            if amount:
+                funding.append({"amount_usd": amount, "headline": title[:120], "url": url})
+            if kind == "pricing" and host not in operators:
+                operators[host] = {"name": title[:80], "host": host, "url": url, "snippet": snippet[:200]}
+
+    funding.sort(key=lambda f: f["amount_usd"], reverse=True)
+    return {
+        "operators_found": len(operators),
+        "operators": list(operators.values())[:6],
+        "funding_mentions": funding[:3],
+        "max_funding_usd": funding[0]["amount_usd"] if funding else None,
+    }
+
+
+def _assess_competition(incumbents, product_hunt):
+    """Turn incumbent data into signals. Absence of competitors is NOT a positive.
+
+    An empty result means demand is unproven or the query was too abstract — the
+    old 'no PH solutions yet (gap)' rule scored that as upside and mis-passed
+    markets whose incumbents simply predate Product Hunt.
+    """
+    positives, negatives = [], []
+    ops = incumbents.get("operators_found", 0)
+    max_funding = incumbents.get("max_funding_usd")
+
+    if max_funding and max_funding >= FUNDED_INCUMBENT_USD:
+        negatives.append(f"funded incumbent (${round(max_funding / 1_000_000)}M raised)")
+        level = "funded_incumbent"
+    elif ops >= CROWDED_OPERATORS:
+        negatives.append(f"crowded: {ops} vendors already selling")
+        level = "crowded"
+    elif ops >= 1:
+        positives.append(f"{ops} small vendor(s) selling — demand proven, room to differentiate")
+        level = "contested"
+    else:
+        negatives.append("no vendors found selling this — demand unproven, or query too abstract")
+        level = "none_found"
+
+    ph_count = product_hunt.get("existing_products", 0)
+    if ph_count >= CROWDED_OPERATORS:
+        negatives.append(f"{ph_count} Product Hunt launches in this space")
+
+    return {"positive": positives, "negative": negatives, "level": level}
+
+
+def cmd_incumbents(args):
+    print(json.dumps(_incumbent_search(args.query, limit=args.limit), indent=2, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------------------
 # Revenue signal helpers
 # ---------------------------------------------------------------------------
 
@@ -293,6 +416,12 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["product_hunt"] = {"error": str(e)}
 
+    # Incumbents (operating businesses + funding — catches what Product Hunt misses)
+    try:
+        report["sources"]["incumbents"] = _incumbent_search(search_query)
+    except Exception as e:
+        report["sources"]["incumbents"] = {"error": str(e)}
+
     # Revenue estimate
     all_snippets = []
     for ph_item in report["sources"].get("product_hunt", {}).get("top_products", []):
@@ -301,6 +430,8 @@ def cmd_report(args):
         all_snippets.append(hn_item.get("title", ""))
     for rd_item in report["sources"].get("reddit", {}).get("top_posts", []):
         all_snippets.append(rd_item.get("snippet", ""))
+    for op in report["sources"].get("incumbents", {}).get("operators", []):
+        all_snippets.append(op.get("snippet", ""))
 
     competitor_prices = _extract_prices(all_snippets)
     trends_avg = report["sources"].get("google_trends", {}).get("average_interest", 0)
@@ -331,15 +462,24 @@ def cmd_report(args):
     if rd.get("total_results", 0) > 5:
         signals.append("active Reddit discussion")
     ph = report["sources"].get("product_hunt", {})
-    if 0 < ph.get("existing_products", 0) < 5:
-        signals.append("few existing PH solutions (gap)")
-    elif ph.get("existing_products", 0) == 0:
-        signals.append("no PH solutions yet (untapped or too niche)")
+    comp = _assess_competition(report["sources"].get("incumbents", {}), ph)
+    signals.extend(comp["positive"])
+
+    if comp["level"] == "funded_incumbent":
+        verdict = "crowded — a funded incumbent already serves this market"
+    elif comp["level"] == "crowded":
+        verdict = "crowded — multiple vendors already selling"
+    elif len(signals) >= 2:
+        verdict = "validate further"
+    else:
+        verdict = "weak signal — reconsider or reframe"
 
     report["summary"] = {
         "positive_signals": signals,
+        "negative_signals": comp["negative"],
         "signal_count": len(signals),
-        "verdict": "validate further" if len(signals) >= 2 else "weak signal — reconsider or reframe",
+        "competition": comp["level"],
+        "verdict": verdict,
     }
 
     # Claude synthesis
@@ -450,6 +590,10 @@ def main():
     p_ph.add_argument("--query", required=True)
     p_ph.add_argument("--limit", type=int, default=10)
 
+    p_inc = subparsers.add_parser("incumbents", help="Find businesses already selling this + their funding")
+    p_inc.add_argument("--query", required=True)
+    p_inc.add_argument("--limit", type=int, default=8)
+
     p_reddit = subparsers.add_parser("reddit", help="Search Reddit (no auth needed)")
     p_reddit.add_argument("--query", required=True)
     p_reddit.add_argument("--subreddits", help="Comma-separated subreddits (optional, default: all)")
@@ -471,6 +615,8 @@ def main():
         cmd_trends(args)
     elif args.command == "producthunt":
         cmd_producthunt(args)
+    elif args.command == "incumbents":
+        cmd_incumbents(args)
     elif args.command == "reddit":
         cmd_reddit(args)
     elif args.command == "report":

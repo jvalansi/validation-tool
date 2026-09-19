@@ -1,10 +1,10 @@
 # validation-tool
 
-Multi-source project idea validator. Gathers market signals from HN, Google Trends, Reddit, and Product Hunt, then uses Claude to produce a revenue and ROI assessment.
+Multi-source project idea validator. Gathers market signals from HN, Google Trends, Reddit, Product Hunt, and incumbent vendors, then uses Claude to produce a revenue and ROI assessment.
 
 ## Validation Phases
 
-- **Phase 1 — Passive signals** (`phase1/`): HN, Reddit, Google Trends, Product Hunt → market signal + ROI score
+- **Phase 1 — Passive signals** (`phase1/`): HN, Reddit, Google Trends, Product Hunt, incumbents → market signal + ROI score
 - **Phase 2 — Active intent** ([Google Ads + Landing Page](docs/phase2.md)): paid search → clicks → email signups → pre-orders. Run when Phase 1 returns strong signal.
 
 ## Tools
@@ -19,6 +19,7 @@ python phase1/validation_tool.py hn --query QUERY [--limit N]
 python phase1/validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
 python phase1/validation_tool.py reddit --query QUERY [--subreddits r/sub1,r/sub2] [--limit N]
 python phase1/validation_tool.py producthunt --query QUERY [--limit N]
+python phase1/validation_tool.py incumbents --query QUERY [--limit N]
 
 # Full report (all sources + Claude analysis)
 python phase1/validation_tool.py report --query QUERY \
@@ -57,8 +58,10 @@ python phase1/validation_tool.py report --query QUERY \
   },
   "summary": {
     "positive_signals": ["active Reddit discussion", "high HN interest"],
+    "negative_signals": ["funded incumbent ($50M raised)"],
     "signal_count": 3,
-    "verdict": "validate further | weak signal — reconsider or reframe"
+    "competition": "funded_incumbent | crowded | contested | none_found",
+    "verdict": "validate further | crowded — ... | weak signal — reconsider or reframe"
   },
   "claude_analysis": {
     "tam_assessment": "one sentence on market size with evidence",
@@ -195,7 +198,7 @@ python -m phase2.cli monitor [--dry-run]                # check signups
 ## Setup
 
 ```bash
-pip install pytrends duckduckgo-search
+pip install pytrends ddgs
 ```
 
 No API keys required for HN, Google Trends, or Reddit (uses DDG `site:reddit.com`).
@@ -203,3 +206,33 @@ No API keys required for HN, Google Trends, or Reddit (uses DDG `site:reddit.com
 Claude analysis requires the Claude Code CLI (`claude`) to be authenticated.
 
 Notion integration requires `NOTION_TOKEN` env var.
+
+## Incumbent detection
+
+Product Hunt indexes *launches*. A company that launched years ago and now owns the
+market never appears there — so "no PH solutions yet" used to score as an untapped
+gap. Property tax appeals passed that way while Ownwell ($50M Series B, Feb 2026)
+and several flat-fee vendors were actively selling.
+
+`incumbents` probes pricing pages and funding news instead, and feeds
+`summary.competition`:
+
+| Level | Condition | Effect on verdict |
+|---|---|---|
+| `funded_incumbent` | any vendor raised >= $10M | verdict is "crowded", regardless of signal count |
+| `crowded` | >= 5 vendors selling | verdict is "crowded" |
+| `contested` | 1-4 vendors, none funded | +1 positive signal - demand proven, room to differentiate |
+| `none_found` | no vendors selling | negative signal, not a gap - demand unproven or query too abstract |
+
+Absence of competitors is never scored as upside.
+
+**Known noise:** review and personal-finance sites (Business Insider, wallethacks)
+can land in `operators`, inflating `operators_found` toward a false `crowded`.
+Check the `operators` list before trusting that level; `max_funding_usd` is the
+more reliable signal.
+
+Run the checks (no network needed):
+
+```bash
+python phase1/test_validation_tool.py
+```
