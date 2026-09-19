@@ -31,8 +31,8 @@ def save_validated_id(page_id):
         json.dump(list(ids), f)
 
 
-def fetch_top_projects(limit=20):
-    validated = load_validated_ids()
+def fetch_top_projects(limit=20, revalidate=False):
+    validated = set() if revalidate else load_validated_ids()
     all_pages = []
     cursor = None
 
@@ -93,7 +93,7 @@ def run_validation(query, pain_query=None, subreddits=None, trends_query=None):
         cmd += ["--reddit-subreddits", subreddits]
     if trends_query:
         cmd += ["--trends-query", trends_query]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=480)
     if result.returncode != 0:
         print(f"  Validation error: {result.stderr[:200]}")
         return None
@@ -190,6 +190,11 @@ def remove_existing_validation_section(blocks):
                 pass
 
 
+def _today():
+    from datetime import date
+    return date.today().strftime("%b %Y")
+
+
 def append_validation_section(page_id, report, new_prob, old_prob, claude):
     if not report:
         return
@@ -219,20 +224,52 @@ def append_validation_section(page_id, report, new_prob, old_prob, claude):
         if ph.get("top_products"):
             ph_line += f" — top: \"{ph['top_products'][0]['name']}\""
 
+    inc = report["sources"].get("incumbents", {})
+    reg = report["sources"].get("regulatory", {})
+    econ = report.get("revenue_estimate", {})
+
+    if inc.get("search_failed"):
+        inc_line = "🏢 Incumbents: search unavailable — competition unknown, not absent"
+    else:
+        inc_line = f"🏢 Incumbents: {inc.get('operators_found', 0)} vendor(s) selling"
+        if inc.get("max_funding_usd"):
+            inc_line += f", top raise ${round(inc['max_funding_usd'] / 1_000_000)}M"
+        if inc.get("operators"):
+            inc_line += f" — e.g. {inc['operators'][0].get('host', '')}"
+    reg_line = f"⚖️ Regulatory: {reg.get('status', 'not checked')}"
+    if reg.get("restriction_terms"):
+        reg_line += f" ({', '.join(reg['restriction_terms'][:2])})"
+    if econ.get("price_anchor_usd"):
+        econ_line = (
+            f"💵 Unit economics: ${econ['price_anchor_usd']}"
+            f"{'/mo' if econ.get('price_is_recurring') else ' one-time'} observed "
+            f"({econ.get('price_observations', 0)} price obs) → "
+            f"${econ.get('ev_per_customer_annual_usd')}/customer/yr vs "
+            f"${econ.get('acquisition_floor_usd')} floor"
+        )
+    else:
+        econ_line = "💵 Unit economics: no competitor price observed — revenue left unestimated"
+
     verdict = report.get("summary", {}).get("verdict", "")
     signals = report.get("summary", {}).get("positive_signals", [])
+    negatives = report.get("summary", {}).get("negative_signals", [])
     prob_note = f"Probability: {old_prob*100:.0f}% → {new_prob*100:.0f}%"
 
     blocks = [
-        {"heading_2": {"rich_text": [{"text": {"content": "Validation (Mar 2026)"}}]}},
+        {"heading_2": {"rich_text": [{"text": {"content": f"Validation ({_today()})"}}]}},
         {"heading_3": {"rich_text": [{"text": {"content": "Signals"}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": gt_line}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": hn_line}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": rd_line}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": ph_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": inc_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": reg_line}}]}},
+        {"bulleted_list_item": {"rich_text": [{"text": {"content": econ_line}}]}},
     ]
     if signals:
         blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": "✅ " + ", ".join(signals)}}]}})
+    for neg in negatives:
+        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": "⛔ " + neg}}]}})
 
     blocks += [
         {"heading_3": {"rich_text": [{"text": {"content": "Verdict"}}]}},
@@ -308,8 +345,14 @@ def update_notion_table(page_id, new_prob, claude, rev, report):
         if ph_count is not None and ph_count >= 0:
             props["PH Products"] = {"number": int(ph_count)}
 
-        signal_count = report.get("summary", {}).get("signal_count", 0)
-        if signal_count >= 3:
+        summary = report.get("summary", {})
+        signal_count = summary.get("signal_count", 0)
+        competition = summary.get("competition", "")
+        verdict = summary.get("verdict", "")
+        # A funded incumbent or sub-floor economics outranks any amount of chatter.
+        if competition in ("funded_incumbent", "crowded") or verdict.startswith("unviable"):
+            props["Market Signal"] = {"select": {"name": "weak"}}
+        elif signal_count >= 3:
             props["Market Signal"] = {"select": {"name": "strong"}}
         elif signal_count >= 1:
             props["Market Signal"] = {"select": {"name": "moderate"}}
@@ -359,8 +402,10 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=20)
+    parser.add_argument("--revalidate", action="store_true",
+                        help="Re-run projects already in validated_ids.json (fields are overwritten)")
     args = parser.parse_args()
-    projects = fetch_top_projects(limit=args.limit)
+    projects = fetch_top_projects(limit=args.limit, revalidate=args.revalidate)
     print(f"Fetched {len(projects)} projects to validate")
     for p in projects:
         try:
