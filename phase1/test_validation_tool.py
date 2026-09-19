@@ -9,7 +9,11 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from validation_tool import _parse_funding, _assess_competition, _host
+from validation_tool import (
+    _parse_funding, _assess_competition, _host, _classify_hosts,
+    _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
+    _extract_prices,
+)
 
 # --- _parse_funding: funding language required -------------------------------
 assert _parse_funding("Ownwell Raises $50 Million To Grow Its Property Tax Fintech") == 50_000_000
@@ -47,5 +51,81 @@ assert len(wedge["positive"]) == 1 and wedge["negative"] == [], wedge
 crowded = _assess_competition({"operators_found": 7, "max_funding_usd": None}, {"existing_products": 6})
 assert crowded["level"] == "crowded", crowded
 assert len(crowded["negative"]) == 2, crowded
+
+# --- _unit_economics: price is observed, customer counts are assumed ----------
+none = _unit_economics([], "mass")
+assert none["price_anchor_usd"] is None, none
+assert none["ev_per_customer_annual_usd"] is None, none
+assert none["conservative_mrr"] == "", none  # no price -> no invented range
+
+cheap = _unit_economics([{"monthly_equiv": 4.0, "period": "monthly"}], "niche")
+assert cheap["ev_per_customer_annual_usd"] == round(4.0 * 12 * 0.8), cheap
+assert cheap["below_acquisition_floor"] is True, cheap
+
+rich = _unit_economics([{"monthly_equiv": 50.0, "period": "monthly"}], "mid")
+assert rich["ev_per_customer_annual_usd"] == 480, rich
+assert rich["below_acquisition_floor"] is False, rich
+assert rich["conservative_mrr"] == "$1000", rich  # $50/mo x 20 customers
+
+# Search volume must not move revenue: same price, different TAM tier, same EV.
+assert (_unit_economics([{"monthly_equiv": 50.0, "period": "monthly"}], "mass")["ev_per_customer_annual_usd"]
+        == rich["ev_per_customer_annual_usd"])
+assert MIN_EV_PER_CUSTOMER_USD == 200
+
+# --- _classify_hosts: who owns the results page ------------------------------
+owned = _classify_hosts(
+    ["ownwell.com", "appealdesk.com", "cutmytaxes.com", "nytimes.com"],
+    incumbent_hosts={"ownwell.com", "appealdesk.com", "cutmytaxes.com"},
+)
+assert owned["vendor_share"] == 0.75, owned
+assert "paid acquisition" in owned["read"], owned
+
+open_serp = _classify_hosts(["cookcountyassessor.gov", "reddit.com", "someblog.com"], incumbent_hosts=set())
+assert open_serp["breakdown"] == {"vendor": 0, "government": 1, "forum": 1, "content": 1}, open_serp
+assert "organic entry plausible" in open_serp["read"], open_serp
+
+# --- regulatory matching: needs a restriction term AND query overlap ---------
+tokens = _query_tokens("property tax appeal service")
+assert tokens == ["property", "appeal"], tokens  # "tax" too short, "service" a stopword
+
+ptab = ("Frequently Asked Questions - Property Tax Appeal Board. PTAB rules prohibit accountants, "
+        "tax representatives and others not qualified to practice law from appearing")
+assert _restriction_match(ptab, tokens)[0] == ["not qualified to practice"], _restriction_match(ptab, tokens)
+
+# Generic state-bar boilerplate must not flag: restriction term, no query overlap.
+boilerplate = "An Unauthorized Practice of Law Complaint can be submitted to the Virginia State Bar"
+assert _restriction_match(boilerplate, tokens) == ([], []), _restriction_match(boilerplate, tokens)
+
+# Query words with no restriction language must not flag either.
+assert _restriction_match("file a property tax appeal with the county board", tokens) == ([], [])
+
+# --- price periods: a bare "$49" is one-time, not $49/mo ---------------------
+periods = {p["raw"]: p["period"] for p in _extract_prices(["Flat $49, every time", "$936 per year", "$20/month"])}
+assert periods["$49"] == "unknown", periods
+assert periods["$936 per year"] == "annual", periods
+assert periods["$20/month"] == "monthly", periods
+
+# AppealDesk's $49 flat fee must not be annualized into $470/yr of revenue.
+one_time = _unit_economics([{"monthly_equiv": 49.0, "period": "unknown"}], "mid")
+assert one_time["price_is_recurring"] is False, one_time
+assert one_time["ev_per_customer_annual_usd"] == round(49 * 0.8), one_time
+assert one_time["below_acquisition_floor"] is True, one_time
+
+# An explicit period wins over undated noise scraped from the same page.
+mixed = _unit_economics(
+    [{"monthly_equiv": 49.0, "period": "unknown"}, {"monthly_equiv": 30.0, "period": "monthly"}], "mid")
+assert mixed["price_is_recurring"] is True and mixed["price_anchor_usd"] == 30.0, mixed
+
+# --- a failed search is "unknown", never "no competitors" --------------------
+blind = _assess_competition({"search_failed": True, "operators_found": 0}, {"existing_products": 0})
+assert blind["level"] == "unknown", blind
+assert "not absent" in blind["negative"][0], blind
+
+# --- a single observed price is too thin to kill an idea --------------------
+thin = _unit_economics([{"monthly_equiv": 49.0, "period": "unknown"}], "mid")
+assert thin["price_observations"] == 1, thin
+solid = _unit_economics(
+    [{"monthly_equiv": 5.0, "period": "monthly"}, {"monthly_equiv": 7.0, "period": "monthly"}], "mid")
+assert solid["price_observations"] == 2 and solid["below_acquisition_floor"] is True, solid
 
 print("all checks passed")

@@ -7,6 +7,8 @@ Usage:
   python validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
   python validation_tool.py producthunt --query QUERY [--limit N]
   python validation_tool.py incumbents --query QUERY [--limit N]
+  python validation_tool.py regulatory --query QUERY
+  python validation_tool.py serp --query QUERY [--limit N]
   python validation_tool.py report --query QUERY [--reddit-subreddits r/sub1,r/sub2]
 """
 
@@ -212,16 +214,21 @@ def _incumbent_search(query, limit=8):
     """
     from ddgs import DDGS
 
+    import time
     operators, funding = {}, []
+    failed = 0
     probes = [
         (f"{query} pricing", "pricing"),
         (f"{query} service cost fee", "pricing"),
         (f"{query} startup raised funding round", "funding"),
     ]
-    for probe, kind in probes:
+    for i, (probe, kind) in enumerate(probes):
+        if i:
+            time.sleep(2)  # see _regulatory_search: a rate-limited 0 must not read as "no competitors"
         try:
             hits = list(DDGS().text(probe, max_results=limit))
         except Exception:
+            failed += 1
             continue
         for r in hits:
             url = r.get("href", "")
@@ -242,6 +249,8 @@ def _incumbent_search(query, limit=8):
         "operators": list(operators.values())[:6],
         "funding_mentions": funding[:3],
         "max_funding_usd": funding[0]["amount_usd"] if funding else None,
+        "probes_failed": failed,
+        "search_failed": failed == len(probes),
     }
 
 
@@ -255,6 +264,10 @@ def _assess_competition(incumbents, product_hunt):
     positives, negatives = [], []
     ops = incumbents.get("operators_found", 0)
     max_funding = incumbents.get("max_funding_usd")
+
+    if incumbents.get("search_failed") or incumbents.get("error"):
+        negatives.append("incumbent search unavailable — competition unknown, not absent")
+        return {"positive": positives, "negative": negatives, "level": "unknown"}
 
     if max_funding and max_funding >= FUNDED_INCUMBENT_USD:
         negatives.append(f"funded incumbent (${round(max_funding / 1_000_000)}M raised)")
@@ -281,6 +294,160 @@ def cmd_incumbents(args):
 
 
 # ---------------------------------------------------------------------------
+# Regulatory standing (are you allowed to sell it?)
+# ---------------------------------------------------------------------------
+
+_RESTRICTION_TERMS = (
+    "license required", "must be licensed", "licensed attorney", "unauthorized practice",
+    "only an attorney", "registration required", "bar admission", "regulated by",
+    "licensed agent", "not permitted to represent", "not qualified to practice",
+    "practice of law", "licensed professional", "statutory exemption",
+    "state law requires", "certification required",
+)
+
+_QUERY_STOPWORDS = {"service", "services", "system", "online", "software", "platform", "tools", "based"}
+
+
+def _query_tokens(query):
+    """Distinctive words from the query, used to reject generic legal boilerplate.
+
+    Without this, a probe for unauthorized practice returns state bar pages for
+    any query at all and every idea looks legally restricted.
+    """
+    return [t for t in re.findall(r"[a-z]{5,}", (query or "").lower()) if t not in _QUERY_STOPWORDS]
+
+
+def _restriction_match(text, tokens):
+    """(matched terms, matched query tokens) — a hit needs both."""
+    blob = (text or "").lower()
+    matched = [t for t in _RESTRICTION_TERMS if t in blob]
+    overlap = [t for t in tokens if t in blob]
+    return (matched, overlap) if (matched and overlap) else ([], [])
+
+
+def _regulatory_search(query, limit=10):
+    """Look for licensing or standing restrictions on selling this.
+
+    Advisory, never a verdict: a hit means "read the statute", not "stop".
+    Property tax appeals surfaced Illinois barring non-attorney representation
+    while California does not regulate agents at all — same idea, different
+    legal product shape per state.
+    """
+    from ddgs import DDGS
+
+    import time
+    tokens = _query_tokens(query)
+    hits, flags, seen = [], set(), set()
+    failed = 0
+    probes = [
+        f"{query} consultant license required represent client non-attorney",
+        f"{query} unauthorized practice of law non-attorney",
+    ]
+    for i, probe in enumerate(probes):
+        if i:
+            time.sleep(2)  # DDG rate-limits bursts; a silent 0 would read as "clear"
+        try:
+            results = list(DDGS().text(probe, max_results=limit))
+        except Exception:
+            failed += 1
+            continue
+        for r in results:
+            url = r.get("href", "")
+            matched, _ = _restriction_match(f"{r.get('title', '')} {r.get('body', '')}", tokens)
+            if not matched or url in seen:
+                continue
+            seen.add(url)
+            flags.update(matched)
+            hits.append({
+                "title": (r.get("title") or "")[:100],
+                "url": url,
+                "matched": matched[:3],
+                "snippet": (r.get("body") or "")[:200],
+            })
+    if hits:
+        status = "restricted — verify the statute before building"
+    elif failed == len(probes):
+        status = "unknown — every regulatory search failed (rate limit?), absence of hits proves nothing"
+    else:
+        status = "no restriction signals found"
+    return {
+        "restriction_hits": len(hits),
+        "restriction_terms": sorted(flags)[:6],
+        "gov_sources": sum(1 for h in hits if _host(h["url"]).endswith(".gov")),
+        "probes_failed": failed,
+        "search_failed": failed == len(probes),
+        "top_hits": hits[:4],
+        "status": status,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Acquisition channel (who owns the buyer-intent results page)
+# ---------------------------------------------------------------------------
+
+_FORUM_HOSTS = ("reddit.com", "quora.com", "stackexchange.com", "news.ycombinator.com", "stackoverflow.com")
+
+
+def _classify_hosts(hosts, incumbent_hosts=()):
+    """Bucket result hosts. Pure function so the read is testable offline."""
+    buckets = {"vendor": 0, "government": 0, "forum": 0, "content": 0}
+    for host in hosts:
+        if not host:
+            continue
+        if host.endswith(".gov"):
+            buckets["government"] += 1
+        elif any(host == f or host.endswith("." + f) for f in _FORUM_HOSTS):
+            buckets["forum"] += 1
+        elif host in incumbent_hosts:
+            buckets["vendor"] += 1
+        else:
+            buckets["content"] += 1
+    total = sum(buckets.values()) or 1
+    vendor_share = round(buckets["vendor"] / total, 2)
+    return {
+        "results_examined": sum(buckets.values()),
+        "breakdown": buckets,
+        "vendor_share": vendor_share,
+        "read": (
+            "vendors own the results page — paid acquisition is likely the only door"
+            if vendor_share >= 0.3
+            else "results page not vendor-dominated — organic entry plausible"
+        ),
+    }
+
+
+def _serp_ownership(query, incumbent_hosts=(), limit=10):
+    from ddgs import DDGS
+    try:
+        results = list(DDGS().text(query, max_results=limit))
+    except Exception as e:
+        return {"error": str(e)}
+    hosts = [_host(r.get("href", "")) for r in results]
+    out = _classify_hosts(hosts, incumbent_hosts)
+    out["hosts"] = [h for h in hosts if h][:10]
+    return out
+
+
+def _fetch_pricing_prices(operators, max_pages=3):
+    """Read prices off operators' own pricing pages rather than search snippets."""
+    found = []
+    for op in operators[:max_pages]:
+        url = op.get("url", "")
+        if not url:
+            continue
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (validation-tool)"})
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                html = resp.read(400_000).decode("utf-8", "ignore")
+        except Exception:
+            continue
+        text = re.sub(r"<[^>]+>", " ", html)
+        for p in _extract_prices([text])[:5]:
+            found.append({**p, "source": op.get("host") or _host(url)})
+    return found
+
+
+# ---------------------------------------------------------------------------
 # Revenue signal helpers
 # ---------------------------------------------------------------------------
 
@@ -290,18 +457,25 @@ _PRICE_RE = re.compile(
 )
 
 def _extract_prices(texts):
-    """Extract price mentions from a list of strings. Returns list of dicts."""
+    """Extract price mentions from a list of strings. Returns list of dicts.
+
+    `period` records whether the source actually said per-month/per-year. A bare
+    "$49" is recorded as "unknown", not assumed monthly — AppealDesk's $49 is a
+    one-time fee, and treating it as $49/mo overstates revenue 12x.
+    """
     found = []
     for text in texts:
         for m in _PRICE_RE.finditer(text or ""):
             amount = float(m.group(1))
-            period = (m.group(2) or "").lower()
-            if period in ("yr", "year"):
-                amount_mo = round(amount / 12, 2)
+            raw_period = (m.group(2) or "").lower()
+            if raw_period in ("yr", "year"):
+                period, amount_mo = "annual", round(amount / 12, 2)
+            elif raw_period in ("mo", "month", "user", "seat"):
+                period, amount_mo = "monthly", amount
             else:
-                amount_mo = amount
+                period, amount_mo = "unknown", amount
             if 1 <= amount_mo <= 10000:  # filter noise
-                found.append({"raw": m.group(0).strip(), "monthly_equiv": amount_mo})
+                found.append({"raw": m.group(0).strip(), "monthly_equiv": amount_mo, "period": period})
     # deduplicate
     seen = set()
     unique = []
@@ -321,25 +495,62 @@ def _tam_tier(trends_avg):
     return "niche"
 
 
-def _mrr_range(tam_tier, prices):
-    monthly_prices = [p["monthly_equiv"] for p in prices] if prices else []
-    price_anchor = sorted(monthly_prices)[len(monthly_prices) // 2] if monthly_prices else None
+GROSS_MARGIN = 0.8              # software delivery; lower it for service businesses
+MIN_EV_PER_CUSTOMER_USD = 200   # below this, paid acquisition rarely clears CAC
+_CUSTOMERS_PER_MONTH = {"niche": 5, "mid": 20, "mass": 100}
 
-    ranges = {
-        "mass":  {"conservative": (500, 5000),  "optimistic": (10000, 50000)},
-        "mid":   {"conservative": (100, 1000),  "optimistic": (2000, 10000)},
-        "niche": {"conservative": (50,  500),   "optimistic": (500,  3000)},
-    }
-    r = ranges[tam_tier]
 
-    # scale up if competitors charge premium prices
-    if price_anchor and price_anchor > 50:
-        r = {k: (v[0] * 2, v[1] * 2) for k, v in r.items()}
+def _unit_economics(prices, tam_tier):
+    """Revenue from an observed price, not from search interest.
 
+    The previous model picked an MRR range from the Google Trends tier alone,
+    which is how a "Low" market signal could sit beside an ROI of 2500. Every
+    number here traces to a named input, and when no competitor price is
+    observed it returns nothing rather than inventing a range.
+    """
+    dated = sorted(p["monthly_equiv"] for p in (prices or []) if p.get("period") in ("monthly", "annual"))
+    undated = sorted(p["monthly_equiv"] for p in (prices or []) if p.get("period") not in ("monthly", "annual"))
+
+    if dated:
+        anchor, recurring, basis = dated[len(dated) // 2], True, f"median of {len(dated)} prices with an explicit period"
+    elif undated:
+        anchor, recurring, basis = undated[len(undated) // 2], False, (
+            f"median of {len(undated)} prices with no stated period — treated as one-time, not recurring"
+        )
+    else:
+        anchor, recurring, basis = None, None, "no competitor price observed"
+
+    if anchor is None:
+        return {
+            "price_anchor_usd": None,
+            "price_is_recurring": None,
+            "price_source": basis,
+            "ev_per_customer_annual_usd": None,
+            "below_acquisition_floor": None,
+            "conservative_mrr": "",
+            "optimistic_mrr": "",
+            "note": "No observed price — revenue left unestimated rather than inferred from search volume.",
+        }
+
+    ev_annual = round(anchor * (12 if recurring else 1) * GROSS_MARGIN)
+    base = _CUSTOMERS_PER_MONTH.get(tam_tier, 5)
     return {
-        "conservative_mrr": f"${r['conservative'][0]}–${r['conservative'][1]}",
-        "optimistic_mrr":   f"${r['optimistic'][0]}–${r['optimistic'][1]}",
-        "price_anchor_used": f"${price_anchor}/mo" if price_anchor else "no prices found — used defaults",
+        "price_anchor_usd": anchor,
+        "price_is_recurring": recurring,
+        "price_source": basis,
+        "gross_margin_assumed": GROSS_MARGIN,
+        "ev_per_customer_annual_usd": ev_annual,
+        "price_observations": len(dated) if dated else len(undated),
+        "acquisition_floor_usd": MIN_EV_PER_CUSTOMER_USD,
+        "below_acquisition_floor": ev_annual < MIN_EV_PER_CUSTOMER_USD,
+        "customers_assumed_per_month": {"conservative": base, "optimistic": base * 10},
+        "conservative_mrr": f"${round(anchor * base)}",
+        "optimistic_mrr": f"${round(anchor * base * 10)}",
+        "note": (
+            f"MRR = observed price (${anchor}{'/mo' if recurring else ' one-time'}) x assumed "
+            f"customers/mo ({base} conservative, {base * 10} optimistic). The customer counts "
+            f"are assumptions; the price is an observation."
+        ),
     }
 
 
@@ -422,6 +633,19 @@ def cmd_report(args):
     except Exception as e:
         report["sources"]["incumbents"] = {"error": str(e)}
 
+    # Regulatory standing (advisory — never a verdict on its own)
+    try:
+        report["sources"]["regulatory"] = _regulatory_search(search_query)
+    except Exception as e:
+        report["sources"]["regulatory"] = {"error": str(e)}
+
+    # Acquisition channel: who owns the buyer-intent results page
+    try:
+        inc_hosts = {o.get("host") for o in report["sources"].get("incumbents", {}).get("operators", [])}
+        report["sources"]["serp_ownership"] = _serp_ownership(search_query, inc_hosts)
+    except Exception as e:
+        report["sources"]["serp_ownership"] = {"error": str(e)}
+
     # Revenue estimate
     all_snippets = []
     for ph_item in report["sources"].get("product_hunt", {}).get("top_products", []):
@@ -434,18 +658,17 @@ def cmd_report(args):
         all_snippets.append(op.get("snippet", ""))
 
     competitor_prices = _extract_prices(all_snippets)
+    try:
+        competitor_prices += _fetch_pricing_prices(report["sources"].get("incumbents", {}).get("operators", []))
+    except Exception:
+        pass
     trends_avg = report["sources"].get("google_trends", {}).get("average_interest", 0)
     tam = _tam_tier(trends_avg)
-    mrr = _mrr_range(tam, competitor_prices)
 
     report["revenue_estimate"] = {
         "tam_tier": tam,
         "competitor_prices_found": competitor_prices,
-        **mrr,
-        "note": (
-            "Rough estimate based on TAM tier (Google Trends) and competitor pricing extracted from snippets. "
-            "Assumes 2–5% free→paid conversion and ~100–500 monthly visitors at conservative end."
-        ),
+        **_unit_economics(competitor_prices, tam),
     }
 
     # Summary signal
@@ -464,8 +687,29 @@ def cmd_report(args):
     ph = report["sources"].get("product_hunt", {})
     comp = _assess_competition(report["sources"].get("incumbents", {}), ph)
     signals.extend(comp["positive"])
+    negatives = list(comp["negative"])
 
-    if comp["level"] == "funded_incumbent":
+    reg = report["sources"].get("regulatory", {})
+    if reg.get("restriction_hits", 0) > 0:
+        terms = ", ".join(reg.get("restriction_terms", [])[:2])
+        negatives.append(f"licensing/standing signals found ({terms}) — verify the statute")
+
+    econ = report.get("revenue_estimate", {})
+    if econ.get("below_acquisition_floor"):
+        negatives.append(
+            f"expected value ${econ['ev_per_customer_annual_usd']}/customer/yr is below "
+            f"the ${MIN_EV_PER_CUSTOMER_USD} acquisition floor "
+            f"({econ.get('price_observations', 0)} price observation(s))"
+        )
+
+    serp = report["sources"].get("serp_ownership", {})
+    if serp.get("vendor_share", 0) >= 0.3:
+        negatives.append("vendors own the buyer-intent results page — paid may be the only channel")
+
+    # One observed price is too thin to kill an idea on; it stays a negative signal.
+    if econ.get("below_acquisition_floor") and econ.get("price_observations", 0) >= 2:
+        verdict = "unviable — value per customer below the acquisition floor"
+    elif comp["level"] == "funded_incumbent":
         verdict = "crowded — a funded incumbent already serves this market"
     elif comp["level"] == "crowded":
         verdict = "crowded — multiple vendors already selling"
@@ -476,7 +720,7 @@ def cmd_report(args):
 
     report["summary"] = {
         "positive_signals": signals,
-        "negative_signals": comp["negative"],
+        "negative_signals": negatives,
         "signal_count": len(signals),
         "competition": comp["level"],
         "verdict": verdict,
@@ -527,8 +771,11 @@ def _claude_review(query, report, assume_tech_exists=False):
 Research data:
 {json.dumps(report.get("sources", {}), indent=2)}
 
-Revenue signals extracted:
+Revenue signals extracted (the price anchor is an OBSERVED competitor price; customer counts are assumptions):
 {json.dumps(report.get("revenue_estimate", {}), indent=2)}
+
+Competition and standing (summary):
+{json.dumps(report.get("summary", {}), indent=2)}
 
 All numeric outputs must be rounded to the nearest power of 10 (e.g. 100, 1000, 10000, 100000, 1000000). Do not use precise figures — order-of-magnitude accuracy is the goal.
 
@@ -537,6 +784,8 @@ Provide your assessment as JSON with these fields:
 - "tam_customers": estimated number of potential customers, rounded to nearest power of 10
 - "price_per_customer_annual": estimated annual revenue per customer in USD, rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
+- "legal_status": one of "clear" | "restricted" | "unknown" — whether licensing or standing rules limit who may sell this, based on the regulatory source
+- "legal_reasoning": one sentence citing the specific restriction found, or stating that none surfaced
 - "key_risks": list of 2-3 main risks to revenue (exclude technical feasibility risk)
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "value": total addressable annual revenue in USD, rounded to nearest power of 10 — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
@@ -546,6 +795,7 @@ Provide your assessment as JSON with these fields:
     0.10 — regular challenge: real demand and proven tech, but significant competition or execution risk (realistic penetration ~5-15%)
     0.99 — low-hanging fruit: clear unmet demand, proven solution, little competition (high penetration likely)
   This encodes both probability of success AND realistic market penetration. Choose the closest tier.
+  Hard rules: if summary.competition is "funded_incumbent", do not exceed 0.01. If revenue_estimate.below_acquisition_floor is true, do not exceed 0.01. If legal_status is "restricted", do not exceed 0.1.
 - "probability_reasoning": one sentence explaining the probability choice, including the expected penetration rate
 
 Return only valid JSON, no markdown."""
@@ -594,6 +844,13 @@ def main():
     p_inc.add_argument("--query", required=True)
     p_inc.add_argument("--limit", type=int, default=8)
 
+    p_reg = subparsers.add_parser("regulatory", help="Search for licensing / standing restrictions")
+    p_reg.add_argument("--query", required=True)
+
+    p_serp = subparsers.add_parser("serp", help="Who owns the buyer-intent results page")
+    p_serp.add_argument("--query", required=True)
+    p_serp.add_argument("--limit", type=int, default=10)
+
     p_reddit = subparsers.add_parser("reddit", help="Search Reddit (no auth needed)")
     p_reddit.add_argument("--query", required=True)
     p_reddit.add_argument("--subreddits", help="Comma-separated subreddits (optional, default: all)")
@@ -617,6 +874,10 @@ def main():
         cmd_producthunt(args)
     elif args.command == "incumbents":
         cmd_incumbents(args)
+    elif args.command == "regulatory":
+        print(json.dumps(_regulatory_search(args.query), indent=2, ensure_ascii=False))
+    elif args.command == "serp":
+        print(json.dumps(_serp_ownership(args.query, limit=args.limit), indent=2, ensure_ascii=False))
     elif args.command == "reddit":
         cmd_reddit(args)
     elif args.command == "report":

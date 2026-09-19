@@ -20,6 +20,8 @@ python phase1/validation_tool.py trends --query QUERY [--timeframe "today 12-m"]
 python phase1/validation_tool.py reddit --query QUERY [--subreddits r/sub1,r/sub2] [--limit N]
 python phase1/validation_tool.py producthunt --query QUERY [--limit N]
 python phase1/validation_tool.py incumbents --query QUERY [--limit N]
+python phase1/validation_tool.py regulatory --query QUERY
+python phase1/validation_tool.py serp --query QUERY [--limit N]
 
 # Full report (all sources + Claude analysis)
 python phase1/validation_tool.py report --query QUERY \
@@ -236,3 +238,45 @@ Run the checks (no network needed):
 ```bash
 python phase1/test_validation_tool.py
 ```
+
+## Kill-order checks
+
+Phase 1 runs the cheap killers before anything is spent, in the order that a
+wrong answer costs least to discover:
+
+| # | Check | Source | Output |
+|---|---|---|---|
+| 1 | Are you allowed to sell it? | `regulatory` | `sources.regulatory.status`, `claude_analysis.legal_status` |
+| 2 | Who already sells it, and what did they raise? | `incumbents` | `summary.competition` |
+| 3 | Does one customer clear the acquisition floor? | `revenue_estimate` | `below_acquisition_floor` |
+| 4 | Who owns the buyer-intent results page? | `serp` | `sources.serp_ownership.read` |
+
+Step 5 of the method — five conversations with people who have the problem —
+is deliberately not automated.
+
+### Unit economics (step 3)
+
+Revenue comes from an **observed competitor price**, never from search volume.
+`price_is_recurring` records whether the source actually said per-month or
+per-year; a bare `$49` is treated as one-time, because AppealDesk's $49 flat fee
+annualized to `$49/mo` overstates revenue 12x. With no price observed, the
+revenue fields are left null rather than inferred.
+
+`ev_per_customer_annual_usd` below `MIN_EV_PER_CUSTOMER_USD` ($200) forces an
+"unviable" verdict — but only with 2+ price observations, since a single scraped
+number is too thin to kill an idea on.
+
+The customer counts behind `conservative_mrr` / `optimistic_mrr` are still
+assumptions, and labelled as such in `note`. The price is the only observation.
+
+### Regulatory (step 1)
+
+Advisory, never a verdict. A hit means "read the statute", not "stop" — the same
+idea can be legal in one state and barred in another. Property tax appeals returns
+the Illinois PTAB rule barring non-attorney representation, while California does
+not regulate agents at all.
+
+A hit requires both a restriction phrase and a distinctive query word, so generic
+state-bar boilerplate does not flag every idea. DuckDuckGo results vary between
+runs; a clean result is weak evidence, and `search_failed` marks the case where
+every probe errored so that silence is never read as clearance.
