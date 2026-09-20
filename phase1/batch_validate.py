@@ -349,15 +349,19 @@ def update_notion_table(page_id, new_prob, claude, rev, report):
         signal_count = summary.get("signal_count", 0)
         competition = summary.get("competition", "")
         verdict = summary.get("verdict", "")
-        # A funded incumbent or sub-floor economics outranks any amount of chatter.
-        if competition in ("funded_incumbent", "crowded") or verdict.startswith("unviable"):
-            props["Market Signal"] = {"select": {"name": "weak"}}
-        elif signal_count >= 3:
-            props["Market Signal"] = {"select": {"name": "strong"}}
+        # Grade competition instead of flooring it: a category owner kills the
+        # signal, a merely funded or crowded market demotes it one step.
+        if signal_count >= 3:
+            signal = "strong"
         elif signal_count >= 1:
-            props["Market Signal"] = {"select": {"name": "moderate"}}
+            signal = "moderate"
         else:
-            props["Market Signal"] = {"select": {"name": "weak"}}
+            signal = "weak"
+        if competition == "dominant" or verdict.startswith("unviable"):
+            signal = "weak"
+        elif competition in ("funded", "crowded"):
+            signal = {"strong": "moderate", "moderate": "weak", "weak": "weak"}[signal]
+        props["Market Signal"] = {"select": {"name": signal}}
 
     notion_patch(f"pages/{page_id}", {"properties": props})
 

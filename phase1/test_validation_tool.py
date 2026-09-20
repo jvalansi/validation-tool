@@ -33,9 +33,25 @@ proptax = _assess_competition(
     {"operators_found": 3, "max_funding_usd": 50_000_000},
     {"existing_products": 0},
 )
-assert proptax["level"] == "funded_incumbent", proptax
-assert proptax["positive"] == [], proptax
+assert proptax["level"] == "funded", proptax
 assert "50M" in proptax["negative"][0], proptax
+# A funded competitor is evidence the market is real — it caps upside, not to zero.
+assert proptax["positive"], proptax
+
+# Only a category owner floors the signal.
+owner = _assess_competition({"operators_found": 4, "max_funding_usd": 434_000_000}, {"existing_products": 0})
+assert owner["level"] == "dominant", owner
+assert owner["positive"] == [], owner
+
+# Funding plus a full field is crowded, not merely "funded" — money is not the only barrier.
+both = _assess_competition({"operators_found": 15, "max_funding_usd": 50_000_000}, {"existing_products": 0})
+assert both["level"] == "crowded", both
+assert both["positive"] == [], both
+
+# One vendor is "open", not "contested" — barely served, still proven.
+lone = _assess_competition({"operators_found": 1, "max_funding_usd": None}, {"existing_products": 0})
+assert lone["level"] == "open", lone
+assert lone["negative"] == [], lone
 
 # Absence of vendors is a negative (unproven), never a positive.
 empty = _assess_competition({"operators_found": 0, "max_funding_usd": None}, {"existing_products": 0})
@@ -43,12 +59,12 @@ assert empty["level"] == "none_found", empty
 assert empty["positive"] == [], empty
 
 # A few small vendors and no big raise is the genuinely promising shape.
-wedge = _assess_competition({"operators_found": 2, "max_funding_usd": None}, {"existing_products": 1})
+wedge = _assess_competition({"operators_found": 3, "max_funding_usd": None}, {"existing_products": 1})
 assert wedge["level"] == "contested", wedge
 assert len(wedge["positive"]) == 1 and wedge["negative"] == [], wedge
 
 # Many vendors, none funded, still reads as crowded.
-crowded = _assess_competition({"operators_found": 7, "max_funding_usd": None}, {"existing_products": 6})
+crowded = _assess_competition({"operators_found": 9, "max_funding_usd": None}, {"existing_products": 6})
 assert crowded["level"] == "crowded", crowded
 assert len(crowded["negative"]) == 2, crowded
 

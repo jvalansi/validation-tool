@@ -164,8 +164,10 @@ def cmd_producthunt(args):
 # Incumbents (businesses currently selling — Product Hunt only indexes launches)
 # ---------------------------------------------------------------------------
 
-FUNDED_INCUMBENT_USD = 10_000_000
-CROWDED_OPERATORS = 5
+DOMINANT_FUNDING_USD = 100_000_000   # a category owner — outspends you on every channel
+FUNDED_FUNDING_USD = 10_000_000      # funded, but not untouchable
+CROWDED_OPERATORS = 8                # operator counts include review-site noise; keep this loose
+CROWDED_PH_LAUNCHES = 5              # launches are cheap to count, so a tighter bar
 
 _FUNDING_RE = re.compile(r'\$\s*(\d+(?:\.\d+)?)\s*(million|billion|m\b|b\b)', re.IGNORECASE)
 _FUNDING_CONTEXT = ("raise", "raised", "raises", "funding", "series ", "seed round", "venture", "backed")
@@ -215,6 +217,7 @@ def _incumbent_search(query, limit=8):
     from ddgs import DDGS
 
     import time
+    tokens = _query_tokens(query)
     operators, funding = {}, []
     failed = 0
     probes = [
@@ -238,6 +241,8 @@ def _incumbent_search(query, limit=8):
             if not host or any(host == d or host.endswith("." + d) for d in _DIRECTORY_HOSTS):
                 continue
             amount = _parse_funding(f"{title} {snippet}")
+            if amount and not [t for t in tokens if t in f"{title} {snippet}".lower()]:
+                amount = None  # a raise with no query overlap is some other market's news
             if amount:
                 funding.append({"amount_usd": amount, "headline": title[:120], "url": url})
             if kind == "pricing" and host not in operators:
@@ -269,21 +274,34 @@ def _assess_competition(incumbents, product_hunt):
         negatives.append("incumbent search unavailable — competition unknown, not absent")
         return {"positive": positives, "negative": negatives, "level": "unknown"}
 
-    if max_funding and max_funding >= FUNDED_INCUMBENT_USD:
-        negatives.append(f"funded incumbent (${round(max_funding / 1_000_000)}M raised)")
-        level = "funded_incumbent"
+    raised = f"${round(max_funding / 1_000_000)}M raised" if max_funding else ""
+
+    if max_funding and max_funding >= DOMINANT_FUNDING_USD:
+        negatives.append(f"category owner in the market ({raised}) — outspends you on every channel")
+        level = "dominant"
+    elif max_funding and max_funding >= FUNDED_FUNDING_USD and ops >= CROWDED_OPERATORS:
+        # Funding AND a full field: the money is not the only thing in the way.
+        negatives.append(f"funded competitor ({raised}) among {ops} vendors already selling")
+        level = "crowded"
+    elif max_funding and max_funding >= FUNDED_FUNDING_USD:
+        negatives.append(f"funded competitor ({raised}) — beatable, but not on spend")
+        positives.append("funding in the space confirms investors believe the demand")
+        level = "funded"
     elif ops >= CROWDED_OPERATORS:
         negatives.append(f"crowded: {ops} vendors already selling")
         level = "crowded"
-    elif ops >= 1:
-        positives.append(f"{ops} small vendor(s) selling — demand proven, room to differentiate")
+    elif ops >= 2:
+        positives.append(f"{ops} small vendors selling, none funded — demand proven, room to differentiate")
         level = "contested"
+    elif ops == 1:
+        positives.append("1 vendor selling — demand proven, market barely served")
+        level = "open"
     else:
         negatives.append("no vendors found selling this — demand unproven, or query too abstract")
         level = "none_found"
 
     ph_count = product_hunt.get("existing_products", 0)
-    if ph_count >= CROWDED_OPERATORS:
+    if ph_count >= CROWDED_PH_LAUNCHES:
         negatives.append(f"{ph_count} Product Hunt launches in this space")
 
     return {"positive": positives, "negative": negatives, "level": level}
@@ -709,8 +727,8 @@ def cmd_report(args):
     # One observed price is too thin to kill an idea on; it stays a negative signal.
     if econ.get("below_acquisition_floor") and econ.get("price_observations", 0) >= 2:
         verdict = "unviable — value per customer below the acquisition floor"
-    elif comp["level"] == "funded_incumbent":
-        verdict = "crowded — a funded incumbent already serves this market"
+    elif comp["level"] == "dominant":
+        verdict = "crowded — a category owner already serves this market"
     elif comp["level"] == "crowded":
         verdict = "crowded — multiple vendors already selling"
     elif len(signals) >= 2:
@@ -795,7 +813,12 @@ Provide your assessment as JSON with these fields:
     0.10 — regular challenge: real demand and proven tech, but significant competition or execution risk (realistic penetration ~5-15%)
     0.99 — low-hanging fruit: clear unmet demand, proven solution, little competition (high penetration likely)
   This encodes both probability of success AND realistic market penetration. Choose the closest tier.
-  Hard rules: if summary.competition is "funded_incumbent", do not exceed 0.01. If revenue_estimate.below_acquisition_floor is true, do not exceed 0.01. If legal_status is "restricted", do not exceed 0.1.
+  Ceilings by evidence (apply the lowest that matches):
+    summary.competition == "dominant" -> do not exceed 0.01
+    summary.competition in ("funded", "crowded") -> do not exceed 0.10
+    legal_status == "restricted" -> do not exceed 0.10
+    revenue_estimate.below_acquisition_floor is true AND price_observations >= 2 -> do not exceed 0.01
+  A funded competitor is evidence the market is real; it caps the upside, it does not zero it. Competition levels "contested" and "open" carry no ceiling.
 - "probability_reasoning": one sentence explaining the probability choice, including the expected penetration rate
 
 Return only valid JSON, no markdown."""
