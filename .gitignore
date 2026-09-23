@@ -3,3 +3,6 @@ __pycache__/
 monitor.log
 signups.jsonl
 validated_ids.json.bak
+
+# Manual run backup
+phase1/*.bak
