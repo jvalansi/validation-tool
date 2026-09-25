@@ -13,17 +13,17 @@
       "query_used": "EEG artifact removal"
     },
     "reddit": {
-      "total_results": 10,
+      "total_results": 7,
       "top_posts": [
-        {
-          "title": "r/OpenBCI",
-          "url": "https://www.reddit.com/r/OpenBCI/",
-          "snippet": "September 10, 2021 -But as far as I can tell, no usable open-source standalone application exists that does this end-to-end — ingesting live EEG, solv"
-        },
         {
           "title": "EEG processing pipeline: Detect and Remove ERPs with ... - Reddit",
           "url": "https://www.reddit.com/r/neuro/comments/138vxhg/eeg_processing_pipeline_detect_and_remove_erps/",
           "snippet": "If it's working properly,removalof ICs (especially blinks with their large magnitude) should minimally disruptive of other signals. In any rate EEGLAB"
+        },
+        {
+          "title": "r/OpenBCI - Reddit",
+          "url": "https://www.reddit.com/r/OpenBCI/",
+          "snippet": "Completed my Bachelors in Human Physiology. Want to pursue masters inNeurosciencefor a carrer inBCI. Researched so many colleges in USA, overwhelmed b"
         },
         {
           "title": "ICA images labelled by experts for EEG artifacts : r/neuroscience",
@@ -53,43 +53,37 @@
       ]
     },
     "incumbents": {
-      "operators_found": 10,
+      "operators_found": 5,
       "operators": [
         {
-          "name": "EEG Artifacts: Types, Detection, and Removal Techniques Bitbrain",
-          "host": "bitbrain.com",
-          "url": "https://www.bitbrain.com/blog/eeg-artifacts",
-          "snippet": "November 25, 2025 -BEST Toolbox: A Python package from the Mayo Clinic for long-term invasive and non-invasive EEG processing. Includes modules for artifact removal (e.g., DBS, movement) alongside sle"
+          "name": "A Brief Summary ofEEGArtifactHandling | IntechOpen",
+          "host": "intechopen.com",
+          "url": "https://www.intechopen.com/chapters/77731",
+          "snippet": "3.2Artifacthandling methods forEEG.Artifactavoidance,artifactrejection, manual rejection,automaticrejection, andartifactremovalare the common methods to deal withartifacts[29]."
         },
         {
-          "name": "EEG Preprocessing and Artifact Handling | Springer Nature Link",
-          "host": "link.springer.com",
-          "url": "https://link.springer.com/chapter/10.1007/978-3-032-20450-9_17",
-          "snippet": "Removal of muscular artifacts in EEG signals: A comparison of linear decomposition methods. Brain Informatics, 5(1), 13–22. https://doi.org/10.1007/s40708-017-0074-6 ... Gabard-Durnam, L. J., Mendez L"
-        },
-        {
-          "name": "Frontiers | The Harvard Automated Processing Pipeline for Electroencephalography",
-          "host": "frontiersin.org",
-          "url": "https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2018.00097/full",
-          "snippet": "February 6, 2018 -HAPPE removes more artifact than all alternative approaches while simultaneously preserving greater or equivalent amounts of EEG signal in almost all instances. We also provide distr"
-        },
-        {
-          "name": "Artifact reduction - encevis",
-          "host": "encevis.com",
-          "url": "https://encevis.com/solutions/artifact-reduction/",
-          "snippet": "May 6, 2024 -PureEEG allows you to automatically preprocess your data in order to obtain purified EEGs suitable for computational analyses. This saves you time and increases the amount of valid data f"
-        },
-        {
-          "name": "6. Reject artifacts - EEGLAB Wiki",
-          "host": "eeglab.org",
-          "url": "https://eeglab.org/tutorials/06_RejectArtifacts/",
-          "snippet": "EEGLAB pioneered the use of independent component analysis to reject artifacts and is implementing new measures such as artifact subspace reconstructions. This series of tutorials guides you through r"
-        },
-        {
-          "name": "Clean EEG – Advanced EEG Data Cleaning & Artifact Removal Software",
+          "name": "Clean EEG – Advanced EEG Data Cleaning & Artifact Removal ...",
           "host": "cleaneeg.com",
           "url": "https://cleaneeg.com/",
-          "snippet": "Clean EEG is a professional EEG data cleaning and visualization tool for researchers. Remove artifacts, preprocess signals, and analyze EEG data efficiently in your browser."
+          "snippet": "ProfessionalEEGpreprocessingandartifactremovaltool built for neuroscience researchers."
+        },
+        {
+          "name": "The Real Cost of EEG Machines for University Labs in 2026: A ...",
+          "host": "mindrove.com",
+          "url": "https://mindrove.com/2026/04/08/the-real-cost-of-eeg-machines-for-university-labs-in-2026-a-comprehensive-buyers-guide/",
+          "snippet": "Apr 8, 2026 ·Some manufacturers also charge per-seat licensingfeesfor analysissoftware, impacting the totalcostofeegmachine for university lab long-term budgets. Do I need a 64-channelEEGfor basic BCI"
+        },
+        {
+          "name": "Comparing 5 Top EEG Recording Software Options - emotiv.com",
+          "host": "emotiv.com",
+          "url": "https://www.emotiv.com/blog/eeg-recording-software-comparison",
+          "snippet": "Find the bestEEGrecordingsoftwarefor your research or project. Compare features, pricing, and usability across five leadingEEGrecordingsoftwareoptions."
+        },
+        {
+          "name": "Best EEG Analysis & Acquisition Software [2023] - Mentalab",
+          "host": "mentalab.com",
+          "url": "https://mentalab.com/best-eeg-analysis-software-2023/",
+          "snippet": "Sep 10, 2023 ·The bestEEGanalysissoftwareof 2023 comparing price, features, integrations and more for scientsits, researchers and brain enthusiasts."
         }
       ],
       "funding_mentions": [],
@@ -109,24 +103,24 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 0,
+        "vendor": 1,
         "government": 1,
         "forum": 0,
-        "content": 9
+        "content": 8
       },
-      "vendor_share": 0.0,
+      "vendor_share": 0.1,
       "read": "results page not vendor-dominated — organic entry plausible",
       "hosts": [
         "gtec.at",
         "pmc.ncbi.nlm.nih.gov",
         "github.com",
         "zipdo.co",
-        "arxiv.org",
         "academia.edu",
-        "intechopen.com",
+        "arxiv.org",
         "hal.science",
-        "sccn.ucsd.edu",
-        "researchgate.net"
+        "intechopen.com",
+        "jove.com",
+        "youtube.com"
       ]
     }
   },
@@ -134,36 +128,42 @@
     "tam_tier": "mid",
     "competitor_prices_found": [
       {
-        "raw": "$8",
-        "monthly_equiv": 8.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
-      },
-      {
         "raw": "$1",
         "monthly_equiv": 1.0,
         "period": "unknown",
-        "source": "frontiersin.org"
+        "source": "mindrove.com"
       },
       {
-        "raw": "$2",
-        "monthly_equiv": 2.0,
+        "raw": "$100",
+        "monthly_equiv": 100.0,
         "period": "unknown",
-        "source": "frontiersin.org"
+        "source": "mindrove.com"
+      },
+      {
+        "raw": "$3",
+        "monthly_equiv": 3.0,
+        "period": "unknown",
+        "source": "mindrove.com"
       },
       {
         "raw": "$5",
         "monthly_equiv": 5.0,
         "period": "unknown",
-        "source": "frontiersin.org"
+        "source": "mindrove.com"
+      },
+      {
+        "raw": "$45",
+        "monthly_equiv": 45.0,
+        "period": "unknown",
+        "source": "mindrove.com"
       }
     ],
     "price_anchor_usd": 5.0,
     "price_is_recurring": false,
-    "price_source": "median of 4 prices with no stated period — treated as one-time, not recurring",
+    "price_source": "median of 5 prices with no stated period — treated as one-time, not recurring",
     "gross_margin_assumed": 0.8,
     "ev_per_customer_annual_usd": 4,
-    "price_observations": 4,
+    "price_observations": 5,
     "acquisition_floor_usd": 200,
     "below_acquisition_floor": true,
     "customers_assumed_per_month": {
@@ -177,37 +177,37 @@
   "summary": {
     "positive_signals": [
       "growing search trend",
-      "active Reddit discussion"
+      "active Reddit discussion",
+      "5 small vendors selling, none funded — demand proven, room to differentiate"
     ],
     "negative_signals": [
-      "crowded: 10 vendors already selling",
       "5 Product Hunt launches in this space",
-      "expected value $4/customer/yr is below the $200 acquisition floor (4 price observation(s))"
+      "expected value $4/customer/yr is below the $200 acquisition floor (5 price observation(s))"
     ],
-    "signal_count": 2,
-    "competition": "crowded",
+    "signal_count": 3,
+    "competition": "contested",
     "verdict": "unviable — value per customer below the acquisition floor"
   },
   "claude_analysis": {
-    "tam_assessment": "Mid-sized niche market: the buyers are EEG research labs and clinical neurophysiology groups, search interest is moderate and rising ('EEG artifact removal', average 41.8, trending up), and the search results are dominated by academic sources (PMC, arXiv, sccn.ucsd.edu), which points to a research-heavy buyer base rather than a mass market.",
+    "tam_assessment": "The market is a mid-sized niche of EEG research and clinical labs: Google Trends interest in 'EEG artifact removal' averages ~40 and is rising, Reddit has active threads in r/neuro, r/neuroscience and r/OpenBCI, and the search results are mostly academic content (PMC, arXiv, HAL) rather than vendor pages.",
     "tam_customers": 10000,
     "price_per_customer_annual": 1000,
-    "pricing_assessment": "The extracted $1-$8 'prices' come from the frontiersin.org HAPPE paper, which describes a free academic pipeline, so they are probably text artifacts rather than real prices; commercial tools like encevis PureEEG and Clean EEG point to lab-license pricing of roughly $1000/yr (an assumption, since no real price was observed), under pressure from free tools like EEGLAB, HAPPE and MNE.",
+    "pricing_assessment": "The $5 anchor comes from mindrove.com, which appears to be an EEG hardware buyer's guide, so it likely isn't artifact-removal software pricing; lab analysis tools such as BrainVision Analyzer and BESA typically sell per-seat licenses in the ~$1000/yr range (assumption, not in the data), which is a more realistic anchor for a B2B research tool.",
     "legal_status": "clear",
-    "legal_reasoning": "The regulatory probe found no restriction signals (0 restriction hits, 0 government sources) for research-use software, but clinical diagnostic use would probably need medical-device clearance, which was not checked.",
+    "legal_reasoning": "The regulatory probe found no restriction signals and no government restriction sources for selling research-grade EEG preprocessing software, although selling it for clinical diagnosis could trigger medical-device clearance, which the probe did not examine.",
     "key_risks": [
-      "Free open-source tools (EEGLAB, HAPPE, MNE, the Mayo Clinic BEST Toolbox) are the default choice in academia and push willingness to pay toward zero",
-      "Crowded field: 10 incumbents found, including established commercial products such as encevis PureEEG and Clean EEG",
-      "The pipeline's revenue estimate of $4/customer/yr falls below the $200 acquisition floor, and academic purchasing cycles are slow and grant-dependent"
+      "Free open-source tools (EEGLAB, MNE-Python, ICLabel, ASR) already cover automated artifact removal, which limits how much academic labs will pay",
+      "Existing vendors such as CleanEEG and hardware makers that bundle analysis software (g.tec, Emotiv, Mentalab) compete for the same lab budgets",
+      "The only observed price points are low and unreliable, and the pipeline flags value per customer as below the $200 acquisition floor"
     ],
     "key_opportunities": [
-      "Search trend for 'EEG artifact removal' is rising",
-      "A Reddit user on r/OpenBCI reports that no usable open-source standalone application handles live EEG end-to-end",
-      "The search results page is not vendor-dominated (0% vendor share), so organic entry through content and SEO looks plausible"
+      "Search interest in EEG artifact removal is moderate (~40) and trending up",
+      "None of the 5 vendors found has any funding mentioned, and vendors hold only 10% of search results, so organic entry looks plausible",
+      "Consumer and BCI EEG hardware (OpenBCI, Emotiv, MindRove) is expanding the base of users who lack preprocessing expertise"
     ],
     "value": 10000000,
-    "value_reasoning": "About 10,000 potential labs × about $1000/yr ≈ $10M total addressable annual revenue.",
+    "value_reasoning": "~10,000 potential lab customers x ~$1000/yr per customer gives ~$10M total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "The cap applies because below_acquisition_floor is true with 4 price observations, and the crowded, free-tool-dominated market also points to realistic penetration under 1%, though the underlying price data looks spurious and may understate real willingness to pay."
+    "probability_reasoning": "The rule for below_acquisition_floor with 5 price observations caps probability at 0.01, and free open-source alternatives make realistic penetration likely under 1% even if the price anchor is wrong."
   }
 }

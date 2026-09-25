@@ -7,28 +7,25 @@
       "top_posts": []
     },
     "google_trends": {
-      "average_interest": 56.6,
-      "trend_direction": "down",
-      "signal": "strong",
-      "query_used": "EEG analysis"
+      "error": "The request failed: Google returned a response with code 429"
     },
     "reddit": {
-      "total_results": 10,
+      "total_results": 6,
       "top_posts": [
         {
-          "title": "EEG Data Analysis (openBCI) : r/neuro - Reddit",
-          "url": "https://www.reddit.com/r/neuro/comments/xyact8/eeg_data_analysis_openbci/",
-          "snippet": "EEGDataAnalysis(openBCI) Hello, I'm an undergraduate RA working on getting anEEG-based cognitive neuro lab running. Our primary hardware is an openBCI"
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
         },
         {
-          "title": "Realtime streaming software choice for EEG? Replacing MNE ...",
-          "url": "https://www.reddit.com/r/neuroscience/comments/czmm6c/realtime_streaming_software_choice_for_eeg/",
-          "snippet": "I\"m not sure if this is the right place to post. I've been doing someanalysisusingMNEand python. I have been using the sample data that comes withMNE."
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
         },
         {
-          "title": "MNE vs pyEDFlib for EEG analysis? : r/neuroscience - Reddit",
-          "url": "https://www.reddit.com/r/neuroscience/comments/epp03x/mne_vs_pyedflib_for_eeg_analysis/",
-          "snippet": "/r/neuroscienceis dedicated to the academic discussion of the discipline. While we welcome beginners to browse and learn, front page posts are heavily"
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/Chub_AI/hot/?rdt=33982",
+          "snippet": "The site owner hides the web page description."
         }
       ]
     },
@@ -53,47 +50,29 @@
       ]
     },
     "incumbents": {
-      "operators_found": 8,
+      "operators_found": 2,
       "operators": [
         {
-          "name": "GitHub - Exekiel179/MNE-MCP: Conversational EEG/MEG/sEEG/ECoG ...",
-          "host": "github.com",
-          "url": "https://github.com/Exekiel179/MNE-MCP",
-          "snippet": "Jun 1, 2026 ·A Model Context Protocol (MCP) server that givesAIassistants direct, conversational access toMNE-Python for analyzing human neurophysiology data —EEG,MEG, sEEG, ECoG, and fNIRS. Describe "
-        },
-        {
-          "name": "MNE — MNE 1.13.2 documentation - Aalto",
+          "name": "Algorithms and other implementation... —MNE1.13.2 documentation",
           "host": "mne.tools",
-          "url": "https://mne.tools/stable/index.html",
-          "snippet": "Sep 16, 2026 ·Version 1.13.2MNE-Python Homepage # Open-source Python package for exploring, visualizing, and analyzing human neurophysiological data:MEG,EEG, sEEG, ECoG, NIRS, and more."
+          "url": "https://mne.tools/stable/documentation/implementation.html",
+          "snippet": "Overview ofMEG/EEGanalysiswithMNE-Python. Modifying data in-place. Parsing events from raw data.Display sensitivity mapsforEEGandMEGsensors. Generate a left cerebellum volume source space."
         },
         {
-          "name": "Best EEG Analysis & Acquisition Software [2023] - Mentalab",
-          "host": "mentalab.com",
-          "url": "https://mentalab.com/best-eeg-analysis-software-2023/",
-          "snippet": "Sep 10, 2023 ·The bestEEGanalysissoftware of 2023 comparingprice, features, integrations and more for scientsits, researchers and brain enthusiasts."
-        },
-        {
-          "name": "Self-Hosted EEG & MEG Neuroimaging Processing: MNE-Python vs ...",
-          "host": "pistack.xyz",
-          "url": "https://www.pistack.xyz/posts/2026-06-10-self-hosted-eeg-meg-neuroimaging-mne-python-fieldtrip-eeglab-guide/",
-          "snippet": "Jun 10, 2026 ·This guide compares three leading self-hostedEEG/MEGprocessing frameworks:MNE-Python (the Python powerhouse for neuroimaging data), FieldTrip (the MATLAB toolbox with unparalleled breadt"
-        },
-        {
-          "name": "Open-Source EEG Analysis Tools: Making Brain Research More ...",
-          "host": "brainaccess.ai",
-          "url": "https://www.brainaccess.ai/open-source-eeg-analysis-tools-making-brain-research-more-accessible/",
-          "snippet": "Jul 15, 2025 ·MNE-Python Platform: Python. Overview:MNE-Python is an open-source library and one of the most popular toolkitsfor EEG/MEGanalysisin Python. It provides comprehensive capabilities for si"
-        },
-        {
-          "name": "mne-mcp · PyPI",
-          "host": "pypi.org",
-          "url": "https://pypi.org/project/mne-mcp/",
-          "snippet": "MNE-MCP English | 简体中文 A Model Context Protocol (MCP) server that givesAIassistants direct, conversational access toMNE-Python for analyzing human neurophysiology data —EEG,MEG, sEEG, ECoG, and fNIRS."
+          "name": "MNE.book",
+          "host": "nitrc.org",
+          "url": "https://www.nitrc.org/docman/view.php/168/486/MNE-manual-2.5.pdf",
+          "snippet": "Interactiveanalysisof theMEG/EEGdata and source estimates is facili-tated by themne_analyzetool. Its features include: 1. Viewing of evoked-response data or data segments in a topographical layout."
         }
       ],
-      "funding_mentions": [],
-      "max_funding_usd": null,
+      "funding_mentions": [
+        {
+          "amount_usd": 500000000.0,
+          "headline": "AIassistantSanaraises$55m in aroundled by NEA | Sifted",
+          "url": "https://sifted.eu/articles/nea-backs-ai-startup-sana-with-55m-news"
+        }
+      ],
+      "max_funding_usd": 500000000.0,
       "probes_failed": 0,
       "search_failed": false
     },
@@ -109,72 +88,111 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 2,
+        "vendor": 3,
         "government": 0,
         "forum": 0,
-        "content": 8
+        "content": 7
       },
-      "vendor_share": 0.2,
-      "read": "results page not vendor-dominated — organic entry plausible",
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "github.com",
         "mne.tools",
-        "mne-cpp.github.io",
-        "frontiersin.org",
-        "reporank.net",
-        "researchgate.net",
-        "academia.edu",
-        "inria.hal.science",
-        "lobehub.com",
-        "webisoft.com"
+        "github.com",
+        "mne.tools",
+        "sciencedirect.com",
+        "pypi.org",
+        "sciencedirect.com",
+        "github.com",
+        "mne.tools",
+        "mne-cpp.github.io"
       ]
     }
   },
   "revenue_estimate": {
-    "tam_tier": "mass",
-    "competitor_prices_found": [],
-    "price_anchor_usd": null,
-    "price_is_recurring": null,
-    "price_source": "no competitor price observed",
-    "ev_per_customer_annual_usd": null,
-    "below_acquisition_floor": null,
-    "conservative_mrr": "",
-    "optimistic_mrr": "",
-    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+    "tam_tier": "niche",
+    "competitor_prices_found": [
+      {
+        "raw": "$8",
+        "monthly_equiv": 8.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$4",
+        "monthly_equiv": 4.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$6",
+        "monthly_equiv": 6.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$7",
+        "monthly_equiv": 7.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      }
+    ],
+    "price_anchor_usd": 6.0,
+    "price_is_recurring": false,
+    "price_source": "median of 5 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 5,
+    "price_observations": 5,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 5,
+      "optimistic": 50
+    },
+    "conservative_mrr": "$30",
+    "optimistic_mrr": "$300",
+    "note": "MRR = observed price ($6.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
   },
   "summary": {
     "positive_signals": [
-      "strong search volume",
       "active Reddit discussion"
     ],
     "negative_signals": [
-      "crowded: 8 vendors already selling",
-      "5 Product Hunt launches in this space"
+      "category owner in the market ($500M raised) — outspends you on every channel",
+      "5 Product Hunt launches in this space",
+      "expected value $5/customer/yr is below the $200 acquisition floor (5 price observation(s))",
+      "vendors own the buyer-intent results page — paid may be the only channel"
     ],
-    "signal_count": 2,
-    "competition": "crowded",
-    "verdict": "crowded — multiple vendors already selling"
+    "signal_count": 1,
+    "competition": "dominant",
+    "verdict": "unviable — value per customer below the acquisition floor"
   },
   "claude_analysis": {
-    "tam_assessment": "Niche academic/clinical-research market despite the 'mass' tier label: the 'EEG analysis' query shows strong but declining interest (56.6, trend down), and demand evidence is small (10 Reddit threads, mostly student/RA questions about MNE and OpenBCI; 0 Hacker News results), so buyers are mainly EEG/MEG research labs and neurotech developers.",
+    "tam_assessment": "Niche market: the incumbents are free open-source tools (mne.tools, NITRC, MNE-CPP on GitHub/PyPI), and no Hacker News posts or relevant Reddit discussion turned up, which points to roughly 10^4 academic and clinical EEG/MEG researchers rather than a broad market.",
     "tam_customers": 10000,
     "price_per_customer_annual": 100,
-    "pricing_assessment": "No competitor price was observed, so ~$100/yr per researcher is an assumption; willingness to pay is limited by the free open-source MNE-MCP server (GitHub/PyPI) combined with general-purpose AI assistants, which pushes pricing toward academic-seat or lab-license levels.",
+    "pricing_assessment": "The $1-8 'competitor prices' come from an MNE manual PDF on nitrc.org and probably aren't product prices, since MNE is free; academic research tooling at about $100/yr per seat fits grant-funded budgets, but willingness to pay is limited when the base tool costs nothing.",
     "legal_status": "clear",
-    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing restriction surfaced for research-use analysis software; clinical diagnostic claims could trigger medical-device rules, but none appeared in the data.",
+    "legal_reasoning": "The regulatory probes returned no restriction terms or government sources, and research-use analysis software isn't subject to medical-device rules unless it's marketed for clinical diagnosis.",
     "key_risks": [
-      "A free, open-source substitute (MNE-MCP on GitHub/PyPI) already provides conversational AI access to MNE-Python",
-      "General LLM coding assistants can already write MNE scripts, which reduces the need for a paid specialized tool",
-      "Academic buyers have small, grant-dependent budgets, and search interest in EEG analysis is declining"
+      "The free open-source MNE ecosystem, plus general coding assistants like Claude and ChatGPT that already write MNE-Python code, leave little room for a paid product",
+      "Academic buyers have small budgets and slow, grant-driven purchasing, and each customer is worth less than the $200 acquisition floor",
+      "Search results are dominated by docs and GitHub (7/10 content, 3/10 vendor), so there's no clear organic or paid acquisition channel"
     ],
     "key_opportunities": [
-      "Strong search volume for EEG analysis, and MNE-Python is established as a leading open-source EEG/MEG toolkit",
-      "Reddit threads show beginners struggling with MNE workflows and hardware integration such as OpenBCI",
-      "Search results are only 20% vendor-owned, so organic entry through content and documentation is plausible"
+      "MNE's steep learning curve (source spaces, forward models, preprocessing pipelines) is a real pain point for newcomers to EEG/MEG",
+      "The 'dominant $500M competitor' signal is a parsing error (Sana, a general AI assistant, raised $55M), so no one owns the MNE-specific assistant niche",
+      "Consumer and BCI EEG (OpenBCI discussion on Reddit) could extend the audience beyond academic labs"
     ],
     "value": 1000000,
-    "value_reasoning": "About 10,000 potential customers (an assumption covering EEG/MEG labs and neurotech developers) × ~$100/yr (an assumed price) ≈ $1M total addressable annual revenue.",
+    "value_reasoning": "About 10,000 potential customers × about $100/yr ≈ $1,000,000 in total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "The crowded verdict caps probability at 0.10, but a free open-source equivalent already exists, general LLMs substitute well, and budgets are academic, so realistic paid penetration is likely ~1% of an already small niche."
+    "probability_reasoning": "The ceilings for 'dominant' competition and for falling below the acquisition floor with 5 or more price observations both cap this at 0.01; both rest on noisy data, but a free incumbent and general LLM substitutes still point to under 1% realistic penetration."
   }
 }

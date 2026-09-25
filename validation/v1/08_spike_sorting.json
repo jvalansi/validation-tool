@@ -1,0 +1,180 @@
+{
+  "query": "cloud spike sorting service neuropixels",
+  "search_query": "cloud spike sorting service neuropixels",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 47.1,
+      "trend_direction": "down",
+      "signal": "moderate",
+      "query_used": "spike sorting"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/11inzdr/unarcdll_error_code_14_fitgirl_this_is_not/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/HypixelSkyblock/comments/11gzy07/where_the_heck_do_i_find_arachne_keeper_ive_been/",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "Altogic: Backend as aserviceplatform to develop apps...",
+          "url": "https://www.producthunt.com/products/altogic",
+          "snippet": "Altogic is a backend as aserviceplatform, a Firebase alternative, providing database, storage,cloudf"
+        },
+        {
+          "name": "iCloud: Acloudstorage andcloudcomputingservice| Product Hunt",
+          "url": "https://www.producthunt.com/products/icloud",
+          "snippet": "Sign in to iCloud to access your photos, videos, documents, notes, contacts, and more. Use your Appl"
+        },
+        {
+          "name": "Air: Don't let good ideas get lost in bad systems",
+          "url": "https://www.producthunt.com/products/air?launch=1stagram",
+          "snippet": "Hey Product Hunt Air Co-Founder and CEO here! Three years ago, we launched Air with a simple idea: m"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "cortex-lab/phy: phy: interactive visualization and manualspikesorting...",
+          "host": "github.com",
+          "url": "https://github.com/cortex-lab/phy",
+          "snippet": "phy is an open-source Python library providing a graphical user interface for visualization and manual curation of large-scale electrophysiological data. It is optimized for high-density multielectrod"
+        },
+        {
+          "name": "Neuropixels| UCL | UCL Faculty of Brain Sciences",
+          "host": "ucl.ac.uk",
+          "url": "https://www.ucl.ac.uk/brain-sciences/neuropixels",
+          "snippet": "Neuropixelsconstitute a step advance in recording technology. Thanks to their dense and numerous recording sites, and their extremely low noise levels, they allow superior discrimination of thespikeso"
+        },
+        {
+          "name": "Multi-NeuropixelsElectrophysiology | Allen Institute for Neural Dynamics",
+          "host": "allenneuraldynamics.org",
+          "url": "https://www.allenneuraldynamics.org/platforms/neuropixels-electrophysiology",
+          "snippet": "NeuropixelsOpto.Spikesortingin thecloud.Spikesortingin thecloud. Reproducible ephys requires rapid feedback about the quality of data in each experiment, along with a complete record of all code that "
+        },
+        {
+          "name": "neuropixels-analysis — Agent Skill — MCP.Directory",
+          "host": "mcp.directory",
+          "url": "https://mcp.directory/skills/neuropixels-analysis",
+          "snippet": "Use when working with neural recordings,spikesorting, extracellular electrophysiology, or when the user mentionsNeuropixels, SpikeGLX, Open Ephys, Kilosort, quality metrics, or unit curation."
+        },
+        {
+          "name": "Ensemblesortingof aNeuropixelsrecording | spikeinterface report",
+          "host": "spikeinterface.github.io",
+          "url": "https://spikeinterface.github.io/blog/ensemble-sorting-of-a-neuropixels-recording/",
+          "snippet": "This notebook reproduces figures 1 and 4 from the paper SpikeInterface, a unified framework forspikesorting.To run the MATLAB-basedsorters, you would also need a MATLAB license. For othersorters, plea"
+        },
+        {
+          "name": "Chronically implantedNeuropixelsprobes enable high-yield recordings...",
+          "host": "elifesciences.org",
+          "url": "https://elifesciences.org/articles/47188",
+          "snippet": "TheNeuropixelsAMIE can be used to record in both restrained and unrestrained conditions, with similar yields in numbers of isolated units (Figures 4 and 5), although a direct comparison of yields acro"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 6,
+        "government": 0,
+        "forum": 0,
+        "content": 4
+      },
+      "vendor_share": 0.6,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "claudecodehq.com",
+        "github.com",
+        "elifesciences.org",
+        "elifesciences.org",
+        "github.com",
+        "openskills.cc",
+        "spikeinterface.readthedocs.io",
+        "allensdk.readthedocs.io",
+        "github.com",
+        "spikeinterface.github.io"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche academic market: the data shows moderate but declining interest in 'spike sorting' (Google Trends average 47, trending down), and the incumbents found are mostly free open-source tools and institutional pipelines (phy, SpikeInterface, Allen Institute cloud sorting), which points to roughly a thousand Neuropixels-using labs rather than a broad commercial market.",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 10000,
+    "pricing_assessment": "No competitor price was observed, so ~$10k/yr per lab for managed GPU sorting plus curation is an assumption; willingness to pay is limited by grant budgets and by free tools like Kilosort and SpikeInterface running on lab-owned GPUs.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found no restriction terms and no government sources, and research-data processing services need no special licensing.",
+    "key_risks": [
+      "Free open-source incumbents (SpikeInterface, Kilosort, phy, Allen Institute's open cloud pipeline) set the reference price at zero",
+      "Academic buyers are grant-constrained and slow to buy, and many already have institutional HPC or GPU access",
+      "Declining search interest and a small labs-only buyer base cap growth"
+    ],
+    "key_opportunities": [
+      "Neuropixels recordings are large and compute-heavy, so labs without GPUs or DevOps skills have a real pain point",
+      "Allen Institute already frames 'spike sorting in the cloud' as a reproducibility need, which validates the workflow",
+      "No paid vendor with observed pricing surfaced, so a managed and reproducible service may be under-served"
+    ],
+    "value": 10000000,
+    "value_reasoning": "Assumes 1,000 potential labs × $10,000/yr = $10M total addressable annual revenue; both figures are assumptions, since no customer count or price was observed.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The 'crowded' ceiling allows up to 0.10, but the real competition is free open-source tooling rather than priced vendors (the Reddit and Product Hunt hits in the data are unrelated noise), so realistic paid penetration is likely under 1% of labs."
+  }
+}

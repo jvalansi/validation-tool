@@ -1,0 +1,179 @@
+{
+  "query": "BCI EEG decoding benchmark leaderboard",
+  "search_query": "BCI EEG decoding benchmark leaderboard",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 41.3,
+      "trend_direction": "down",
+      "signal": "moderate",
+      "query_used": "EEG decoding"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "OpenBCI EEG Assembly, Software installation, and Recording",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "Still improving my editing so the video is not great, maybe watch it on 2x speed to get through it faster. But for anyone who is considering starting "
+        },
+        {
+          "title": "r/OpenBCI - Reddit",
+          "url": "https://www.reddit.com/r/OpenBCI/",
+          "snippet": "r/OpenBCIHello, I'm looking for some guidance in setting up aBCIcontroller for a laptop to help my daughter with a degenerative disease speak. Is Open"
+        },
+        {
+          "title": "The best EEG headset for programming : r/BCI - Reddit",
+          "url": "https://www.reddit.com/r/BCI/comments/p3mz41/the_best_eeg_headset_for_programming/",
+          "snippet": "Is that what your looking for, or are you trying to write software to do something with eeg data (bci, analysis, biofeedback etc.) If the later, I wou"
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 3,
+      "top_products": [
+        {
+          "name": "Benchmark| Upload a fintech proposal & see if the...",
+          "url": "https://www.producthunt.com/products/are-you-beeing-spreaded",
+          "snippet": "Nobenchmarks, no transparency — information asymmetry benefits incumbents. Upload a PDF proposal for"
+        },
+        {
+          "name": "AISpace: All frontier AI models in one space",
+          "url": "https://www.producthunt.com/products/aispace",
+          "snippet": "1. Usage dashboard — track your usage and spending across models, compare costs, see which models yo"
+        },
+        {
+          "name": "Abode: Fresh take on group spaces with friends.",
+          "url": "https://www.producthunt.com/products/abode-3?launch=abode-3&page=2",
+          "snippet": "ShoutoutsLeaderboard. Love it, you guys are setting abenchmarkin delightful design ￼ ￼are there any "
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 12,
+      "operators": [
+        {
+          "name": "Track record ·EEG/EMG Foundation Challenge 2026",
+          "host": "neural-interfaces26.github.io",
+          "url": "https://neural-interfaces26.github.io/track-record.html",
+          "snippet": "Cross-subject motor-imageryEEGdecodingacross heterogeneousBCIdatasets.EEG-based age regression on a multi-cohortbenchmark. Stress-tested cross-site generalisation and introduced the dataset-aggregator"
+        },
+        {
+          "name": "EEG-Driven IntentionDecoding: Offline Deep Learning...",
+          "host": "arxiv.org",
+          "url": "https://arxiv.org/html/2602.20041",
+          "snippet": "By combining real-world robotic control with multi-horizonEEGintentiondecoding, this study introduces a reproduciblebenchmarkand reveals key design insights for predictive, DL-basedBCIsystems."
+        },
+        {
+          "name": "BCINetV1: Integrating Temporal and Spectral Focus Through a Novel...",
+          "host": "pmc.ncbi.nlm.nih.gov",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12349355/",
+          "snippet": "Within theEEG-basedBCIlandscape, common paradigms include event-related potentials (ERPs), steady-state visually evoked potentials (SSVEPs), and motor imagery (MI).Table 1. Overview ofbenchmarkEEGdeco"
+        },
+        {
+          "name": "AILeaderboard2026: Rankings for 300+ Top AI Models by...",
+          "host": "llm-stats.com",
+          "url": "https://llm-stats.com/",
+          "snippet": "The AILeaderboard— independent rankings of GPT, Claude, Gemini, Llama, DeepSeek and 300+ AI models by intelligence, speed andprice. Composite LLM Stats Score updated continuously from publicbenchmarks"
+        },
+        {
+          "name": "SMMTM: Motor imageryEEGdecodingalgorithm using a hybrid...",
+          "host": "journals.plos.org",
+          "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0333805&type=printable",
+          "snippet": "Cross-subjectdecodingexperiment. Table 3 shows the overall accuracy and k-scores for within-subject MI-EEGclassification usingBCI-2a dataset."
+        },
+        {
+          "name": "Inter-subject Deep Transfer Learning for Motor ImageryEEGDecoding",
+          "host": "ieeexplore.ieee.org",
+          "url": "https://ieeexplore.ieee.org/document/9441085",
+          "snippet": "Convolutional neural networks (CNNs) have become a powerful technique todecodeEEGand have become thebenchmarkfor motor imageryEEGBrain-Computer-Interface (BCI)decoding."
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 4,
+        "government": 1,
+        "forum": 0,
+        "content": 5
+      },
+      "vendor_share": 0.4,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "neural-interfaces26.github.io",
+        "bci.report",
+        "github.com",
+        "neural-interfaces26.github.io",
+        "sota2.com",
+        "sylyoung.github.io",
+        "neural-interfaces26.github.io",
+        "arxiv.org",
+        "pmc.ncbi.nlm.nih.gov",
+        "universite-paris-saclay.hal.science"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 12 vendors already selling",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "The market is a narrow academic and industry niche: the 12 'operators' found are mostly free academic benchmarks and papers (neural-interfaces26.github.io challenge, arXiv, PMC, PLOS, IEEE), not paying vendors, Hacker News returned 0 results, and Google Trends interest for 'EEG decoding' is moderate (41.3) and trending down.",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "No competitor price was observed, and existing EEG benchmarks (e.g. the EEG/EMG Foundation Challenge, the benchmarks attached to papers) appear to be free and community-run, so ~$1000/yr is an assumption that only fits sponsorships or private evaluation for BCI companies and well-funded labs, not per-researcher subscriptions.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing rule limiting who may sell this surfaced.",
+    "key_risks": [
+      "Benchmark leaderboards in this field are free public goods run by academics and challenge organizers, which anchors willingness to pay near zero",
+      "Small, shrinking buyer pool: Google Trends interest is declining and Hacker News shows no discussion",
+      "Vendor and academic sites hold 40% and 50% of the search results page, so organic discovery is hard and paid acquisition would be expensive for a low-price product"
+    ],
+    "key_opportunities": [
+      "No single established EEG decoding leaderboard exists: results are scattered across per-paper benchmarks (BCI-2a, cross-subject motor imagery), which leaves room for a standardized, reproducible comparison",
+      "Active hobbyist and assistive-use discussion on r/BCI and r/OpenBCI points to a user base beyond academia",
+      "Growing interest in EEG foundation models (e.g. the 2026 EEG/EMG Foundation Challenge) could produce sponsors among neurotech companies that want credible third-party validation"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 1000 potential paying BCI labs and neurotech companies × about $1000/yr ≈ $1M total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "This is a moonshot tier, below the 0.10 ceiling for a 'crowded' market: free academic benchmarks already set the norm and no paid pricing was observed, so realistic paid penetration is likely under 1% of an already small niche."
+  }
+}

@@ -7,25 +7,28 @@
       "top_posts": []
     },
     "google_trends": {
-      "error": "The request failed: Google returned a response with code 429"
+      "average_interest": 28.1,
+      "trend_direction": "up",
+      "signal": "moderate",
+      "query_used": "EEG signal quality"
     },
     "reddit": {
-      "total_results": 6,
+      "total_results": 10,
       "top_posts": [
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
-          "snippet": "The site owner hides the web page description."
+          "title": "EEG Data Analysis (openBCI) : r/neuro - Reddit",
+          "url": "https://www.reddit.com/r/neuro/comments/xyact8/eeg_data_analysis_openbci/",
+          "snippet": "EEGDataAnalysis (openBCI) Hello, I'm an undergraduate RA working on getting anEEG-based cognitive neuro lab running. Our primary hardware is an openBC"
         },
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/neuroscience/comments/p2sipc/neurofeedback_technologyreal_or_what/?rdt=53997",
-          "snippet": "The site owner hides the web page description."
+          "title": "Can't get any quality on my emotiv EEG : r/BCI - Reddit",
+          "url": "https://www.reddit.com/r/BCI/comments/1dfbcdv/cant_get_any_quality_on_my_emotiv_eeg/",
+          "snippet": "Thequalityof thesignalis awful, in best case scenario it's muscles and movement artefacts. I very rarely see there alpha rhythm even for people with p"
         },
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
-          "snippet": "The site owner hides the web page description."
+          "title": "Emotiv Insight 2.0 Major EEG signal issues. Any advice? : r/BCI",
+          "url": "https://www.reddit.com/r/BCI/comments/18asonj/emotiv_insight_20_major_eeg_signal_issues_any/",
+          "snippet": "Hello! I have been having major trouble with the Emotiv Insight. Even though the contactqualityis 100%, theEEGqualityis haywire. While I can get it to"
         }
       ]
     },
@@ -50,7 +53,7 @@
       ]
     },
     "incumbents": {
-      "operators_found": 9,
+      "operators_found": 10,
       "operators": [
         {
           "name": "EEGHolterMonitor: 288-Channel AmbulatoryEEGSystem",
@@ -71,22 +74,22 @@
           "snippet": "WhyEEGSignalQualityMatters. High-qualityEEGdataforms the foundation ofSymptoms. Suddensignalloss. Flat channels. Excessive noise. Intermittent recordings. Regularsignalqualitychecks help identify thes"
         },
         {
+          "name": "Frontiers | Concealed, Unobtrusive Ear-CenteredEEGAcquisition...",
+          "host": "frontiersin.org",
+          "url": "https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2017.00163/full",
+          "snippet": "Here, we propose the transparentEEGconcept. TransparentEEGaims for motion tolerant, highly portable, unobtrusive, and near invisibledataacquisition with minimum disturbance of a user's daily activitie"
+        },
+        {
           "name": "EEGSignalQualityin Wet Versus Dry Electrodes - Sapien Labs",
           "host": "sapienlabs.org",
           "url": "https://sapienlabs.org/lab-talk/eeg-signal-quality-in-wet-versus-dry-electrodes/",
           "snippet": "WetEEGelectrodes may provide betterqualityEEGsignalsfor short duration. As the gel dries up, motion artifacts and high contact impedance may deteriorate thesignalfurther."
         },
         {
-          "name": "Cost of an EEG - 2026 Healthcare Costs - CostHelper",
-          "host": "health.costhelper.com",
-          "url": "https://health.costhelper.com/eeg.html",
-          "snippet": "In an ambulatory EEG [5] , for example, the patient goes about daily activities for up to 72 hours while wearingmonitoringequipment. And in an extended EEG, the patient is monitored, typically in a ho"
-        },
-        {
-          "name": "EEG Device Comparison & Signal Quality Visualizer",
-          "host": "bionichaos.com",
-          "url": "https://bionichaos.com/eegcompare/",
-          "snippet": "An interactive laboratory comparing consumer, research, clinical, and implantable EEG devices based onSignal-to-Noise Ratio (SNR),cost, and real-time synthesized electrophysiologicalsignalquality."
+          "name": "The Dreem Headband as an Alternative to Polysomnography forEEG...",
+          "host": "biorxiv.org",
+          "url": "https://www.biorxiv.org/content/10.1101/662734v1.full",
+          "snippet": "This study compared theEEGsignalquality; heart rate, breathing frequency, and respiratory rate variability (RRV) measurements; and automatic sleep staging of the Dreem headband (DH) to manually genera"
         }
       ],
       "funding_mentions": [
@@ -112,29 +115,29 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 4,
+        "vendor": 6,
         "government": 0,
         "forum": 0,
-        "content": 6
+        "content": 4
       },
-      "vendor_share": 0.4,
+      "vendor_share": 0.6,
       "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "nccmed.com",
         "bitbrain.com",
         "brainbit.com",
         "biorxiv.org",
-        "sapienlabs.org",
         "keras.io",
+        "sapienlabs.org",
         "mbraintrain.com",
         "clinicaltrialvanguard.com",
         "researchgate.net",
-        "inria.hal.science"
+        "frontiersin.org"
       ]
     }
   },
   "revenue_estimate": {
-    "tam_tier": "niche",
+    "tam_tier": "mid",
     "competitor_prices_found": [
       {
         "raw": "$499",
@@ -152,46 +155,47 @@
     "acquisition_floor_usd": 200,
     "below_acquisition_floor": false,
     "customers_assumed_per_month": {
-      "conservative": 5,
-      "optimistic": 50
+      "conservative": 20,
+      "optimistic": 200
     },
-    "conservative_mrr": "$2495",
-    "optimistic_mrr": "$24950",
-    "note": "MRR = observed price ($499.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+    "conservative_mrr": "$9980",
+    "optimistic_mrr": "$99800",
+    "note": "MRR = observed price ($499.0 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
   },
   "summary": {
     "positive_signals": [
+      "growing search trend",
       "active Reddit discussion"
     ],
     "negative_signals": [
-      "funded competitor ($52M raised) among 9 vendors already selling",
+      "funded competitor ($52M raised) among 10 vendors already selling",
       "5 Product Hunt launches in this space",
       "vendors own the buyer-intent results page — paid may be the only channel"
     ],
-    "signal_count": 1,
+    "signal_count": 2,
     "competition": "crowded",
     "verdict": "crowded — multiple vendors already selling"
   },
   "claude_analysis": {
-    "tam_assessment": "Niche market: buyers are clinical EEG labs, ambulatory EEG providers, and BCI/neuroscience research groups, with 9 incumbent vendors (e.g., nccmed, Bitbrain, BrainBit, mBrainTrain) already selling hardware that includes signal-quality features, and the 6 Reddit results include unrelated threads, so there is little direct demand evidence.",
+    "tam_assessment": "This is a mid-size niche: the buyers are EEG research labs, clinical and ambulatory EEG providers (for example, nccmed's 288-channel Holter systems), and BCI and consumer-headset users (OpenBCI, Emotiv), with moderate and rising search interest (Google Trends 28.1, up).",
     "tam_customers": 10000,
     "price_per_customer_annual": 1000,
-    "pricing_assessment": "The only observed price is BrainBit's $499, with no stated period, so it is treated as a one-time purchase; B2B software at a few hundred to ~$1000/yr per lab is plausible, but willingness to pay for a standalone tool is unproven when amplifier vendors already bundle impedance and quality checks.",
-    "legal_status": "clear",
-    "legal_reasoning": "No restriction signals or government sources surfaced in the regulatory probe, though clinical-use claims could trigger medical device (e.g., FDA SaMD) review, which this data did not test.",
+    "pricing_assessment": "The only observed price is a $499 one-time BrainBit figure (about $399 per year after the assumed 80% margin, which rounds up to $1000 on a log scale); B2B lab and clinical software at roughly $500-1000 per year is plausible, but the observed price may be hardware rather than software, so this is not proven.",
+    "legal_status": "unknown",
+    "legal_reasoning": "No restriction signals or government sources surfaced, but tools used in clinical EEG monitoring may count as medical-device software, and this search did not test that.",
     "key_risks": [
-      "Incumbent hardware vendors bundle signal-quality monitoring for free, so a standalone product has weak differentiation",
-      "Vendors own the search results page, so paid acquisition may be the only channel into a small buyer pool",
-      "Only one price observation, which looks one-time rather than recurring, so the revenue model is uncertain"
+      "Hardware vendors (Bitbrain, BrainBit, mBrainTrain, Emotiv) already build impedance and signal-quality checks into their own products for free",
+      "Vendors own 60% of the search results, so reaching buyers likely depends on paid ads or partnerships",
+      "Clinical buyers may need FDA or CE clearance, which lengthens sales cycles"
     ],
     "key_opportunities": [
-      "Data loss from ambulatory and dry-electrode EEG is a documented pain point (Sapien Labs, BrainBit content cite sudden signal loss and gel drying)",
-      "Growth in ambulatory/home EEG and BCI research widens the need for real-time, cross-device quality monitoring",
-      "A $52M raise by Hemispheric shows investor appetite for brain-data tooling"
+      "Reddit users with OpenBCI and Emotiv devices report poor signal quality even when the device shows 100% contact quality, so the built-in checks appear to miss problems",
+      "Search interest in EEG signal quality is rising",
+      "More dry-electrode, ambulatory, and home EEG use increases motion artifacts and data loss, so the need should grow"
     ],
     "value": 10000000,
-    "value_reasoning": "About 10,000 potential labs and clinics × ~$1,000/yr per customer ≈ $10M total addressable annual revenue.",
+    "value_reasoning": "10000 potential customers x $1000 per year = about $10M in total addressable annual revenue.",
     "suggested_probability": 0.1,
-    "probability_reasoning": "Competition is 'crowded' (9 vendors, a funded player), which caps probability at 0.10, and the pain point is real and the tech proven, so about 5-10% penetration is realistic."
+    "probability_reasoning": "The market is rated crowded, which caps the probability at 0.10, and a device-agnostic quality layer could realistically capture about 5-15% of it; the competition may be overstated, though, because the Product Hunt hits look unrelated and it is not clear the $52M Hemispheric raise is an EEG quality-monitoring competitor."
   }
 }

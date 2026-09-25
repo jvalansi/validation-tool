@@ -7,13 +7,10 @@
       "top_posts": []
     },
     "google_trends": {
-      "average_interest": 60.2,
-      "trend_direction": "down",
-      "signal": "strong",
-      "query_used": "EEG dataset"
+      "error": "The request failed: Google returned a response with code 429"
     },
     "reddit": {
-      "total_results": 10,
+      "total_results": 6,
       "top_posts": [
         {
           "title": "Link to reddit.com",
@@ -27,7 +24,7 @@
         },
         {
           "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/neuroscience/comments/p2sipc/neurofeedback_technologyreal_or_what/?rdt=53997",
+          "url": "https://www.reddit.com/r/NMSCoordinateExchange/?rdt=49209",
           "snippet": "The site owner hides the web page description."
         }
       ]
@@ -53,20 +50,8 @@
       ]
     },
     "incumbents": {
-      "operators_found": 12,
+      "operators_found": 7,
       "operators": [
-        {
-          "name": "GitHub - meagmohit/EEG-Datasets: A list of allpublicEEG-datasets",
-          "host": "github.com",
-          "url": "https://github.com/meagmohit/EEG-Datasets",
-          "snippet": "The largest SCPdataof Motor-Imagery: Thedatasetcontains 60 hours ofEEGBCI recordings across 75 recording sessions of 13 participants, 60,000 mental imageries, and 4 BCI interaction paradigms, with mul"
-        },
-        {
-          "name": "freeEEGdatadatabase freely ERPdatapubliclyavailable",
-          "host": "sccn.ucsd.edu",
-          "url": "https://sccn.ucsd.edu/~arno/fam2data/publicly_available_EEG_data.html",
-          "snippet": "EEG/ ERPdataavailable for freepublicdownload (updated 2023). History of this page.DEAPdataset:EEG(and other modalities) emotion recognition. Epilepsydata: A very comprehensive database of epilepsydata"
-        },
         {
           "name": "EEGDash/ds004951 ·Datasetsat Hugging Face",
           "host": "huggingface.co",
@@ -86,10 +71,22 @@
           "snippet": "Thesedatasetsinclude the University of Bonndataset, the CHB-MITdataset, and the European Epilepsydataset. The first two are freely available online and the lastdatasetneeds to be paid for."
         },
         {
-          "name": "Are there anypublicEEGdatasetsthat one can try... | ResearchGate",
-          "host": "researchgate.net",
-          "url": "https://www.researchgate.net/post/Are-there-any-public-EEG-data-sets-that-one-can-try-their-hands-on",
-          "snippet": "You can register for the TempleDatasetwith Jospeph Picone for free. I believe it is one of the largest open sourceddatasetsto date."
+          "name": "PassengerEEG: AnEEGDatasetfor Passenger Hazard Perception in...",
+          "host": "d3ty06pe9ejbnf.cloudfront.net",
+          "url": "https://d3ty06pe9ejbnf.cloudfront.net/documents/passengereeg-eeg-dataset-passenger-hazard-perception-avs",
+          "snippet": "In total, thedatasetcomprises approximately 4 hours ofEEGrecordings per participant and around 400 event-relatedEEGsegments. Each event-specificEEGsegment is 8 seconds long: 2 seconds serve as baselin"
+        },
+        {
+          "name": "IIST BCIDataset-14: Male and FemaleEEGDataset... | IEEE DataPort",
+          "host": "ieee-dataport.org",
+          "url": "https://ieee-dataport.org/documents/iist-bci-dataset-14-male-and-female-eeg-dataset-odia-vowels-and-consonants",
+          "snippet": "However, there exist limiteddatasetsfor Odia language. In thisdatadescriptive paper, we constructed anEEG-based BCIdatasetthat captures neural responses corresponding to Odia vowels and consonants."
+        },
+        {
+          "name": "Tutorialdata- EEGLAB Wiki",
+          "host": "eeglab.org",
+          "url": "https://eeglab.org/tutorials/tutorial_data.html",
+          "snippet": "EEGdataavailable forpublicdownload. Downloaddataused in the workshops and in tutorials.There is an increasing amount ofEEGdataavailable on the internet. The list below is by no way exhaustive but may "
         }
       ],
       "funding_mentions": [],
@@ -109,88 +106,72 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 6,
-        "government": 1,
+        "vendor": 3,
+        "government": 0,
         "forum": 0,
-        "content": 3
+        "content": 7
       },
-      "vendor_share": 0.6,
+      "vendor_share": 0.3,
       "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "github.com",
         "github.com",
         "sccn.ucsd.edu",
-        "eeglab.org",
         "ebrary.net",
+        "eeglab.org",
         "researchgate.net",
         "huggingface.co",
         "heyadam.dev",
-        "youtube.com",
-        "pmc.ncbi.nlm.nih.gov"
+        "awesomeopensource.com",
+        "nemar.org"
       ]
     }
   },
   "revenue_estimate": {
-    "tam_tier": "mass",
-    "competitor_prices_found": [
-      {
-        "raw": "$4.4",
-        "monthly_equiv": 4.4,
-        "period": "unknown",
-        "source": "sccn.ucsd.edu"
-      }
-    ],
-    "price_anchor_usd": 4.4,
-    "price_is_recurring": false,
-    "price_source": "median of 1 prices with no stated period — treated as one-time, not recurring",
-    "gross_margin_assumed": 0.8,
-    "ev_per_customer_annual_usd": 4,
-    "price_observations": 1,
-    "acquisition_floor_usd": 200,
-    "below_acquisition_floor": true,
-    "customers_assumed_per_month": {
-      "conservative": 100,
-      "optimistic": 1000
-    },
-    "conservative_mrr": "$440",
-    "optimistic_mrr": "$4400",
-    "note": "MRR = observed price ($4.4 one-time) x assumed customers/mo (100 conservative, 1000 optimistic). The customer counts are assumptions; the price is an observation."
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
   },
   "summary": {
     "positive_signals": [
-      "strong search volume",
-      "active Reddit discussion"
+      "active Reddit discussion",
+      "7 small vendors selling, none funded — demand proven, room to differentiate"
     ],
     "negative_signals": [
-      "crowded: 12 vendors already selling",
       "5 Product Hunt launches in this space",
-      "expected value $4/customer/yr is below the $200 acquisition floor (1 price observation(s))",
       "vendors own the buyer-intent results page — paid may be the only channel"
     ],
     "signal_count": 2,
-    "competition": "crowded",
-    "verdict": "crowded — multiple vendors already selling"
+    "competition": "contested",
+    "verdict": "validate further"
   },
   "claude_analysis": {
-    "tam_assessment": "The market is a niche of EEG/BCI researchers and ML engineers, not a mass market: Google Trends shows relative interest of 60 but a downward trend, and Hacker News returned 0 results. Most of the Reddit and Product Hunt hits are unrelated (a crack-key thread, e-commerce tools), so the 'active discussion' signal is mostly noise.",
+    "tam_assessment": "Niche market: the addressable buyers are EEG/BCI research labs and neuro-ML developers, and the existing catalogs in the data (EEGDash on Hugging Face, NEMAR, EEGLAB's tutorial data list, IEEE DataPort, GitHub awesome-lists) are all free; the Reddit and Product Hunt hits are unrelated noise, not demand evidence.",
     "tam_customers": 10000,
-    "price_per_customer_annual": 10,
-    "pricing_assessment": "Willingness to pay is near zero because the incumbents are free (the meagmohit GitHub list, the SCCN/UCSD page, EEGDash on Hugging Face, Kaggle). The single $4.4 'price' was scraped from a free SCCN data page and is likely not a real product price, so revenue would depend on a small paid institutional or curation tier.",
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, and the main alternatives (OpenNeuro/NEMAR, EEGDash, Kaggle, EEGLAB lists) are free, so ~$100/yr is an assumption that only holds for value-add like harmonized formats, ML-ready loaders, or lab/institutional licenses.",
     "legal_status": "clear",
-    "legal_reasoning": "No restriction signals surfaced (0 restriction hits, 0 government sources), though each dataset's individual license would govern redistribution.",
+    "legal_reasoning": "The regulatory probe found no restriction signals and no government sources, though each dataset's own license (e.g. CC-BY, or a paid dataset like the European Epilepsy database) limits what can be redistributed rather than what can be catalogued.",
     "key_risks": [
-      "Free, community-maintained catalogs (GitHub lists, SCCN, EEGDash/Hugging Face, OpenNeuro-style repositories) set the price at zero",
-      "Expected value per customer (~$4/yr) is far below the $200 acquisition floor, and vendors/free resources own the search results page",
-      "Search interest is trending down and the buyer pool is small and academic, with grant-constrained budgets"
+      "Free, academically backed incumbents (NEMAR/OpenNeuro, EEGDash on Hugging Face, EEGLAB) already do cataloguing, which leaves little room to charge",
+      "Buyers are grant-funded academics with low willingness to pay for discovery tooling",
+      "Redistribution is limited by each dataset's license, so the product may only link out and not host data"
     ],
     "key_opportunities": [
-      "Existing catalogs are fragmented and stale (the SCCN page was last updated in 2023), leaving room for a maintained, searchable, standardized (BIDS) index",
-      "Growing EEG foundation-model and BCI work creates demand for harmonized, ML-ready data pipelines, which could be sold B2B to neurotech companies",
-      "No regulatory barriers to operating a catalog of public data"
+      "Discovery is fragmented: search results spread across GitHub, ResearchGate, Hugging Face, IEEE DataPort and personal blogs",
+      "No incumbent shows funding, which suggests no well-resourced commercial player",
+      "EEG foundation-model and BCI ML work creates demand for standardized, ML-ready aggregated corpora"
     ],
-    "value": 100000,
-    "value_reasoning": "About 10,000 potential customers × about $10/yr blended revenue gives about $100,000/yr total addressable revenue.",
+    "value": 1000000,
+    "value_reasoning": "~10,000 potential lab/developer customers x ~$100/yr ≈ $1,000,000 total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "The 'crowded' verdict caps this at 0.10, but because the incumbents are free and acquisition costs exceed per-customer value, realistic paid penetration is likely under 1%, which puts it in the moonshot tier."
+    "probability_reasoning": "No ceiling applies because competition is rated 'contested', but free, community-run catalogs already exist and there is no evidence of willingness to pay, so realistic paid penetration is likely under 1%."
   }
 }

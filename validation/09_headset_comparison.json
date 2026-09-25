@@ -7,28 +7,25 @@
       "top_posts": []
     },
     "google_trends": {
-      "average_interest": 53.0,
-      "trend_direction": "down",
-      "signal": "strong",
-      "query_used": "EEG headset"
+      "error": "The request failed: Google returned a response with code 429"
     },
     "reddit": {
       "total_results": 10,
       "top_posts": [
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
-          "snippet": "The site owner hides the web page description."
+          "title": "EEG headset for measuring cognitive engagement? : r/BCI - Reddit",
+          "url": "https://www.reddit.com/r/BCI/comments/z83sv3/eeg_headset_for_measuring_cognitive_engagement/",
+          "snippet": "EEGheadsets like those from Neuphony provide valuable insights into cognitive engagement, benefiting education, workplace productivity, and personal w"
         },
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/NMSCoordinateExchange/?rdt=49209",
-          "snippet": "The site owner hides the web page description."
+          "title": "The best EEG headset for programming : r/BCI - Reddit",
+          "url": "https://www.reddit.com/r/BCI/comments/p3mz41/the_best_eeg_headset_for_programming/",
+          "snippet": "Is that what your looking for,orare you trying to write software to do something witheegdata (bci, analysis, biofeedback etc.) If the later, I would s"
         },
         {
-          "title": "Link to reddit.com",
-          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
-          "snippet": "The site owner hides the web page description."
+          "title": "Emotiv Epoc + vs OpenBCI Ganglion : r/BCI - Reddit",
+          "url": "https://www.reddit.com/r/BCI/comments/13wdm1b/emotiv_epoc_vs_openbci_ganglion/",
+          "snippet": "Hi, I’ve done someBCIwork in the past and am looking to get my ownheadsetfor some personal projects. I have the opportunity to buy a slightly used Emo"
         }
       ]
     },
@@ -53,7 +50,7 @@
       ]
     },
     "incumbents": {
-      "operators_found": 8,
+      "operators_found": 10,
       "operators": [
         {
           "name": "EEGHeadsetPrices– An Overview of 15+EEGDevices",
@@ -62,34 +59,34 @@
           "snippet": "CompareEEGheadsetpricesfor students, researchers, and biometric specialists.Comparecosts, features, and options across allpriceranges to find the bestEEGdevice for your needs. Table of Contents."
         },
         {
-          "name": "Emotiv Epoc X - 14-Channel Research-GradeEEGHeadsetDevice",
-          "host": "emotiv.com",
-          "url": "https://www.emotiv.com/epoc-x",
-          "snippet": "The Epoc XEEGheadsetintegrates seamlessly with Emotiv’s software ecosystem: EmotivPRO forEEGrecording, visualization, and analysis. Cortex API & SDK for real-timeEEGdata access."
-        },
-        {
-          "name": "Frontiers | A Systemic Review of Available Low-CostEEGHeadsets...",
-          "host": "frontiersin.org",
-          "url": "https://www.frontiersin.org/journals/neuroinformatics/articles/10.3389/fninf.2020.553352/full",
-          "snippet": "Comparisonof consumerEEGheadsets.HeadsetInformation. The primary investigatedheadsetswere the InteraXon Muse, the Neurosky MindWave, OpenBCI, and the Emotiv Epoc and Insight.(2017).EEGHeadsetCompariso"
-        },
-        {
-          "name": "Top 10EEGCaps to Buy in 2026 (Pricing, Specs...) | ApparatusRanker",
-          "host": "apparatusranker.com",
-          "url": "https://apparatusranker.com/blog/top-eeg-caps",
-          "snippet": "At a glancecomparisontable (specs andpricing).Pricingis what the vendor or a reseller publicly lists; institutional systems are often “request a quote,” and taxes or shipping can change totals.Top 10E"
-        },
-        {
-          "name": "BuyEEGHeadsetonline ' Now available at MindTecStore",
+          "name": "EEG-Headset comparison table",
           "host": "mindtecstore.com",
-          "url": "https://www.mindtecstore.com/neurofeedback/eeg-headsets_en",
-          "snippet": "BuyEEGheadsetonline Visualize your brain waves thanks to advanced technology High quality & fast delivery."
+          "url": "https://www.mindtecstore.com/EEG-Headset-comparison-table",
+          "snippet": "Aug 26, 2025 ·EEG-Headset comparisontable The Mindtecstore offers a large selection of EEG and neurofeedbackheadsetsfrom various manufacturers and for numerous areas of application. Finding the right "
         },
         {
-          "name": "EEGPortableHeadset: FDA-approvedEEGdevice | Zeto Inc.",
-          "host": "zeto-inc.com",
-          "url": "https://zeto-inc.com/",
-          "snippet": "PortableEEGHeadsets. RapidEEGfor All Your Neurological Needs.Comparedto other systems, Zeto provides full montage, lower cost and faster turnaround time to clinics, extraordinary convenience to operat"
+          "name": "Best EEG & Brain-Training Headsets (2026) - ONDA Life",
+          "host": "onda-life.com",
+          "url": "https://onda-life.com/reviews/compare/best-eeg-headsets-2026",
+          "snippet": "Sep 17, 2026 ·ONDA ranks the ten best EEG and brain-trainingheadsetsof 2026 — Muse, Neurosity Crown, Emotiv, Mendi, FocusCalm, Sens.ai, Myndlift, Flow, NeuroSky — across…"
+        },
+        {
+          "name": "MindRove EEG Headset Price Guide 2026: Research-Grade ...",
+          "host": "mindrove.com",
+          "url": "https://mindrove.com/2026/03/11/mindrove-eeg-headset-price-guide-2026-research-grade-neurotechnology-without-subscriptions/",
+          "snippet": "Mar 11, 2026 ·Master mobile neuroscience. Find the best portableeegdevice for field studies with our 2026 guide to high-fidelity data, open SDKs, and artifact rejection."
+        },
+        {
+          "name": "Our 10 Best Eeg Headset in the US - August 2026 ...",
+          "host": "bestproductsreviews.com",
+          "url": "https://www.bestproductsreviews.com/eeg-headset",
+          "snippet": "Aug 30, 2026 ·Easilycompare& choose from the 10 best EegHeadsetfor you. Don't buy EegHeadsetin the US before reading our rankings | bestproductsreviews.com"
+        },
+        {
+          "name": "EEG Device Comparison & Signal Quality Visualizer",
+          "host": "bionichaos.com",
+          "url": "https://bionichaos.com/eegcompare/",
+          "snippet": "An interactive laboratory comparing consumer, research, clinical, and implantable EEG devices based on Signal-to-Noise Ratio (SNR),cost, and real-time synthesized electrophysiological signal quality."
         }
       ],
       "funding_mentions": [],
@@ -109,12 +106,12 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 4,
+        "vendor": 3,
         "government": 0,
         "forum": 0,
-        "content": 6
+        "content": 7
       },
-      "vendor_share": 0.4,
+      "vendor_share": 0.3,
       "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "imotions.com",
@@ -131,7 +128,7 @@
     }
   },
   "revenue_estimate": {
-    "tam_tier": "mass",
+    "tam_tier": "niche",
     "competitor_prices_found": [
       {
         "raw": "$1",
@@ -144,89 +141,58 @@
         "monthly_equiv": 25.0,
         "period": "unknown",
         "source": "imotions.com"
-      },
-      {
-        "raw": "$8",
-        "monthly_equiv": 8.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
-      },
-      {
-        "raw": "$1",
-        "monthly_equiv": 1.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
-      },
-      {
-        "raw": "$2",
-        "monthly_equiv": 2.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
-      },
-      {
-        "raw": "$5",
-        "monthly_equiv": 5.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
-      },
-      {
-        "raw": "$1000",
-        "monthly_equiv": 1000.0,
-        "period": "unknown",
-        "source": "frontiersin.org"
       }
     ],
-    "price_anchor_usd": 5.0,
+    "price_anchor_usd": 25.0,
     "price_is_recurring": false,
-    "price_source": "median of 7 prices with no stated period — treated as one-time, not recurring",
+    "price_source": "median of 2 prices with no stated period — treated as one-time, not recurring",
     "gross_margin_assumed": 0.8,
-    "ev_per_customer_annual_usd": 4,
-    "price_observations": 7,
+    "ev_per_customer_annual_usd": 20,
+    "price_observations": 2,
     "acquisition_floor_usd": 200,
     "below_acquisition_floor": true,
     "customers_assumed_per_month": {
-      "conservative": 100,
-      "optimistic": 1000
+      "conservative": 5,
+      "optimistic": 50
     },
-    "conservative_mrr": "$500",
-    "optimistic_mrr": "$5000",
-    "note": "MRR = observed price ($5.0 one-time) x assumed customers/mo (100 conservative, 1000 optimistic). The customer counts are assumptions; the price is an observation."
+    "conservative_mrr": "$125",
+    "optimistic_mrr": "$1250",
+    "note": "MRR = observed price ($25.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
   },
   "summary": {
     "positive_signals": [
-      "strong search volume",
       "active Reddit discussion"
     ],
     "negative_signals": [
-      "crowded: 8 vendors already selling",
+      "crowded: 10 vendors already selling",
       "5 Product Hunt launches in this space",
-      "expected value $4/customer/yr is below the $200 acquisition floor (7 price observation(s))",
+      "expected value $20/customer/yr is below the $200 acquisition floor (2 price observation(s))",
       "vendors own the buyer-intent results page — paid may be the only channel"
     ],
-    "signal_count": 2,
+    "signal_count": 1,
     "competition": "crowded",
     "verdict": "unviable — value per customer below the acquisition floor"
   },
   "claude_analysis": {
-    "tam_assessment": "Consumer and research EEG headset buyers are a niche market: Google Trends interest for 'EEG headset' averages 53 and is trending down, and the incumbents found are headset vendors (Emotiv, Zeto) and existing comparison guides (iMotions, ApparatusRanker), not a mass consumer audience.",
+    "tam_assessment": "Niche market: the audience is consumer and researcher EEG buyers (active r/BCI threads comparing Emotiv vs OpenBCI), and at least 6 comparison sites already serve it (imotions.com, mindtecstore.com, onda-life.com, bionichaos.com), so the buyer pool is likely ~100,000 people a year, which is an assumption and not a measured figure.",
     "tam_customers": 100000,
     "price_per_customer_annual": 10,
-    "pricing_assessment": "The extracted $1-$25 'prices' look like text fragments rather than real price points, and a comparison site would mostly earn one-time affiliate commissions of roughly $10 per headset sale, well below the $200 acquisition floor.",
+    "pricing_assessment": "The only observed prices ($1 and $25 from imotions.com, period not stated) are weak anchors that may not be comparison-product prices at all, and free incumbent guides from imotions, mindtecstore and bionichaos suggest a comparison service has low willingness-to-pay, around $10 per customer a year at most.",
     "legal_status": "clear",
-    "legal_reasoning": "The regulatory probe found no restriction signals (0 restriction hits, 0 government sources), so nothing limits who may publish headset comparisons.",
+    "legal_reasoning": "The regulatory probe found no restriction terms and no government sources, so no licensing or standing limit surfaced for publishing EEG headset comparisons.",
     "key_risks": [
-      "Established free comparison content (iMotions' 15+ device guide, a Frontiers systematic review, ApparatusRanker) already covers the query",
-      "Vendors own 40% of buyer-intent search results, so paid acquisition may be the only channel and costs more than a customer is worth",
-      "Search interest is trending down and sales are one-time, so there is no recurring revenue"
+      "Value per customer (~$20/yr) is below the $200 acquisition floor, so paid acquisition cannot pay back",
+      "Crowded field: 10 operators, including vendors (emotiv.com, mindtecstore.com, mindrove.com) that publish free comparison content",
+      "Content sites and vendors own the buyer-intent search results, which leaves little organic room for a new entrant"
     ],
     "key_opportunities": [
-      "Search volume is still strong (average interest 53)",
-      "Active hobbyist communities such as r/BCI and OpenBCI users want help choosing hardware",
-      "Research and clinical buyers (Emotiv Epoc X, Zeto) spend enough that a B2B lead-generation model could earn more per referral"
+      "Active r/BCI discussion shows people are confused about which headset to buy (Emotiv vs OpenBCI, headsets for programming or engagement)",
+      "Affiliate or lead-gen revenue from research-grade headsets priced in the hundreds to thousands could exceed direct subscription revenue",
+      "Interactive signal-quality tools such as bionichaos.com's visualizer point to demand for deeper, data-driven comparisons than listicles provide"
     ],
     "value": 1000000,
-    "value_reasoning": "About 100000 potential buyers × about $10 affiliate revenue per buyer per year ≈ $1M total addressable annual revenue.",
+    "value_reasoning": "100,000 potential customers x $10 per customer a year is about $1,000,000 of total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "The value per customer is below the acquisition floor with 7 price observations, which caps the probability at 0.01, and the crowded field of existing guides points to penetration under 1%."
+    "probability_reasoning": "Capped at 0.01 because value per customer is below the acquisition floor with 2 price observations, and competition is crowded, so realistic penetration is likely under 1%."
   }
 }

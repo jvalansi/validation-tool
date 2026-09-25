@@ -8,7 +8,7 @@
     },
     "google_trends": {
       "average_interest": 44.2,
-      "trend_direction": "up",
+      "trend_direction": "down",
       "signal": "moderate",
       "query_used": "EEG synchronization"
     },
@@ -53,48 +53,48 @@
       ]
     },
     "incumbents": {
-      "operators_found": 15,
+      "operators_found": 7,
       "operators": [
         {
-          "name": "Pricing & Plans | iMediSync North America",
-          "host": "imedisyncamericas.com",
-          "url": "https://www.imedisyncamericas.com/pricing",
-          "snippet": "Explore flexiblepricingoptions for iMediSync's brain health technology solutions. Contact us for personalized quotes."
+          "name": "What Is Hyperscanning?EEGMulti-Brain Experiments | Neurosity",
+          "host": "neurosity.co",
+          "url": "https://neurosity.co/guides/what-is-hyperscanning-eeg-multi-brain",
+          "snippet": "Asynchronizationmethod. This can be as simple as pressing a button that sends atimestampto bothdevicessimultaneously, or using network-syncedclocks to align the data streams post-hoc. An ecologically "
         },
         {
-          "name": "How Much Does an EEG Machine Cost in 2025? - biosurgico.com",
-          "host": "biosurgico.com",
-          "url": "https://biosurgico.com/how-much-does-an-eeg-machine-cost/",
-          "snippet": "Let’s dive into thepricingand explore what you can expect when investing in anEEGmachine in 2025. What Is anEEGMachine? AnEEGmachine (Electroencephalograph) serves as a highly specialized diagnostic t"
+          "name": "EEGSynchronizationTest | Mentalab Hypersync",
+          "host": "mentalab.com",
+          "url": "https://mentalab.com/eeg-exg-multimodal-hyperscanning-synchronization-validation/",
+          "snippet": "You can validatesynchronizationby comparing hardware triggertimestampsto LSL markers in the XDF file and computingtimingerror distributions to confirm sub-millisecond latency and jitter. What research"
         },
         {
-          "name": "BrainBit | EEG, EMG & ECG Devices and Software + SDKs for ...",
-          "host": "brainbit.com",
-          "url": "https://brainbit.com/",
-          "snippet": "Sep 18, 2026 ·BrainBit offers a full range ofEEG, EMG, and ECG hardware – from lightweight wearable headbands and flexiblemulti-channel systems to advanced high-densitydevicesand specialized sensors."
+          "name": "android -Synchronizetimestampsacrossmultipledevices",
+          "host": "stackoverflow.com",
+          "url": "https://stackoverflow.com/questions/18323859/synchronize-timestamps-across-multiple-devices",
+          "snippet": "Explore Stack Internal.Synchronizetimestampsacrossmultipledevices. Ask Question.How can Isyncup two or more devices so that their internal clocks will be no more than 100 ms apart from each other? Is "
         },
         {
-          "name": "EEG Device Comparison & Signal Quality Visualizer",
-          "host": "bionichaos.com",
-          "url": "https://bionichaos.com/eegcompare/",
-          "snippet": "Explore an interactive laboratory comparing consumer, research, clinical, and implantableEEGdevices. Analyze signal-to-noise ratio (SNR),pricingtrade-offs, and live electrophysiological waveform synth"
+          "name": "UnixTimeStamp- Epoch Converter",
+          "host": "unixtimestamp.com",
+          "url": "https://www.unixtimestamp.com/",
+          "snippet": "Epoch and unixtimestampconverter for developers. Date andtimefunction syntax reference for various programming languages."
         },
         {
-          "name": "The Real Cost of EEG Machines for University Labs in 2026: A ...",
-          "host": "mindrove.com",
-          "url": "https://mindrove.com/2026/04/08/the-real-cost-of-eeg-machines-for-university-labs-in-2026-a-comprehensive-buyers-guide/",
-          "snippet": "Apr 8, 2026 ·When evaluating the total cost ofeegmachine for university lab settings in 2026, the initialpricetag is just the beginning of the equation. We’ll help you decode the complexpricingtiers o"
+          "name": "SynchronizingMultipleMFLI Lock-in Amplifiers | Zurich Instruments",
+          "host": "zhinst.com",
+          "url": "https://www.zhinst.com/en/blogs/synchronizing-multiple-mfli-lock-in-amplifiers/",
+          "snippet": "Multipleinstruments can besynchronizedby the MDS toolbox to convert them to onemulti-channeldevicecapable of generating and measuring several signal ports simultaneously. MDSsynchronizesinstruments at"
         },
         {
-          "name": "EEG Headset Prices – An Overview of 15+ EEG Devices - iMotions",
-          "host": "imotions.com",
-          "url": "https://imotions.com/blog/learning/product-guides/eeg-headset-prices/",
-          "snippet": "Jul 17, 2019 ·CompareEEGheadset prices for students, researchers, and biometric specialists. Get valuable reference forEEGdevices."
+          "name": "Smarting PRO — 32-Channel WirelessEEGSystem | mBrainTrain",
+          "host": "mbraintrain.com",
+          "url": "https://mbraintrain.com/smarting-pro-32/",
+          "snippet": "Smarting PRO. Fully mobileEEGFor any study setup. Introducing a mobile 32-channelEEGdevicefor seamless high-quality recordings on a PC and mobile phone. Its unparalleled wireless connection reliabilit"
         }
       ],
       "funding_mentions": [],
       "max_funding_usd": null,
-      "probes_failed": 0,
+      "probes_failed": 1,
       "search_failed": false
     },
     "regulatory": {
@@ -109,86 +109,72 @@
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 0,
+        "vendor": 5,
         "government": 0,
-        "forum": 1,
-        "content": 9
+        "forum": 0,
+        "content": 5
       },
-      "vendor_share": 0.0,
-      "read": "results page not vendor-dominated — organic entry plausible",
+      "vendor_share": 0.5,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "bitbrain.com",
+        "sciencedirect.com",
+        "mindrove.com",
+        "sciencedirect.com",
         "mentalab.com",
         "neurosity.co",
-        "docs.luxonis.com",
         "zhinst.com",
-        "unixtimestamp.com",
+        "docs.luxonis.com",
         "mbraintrain.com",
-        "stackoverflow.com",
-        "researchgate.net",
-        "emergentmind.com"
+        "unixtimestamp.com"
       ]
     }
   },
   "revenue_estimate": {
     "tam_tier": "mid",
-    "competitor_prices_found": [
-      {
-        "raw": "$499",
-        "monthly_equiv": 499.0,
-        "period": "unknown",
-        "source": "brainbit.com"
-      }
-    ],
-    "price_anchor_usd": 499.0,
-    "price_is_recurring": false,
-    "price_source": "median of 1 prices with no stated period — treated as one-time, not recurring",
-    "gross_margin_assumed": 0.8,
-    "ev_per_customer_annual_usd": 399,
-    "price_observations": 1,
-    "acquisition_floor_usd": 200,
-    "below_acquisition_floor": false,
-    "customers_assumed_per_month": {
-      "conservative": 20,
-      "optimistic": 200
-    },
-    "conservative_mrr": "$9980",
-    "optimistic_mrr": "$99800",
-    "note": "MRR = observed price ($499.0 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
   },
   "summary": {
     "positive_signals": [
-      "growing search trend",
-      "active Reddit discussion"
+      "active Reddit discussion",
+      "7 small vendors selling, none funded — demand proven, room to differentiate"
     ],
     "negative_signals": [
-      "crowded: 15 vendors already selling",
-      "5 Product Hunt launches in this space"
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
     ],
     "signal_count": 2,
-    "competition": "crowded",
-    "verdict": "crowded — multiple vendors already selling"
+    "competition": "contested",
+    "verdict": "validate further"
   },
   "claude_analysis": {
-    "tam_assessment": "Niche research market: the 15 incumbents found are EEG hardware vendors (BrainBit, Mentalab, mBrainTrain, Bitbrain), not dedicated sync-tool sellers, and HN shows 0 results, so buyers are mostly university and neurotech labs running multi-device setups, with moderate and rising search interest (44.2 avg, up).",
+    "tam_assessment": "Niche research-tooling market: the only real evidence is a handful of EEG hardware vendors (Mentalab, mBrainTrain, Neurosity, Bitbrain, MindRove) that sell their own synchronization features, a declining 'EEG synchronization' Google Trends curve (avg 44, down), zero Hacker News posts, and Reddit/Product Hunt hits that are mostly unrelated (password managers, file transfer), so the buyer pool looks limited to academic and clinical EEG, hyperscanning, and multimodal labs, which I estimate at around 10,000 worldwide.",
     "tam_customers": 10000,
-    "price_per_customer_annual": 100,
-    "pricing_assessment": "The only observed price ($499, brainbit.com) is for hardware with no stated period, so standalone sync software likely sells for about $100/yr per lab, since vendors bundle sync into their SDKs and free open-source tools exist.",
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "The data contains no observed competitor price, so ~$1,000/yr per lab is an assumption based on typical research-software and sync-hardware budgets, and willingness to pay is limited because the free, open-source Lab Streaming Layer (LSL, referenced in the Mentalab snippet) is the default method and vendors bundle sync with their own devices.",
     "legal_status": "clear",
-    "legal_reasoning": "The regulatory probe found no restriction terms and no government sources, and research-use timing software is not a regulated medical device claim.",
+    "legal_reasoning": "The regulatory probe returned 0 restriction hits and 0 government sources, so no licensing or standing rules surfaced for selling research sync software, though a clinical/diagnostic positioning could trigger medical-device rules that were not probed.",
     "key_risks": [
-      "Free open-source standards such as Lab Streaming Layer (LSL) already handle multi-device EEG timestamp sync in research labs, which caps willingness to pay (from domain knowledge, not the research data)",
-      "Hardware vendors (BrainBit, Mentalab, mBrainTrain) bundle sync into their SDKs, so a third-party tool is hard to justify",
-      "Weak demand signal: 0 HN results, and the Reddit hits are mostly unrelated (e.g. CrackSupport)"
+      "The free open-source Lab Streaming Layer is already the default method for timestamp alignment",
+      "EEG hardware vendors (Mentalab Hypersync, mBrainTrain) bundle synchronization with their own devices, which limits the market for third-party tools",
+      "Search results are owned by vendors (50% vendor share) and academic buyers have slow grant-driven purchasing, which raises acquisition cost"
     ],
     "key_opportunities": [
-      "Search interest in EEG synchronization is rising (Google Trends up, avg 44.2)",
-      "Search results are not vendor-dominated (0% vendor share, 9/10 content pages), so organic/SEO entry is plausible",
-      "Labs mixing EEG with other devices (eye tracking, cameras, other brands) need cross-vendor sync that single-vendor SDKs don't provide"
+      "Cross-vendor sync for labs that mix devices from different manufacturers is not handled by single-vendor bundles",
+      "Growth in hyperscanning and multimodal (EEG + eye-tracking/motion/fNIRS) research raises the need for validated sub-millisecond sync",
+      "None of the incumbents found shows any recorded funding, so no well-capitalized player owns the cross-device niche"
     ],
-    "value": 1000000,
-    "value_reasoning": "About 10,000 potential labs × about $100/yr per customer ≈ $1M total addressable annual revenue.",
+    "value": 10000000,
+    "value_reasoning": "10,000 potential labs × $1,000/yr ≈ $10M total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "Crowded competition caps this at 0.10, and a free, widely used open-source standard plus sync bundled into vendor SDKs push realistic paid penetration below 1% of an already niche market."
+    "probability_reasoning": "Competition is 'contested', so no ceiling applies, but the free LSL standard and vendor-bundled sync keep realistic penetration of an already small niche at around 1% or less, which puts this in the moonshot tier."
   }
 }

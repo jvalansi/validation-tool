@@ -10,12 +10,12 @@
       "signal": "no data"
     },
     "reddit": {
-      "total_results": 10,
+      "total_results": 6,
       "top_posts": [
         {
-          "title": "r/BCI on Reddit: OpenBCI EEG Assembly, Software installation, and Recording",
+          "title": "Link to reddit.com",
           "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
-          "snippet": "June 27, 2023 -But for anyone who is considering starting out, OpenBCIs Low-cost Biosensing Starter Kit comes with EMG / ECG Foam Solid Gel Electrodes"
+          "snippet": "The site owner hides the web page description."
         },
         {
           "title": "Link to reddit.com",
@@ -50,7 +50,7 @@
       ]
     },
     "incumbents": {
-      "operators_found": 11,
+      "operators_found": 9,
       "operators": [
         {
           "name": "ConvertElectroencephalography Data to EDF, CSV, TXTfiles",
@@ -65,22 +65,22 @@
           "snippet": "NeuroScanEEGFileFormats. April 1997, updated September 1997.Basic C source code that takes a WestmeadEEGfileandconvertsit into an asciifileis given here: westmead2ascii.c. It can be readily modified a"
         },
         {
+          "name": "Convertio —FileConverter",
+          "host": "convertio.co",
+          "url": "https://convertio.co/",
+          "snippet": "FileConverter.Convertyourfilesto anyformat. We'veconverted3,191,036,609fileswith a total size of 58,299 TB."
+        },
+        {
           "name": "EEGFileExtension- What is it? How to open anEEGfile?",
           "host": "filext.com",
           "url": "https://filext.com/file-extension/EEG",
           "snippet": "aneegdatafileis a specialfileformatand should only be edited and saved with the appropriate software. How to solve problems withEEGfiles. Associate theEEGfileextensionwith the correct application. Upd"
         },
         {
-          "name": "GitHub - ElChaderino/EEG-Paradox-EDF2EEG-Converter: EDF to ....",
-          "host": "github.com",
-          "url": "https://github.com/ElChaderino/EEG-Paradox-EDF2EEG-Converter",
-          "snippet": "#Convertsinglefilepythonconverter_core.py input.edf output.eeg\"Patient Name\" #. Ready toconvertyour EDFfilesto WinEEGformat! LaunchEEG_Paradox_Converter.py to get started."
-        },
-        {
-          "name": "Convertio —FileConverter",
-          "host": "convertio.co",
-          "url": "https://convertio.co/",
-          "snippet": "FileConverter.Convertyourfilesto anyformat. We'veconverted3,191,036,609fileswith a total size of 58,299 TB."
+          "name": "reproducible research - Is there anyfileformatstandard forEEGdata?",
+          "host": "psychology.stackexchange.com",
+          "url": "https://psychology.stackexchange.com/questions/6163/is-there-any-file-format-standard-for-eeg-data",
+          "snippet": "Is there anyEEGformatout there that is considered standard? Do theEEGmanufacturers provideconvertersto thatformatin their software? Thanks, -drd."
         },
         {
           "name": "BiosemiEEGECG EMG BSPM NEURO amplifiers systems",
@@ -95,115 +95,83 @@
       "search_failed": false
     },
     "regulatory": {
-      "restriction_hits": 1,
-      "restriction_terms": [
-        "licensed attorney"
-      ],
+      "restriction_hits": 0,
+      "restriction_terms": [],
       "gov_sources": 0,
       "probes_failed": 0,
       "search_failed": false,
-      "top_hits": [
-        {
-          "title": "How to Start a Consulting Business: Licenses, Professional Requirements, and What It Actually Costs ",
-          "url": "https://startpermit.com/blog/how-to-start-a-consulting-business/",
-          "matched": [
-            "licensed attorney"
-          ],
-          "snippet": "April 23, 2026 -Legal consulting:If you provide legal advice (not just \"legal information\"), a state bar license is required. Legal consultants who aren't licensed attorneys must be very careful about"
-        }
-      ],
-      "status": "restricted — verify the statute before building"
+      "top_hits": [],
+      "status": "no restriction signals found"
     },
     "serp_ownership": {
       "results_examined": 10,
       "breakdown": {
-        "vendor": 4,
+        "vendor": 3,
         "government": 0,
-        "forum": 0,
+        "forum": 1,
         "content": 6
       },
-      "vendor_share": 0.4,
+      "vendor_share": 0.3,
       "read": "vendors own the results page — paid acquisition is likely the only door",
       "hosts": [
         "convert.guru",
-        "mne.tools",
         "paulbourke.net",
         "github.com",
-        "brainproducts.com",
-        "brainvoyager.com",
-        "filext.com",
-        "eeglab.org",
+        "sv.uio.no",
         "wiki.besa.de",
-        "neuroimage.usc.edu"
+        "psychology.stackexchange.com",
+        "filext.com",
+        "researchgate.net",
+        "mne.tools",
+        "teuniz.net"
       ]
     }
   },
   "revenue_estimate": {
     "tam_tier": "niche",
-    "competitor_prices_found": [
-      {
-        "raw": "$1",
-        "monthly_equiv": 1.0,
-        "period": "unknown",
-        "source": "filext.com"
-      },
-      {
-        "raw": "$2",
-        "monthly_equiv": 2.0,
-        "period": "unknown",
-        "source": "filext.com"
-      }
-    ],
-    "price_anchor_usd": 2.0,
-    "price_is_recurring": false,
-    "price_source": "median of 2 prices with no stated period — treated as one-time, not recurring",
-    "gross_margin_assumed": 0.8,
-    "ev_per_customer_annual_usd": 2,
-    "price_observations": 2,
-    "acquisition_floor_usd": 200,
-    "below_acquisition_floor": true,
-    "customers_assumed_per_month": {
-      "conservative": 5,
-      "optimistic": 50
-    },
-    "conservative_mrr": "$10",
-    "optimistic_mrr": "$100",
-    "note": "MRR = observed price ($2.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
   },
   "summary": {
     "positive_signals": [
       "active Reddit discussion"
     ],
     "negative_signals": [
-      "crowded: 11 vendors already selling",
+      "crowded: 9 vendors already selling",
       "5 Product Hunt launches in this space",
-      "licensing/standing signals found (licensed attorney) — verify the statute",
-      "expected value $2/customer/yr is below the $200 acquisition floor (2 price observation(s))",
       "vendors own the buyer-intent results page — paid may be the only channel"
     ],
     "signal_count": 1,
     "competition": "crowded",
-    "verdict": "unviable — value per customer below the acquisition floor"
+    "verdict": "crowded — multiple vendors already selling"
   },
   "claude_analysis": {
-    "tam_assessment": "Niche market: buyers are EEG research labs, BCI hobbyists (e.g. OpenBCI users on r/BCI) and clinical neurophysiology units, and there is no Google Trends or Hacker News signal.",
+    "tam_assessment": "This is a niche market: the search results are mostly format documentation and free open-source tools (mne.tools, teuniz.net/EDFbrowser, paulbourke.net), there is no Google Trends signal, there are 0 Hacker News results, and the 6 Reddit hits are mostly unrelated (e.g. r/CrackSupport), so demand is limited to EEG research labs, clinics and BCI hobbyists.",
     "tam_customers": 10000,
-    "price_per_customer_annual": 10,
-    "pricing_assessment": "Willingness to pay is very low: the observed anchors are $1-2 one-time, and free converters already cover this (convert.guru, MNE, EEGLAB, open-source GitHub tools), so even ~$10/yr is optimistic.",
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, so ~$100/yr is an assumption; willingness to pay looks weak because free converters (convert.guru, MNE-Python, EDFbrowser) and vendor-supplied export tools already cover common formats like EDF, BDF and CSV.",
     "legal_status": "clear",
-    "legal_reasoning": "The only restriction found ('licensed attorney') comes from an article about legal consulting and doesn't apply to EEG data conversion, and no government sources came up.",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing restriction surfaced for a file-conversion tool that isn't sold as a medical device.",
     "key_risks": [
-      "Free open-source tools (MNE-Python, EEGLAB, BESA, EDF2EEG converters) already handle format conversion",
-      "Value per customer (~$2) is far below the $200 acquisition floor",
-      "Vendor and documentation sites own the search results, so paid acquisition may be the only channel"
+      "Free open-source tools (MNE-Python, EDFbrowser) and free web converters (convert.guru, Convertio) set the price anchor at $0",
+      "EEG hardware vendors (BioSemi, NeuroScan, BESA) document their formats and include export tools with their software, which reduces the need for a standalone converter",
+      "Vendors hold 30% of the results page and the audience is small, so paid acquisition costs could exceed ~$100/yr per-customer revenue"
     ],
     "key_opportunities": [
-      "The EEG format landscape is fragmented (EDF, BDF, NeuroScan, WinEEG, BrainVision), so conversion is a real recurring need",
-      "The consumer BCI community (OpenBCI) is growing, and some users don't want to install Python toolchains"
+      "Many proprietary formats and no clear standard (the psychology.stackexchange question asks exactly this), which creates friction for multi-site or multi-vendor research",
+      "The consumer and BCI hardware market (e.g. OpenBCI users on r/BCI) needs simple, no-code conversion to research formats",
+      "A possible upsell to BIDS-compliant conversion and validation for labs preparing data for publication or sharing"
     ],
-    "value": 100000,
-    "value_reasoning": "10,000 potential customers × $10/yr ≈ $100,000 total addressable annual revenue.",
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential customers × about $100/yr each (an assumed price, since none was observed) ≈ $1,000,000 total addressable annual revenue.",
     "suggested_probability": 0.01,
-    "probability_reasoning": "The below-acquisition-floor ceiling applies (2 price observations), so the cap is 0.01, and with a crowded field of free incumbents realistic penetration is under 1%."
+    "probability_reasoning": "Competition is rated crowded, which caps probability at 0.10, but mature free tools already meet the core need, so realistic paid penetration is likely under 1% of an already niche market."
   }
 }

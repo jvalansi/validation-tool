@@ -1,0 +1,169 @@
+{
+  "query": "EEGLAB MATLAB environment container",
+  "search_query": "EEGLAB MATLAB environment container",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 45.0,
+      "trend_direction": "flat",
+      "signal": "moderate",
+      "query_used": "EEGLAB"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "Help with EEG matlab resources : r/neuroscience - Reddit",
+          "url": "https://www.reddit.com/r/neuroscience/comments/fhmvia/help_with_eeg_matlab_resources/",
+          "snippet": "EEGlabis a toolbox for MATLAB that has a ton of EEG processing stuff built in. MNE is probably the equivalent for Python, although it was originally f"
+        },
+        {
+          "title": "Need help for making event lists in EEGLAB/ERPLAB on Matlab",
+          "url": "https://www.reddit.com/r/neuro/comments/mkotwz/need_help_for_making_event_lists_in_eeglaberplab/",
+          "snippet": "/r/neuro, involving neuroscience: Discussion and news pertaining to neurobiology, cognitive studies, clinical neuroscience, the laboratory, and anythi"
+        },
+        {
+          "title": "EEG processing pipeline: Detect and Remove ERPs with ... - Reddit",
+          "url": "https://www.reddit.com/r/neuro/comments/138vxhg/eeg_processing_pipeline_detect_and_remove_erps/",
+          "snippet": "Hi all, I'm processing EEG data usingEEGLABand ERPLAB. I've already referenced the data and applied a filter 0.1-30Hz. I'm using ICA weights for data "
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 1,
+      "top_products": [
+        {
+          "name": "witr: Why is this running? Trace process, port, container or ...",
+          "url": "https://www.producthunt.com/products/witr",
+          "snippet": "Jul 30, 2026 ·Container: witr-dd-test (id d0a9b15ffb6f) Image : alpine Why It Exists : docker → witr"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 8,
+      "operators": [
+        {
+          "name": "EEGLAB- File Exchange -MATLABCentral",
+          "host": "mathworks.com",
+          "url": "https://www.mathworks.com/matlabcentral/fileexchange/56415-eeglab",
+          "snippet": "EEGLABis an open-source signal processingenvironmentfor electrophysiological signals running onMatlaband developed at the SCCN/UCSD. Download from the project website rather than GitHub to make sure a"
+        },
+        {
+          "name": "EEGLAB",
+          "host": "sccn.ucsd.edu",
+          "url": "https://sccn.ucsd.edu/eeglab/",
+          "snippet": "For experiencedMatlabusers,EEGLABoffers a structured programmingenvironmentfor storing, accessing, measuring, manipulating and visualizing event-related EEG data.EEGLABFeatures. Academic (free) softwa"
+        },
+        {
+          "name": "EEGLABDocumentation including tutorials and workshops information",
+          "host": "eeglab.org",
+          "url": "https://eeglab.org/others/TIPS_and_FAQ.html",
+          "snippet": "BecauseMATLABsometimes uses large amount of RAM, we also took great care of inserting options inEEGLABand in several processing functions to handle low memory conditions. On the other hand theMATLABen"
+        },
+        {
+          "name": "GitHub - sccn/eeglab:EEGLABis an open source signal processing...",
+          "host": "github.com",
+          "url": "https://github.com/sccn/eeglab",
+          "snippet": "This folder contains originalMatlabfunctions from theEEGLAB(formerly ICA/EEG)Matlabtoolbox, all released under the Gnu public license (see eeglablicence.txt). See theEEGLABtutorial and reference paper"
+        },
+        {
+          "name": "Processing data withEEGLAB:Matlab: need to knows",
+          "host": "carpentries-incubator.github.io",
+          "url": "https://carpentries-incubator.github.io/SDC-EEGLAB/02-intro_Matlab/index.html",
+          "snippet": "Before we get started analyzing EEG data inEEGLABlets take a look at how the functions operate in theMatlabenvironment.Matlabis an interpreted language."
+        },
+        {
+          "name": "eeglab:Matlabtoolbox for EEG signal processing",
+          "host": "numfer.com",
+          "url": "https://numfer.com/sccn/eeglab",
+          "snippet": "EEGLABprovides a comprehensiveenvironmentfor analyzing electroencephalography (EEG) data inMatlab, offering tools for preprocessing, source localization, and spectral analysis. Screenshot of sccn/eegl"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 9,
+        "government": 0,
+        "forum": 0,
+        "content": 1
+      },
+      "vendor_share": 0.9,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "mathworks.com",
+        "github.com",
+        "github.com",
+        "sccn.ucsd.edu",
+        "deepwiki.com",
+        "sccn.ucsd.edu",
+        "eeglab.org",
+        "sccn.ucsd.edu",
+        "eeglab.org",
+        "github.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 8 vendors already selling",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche academic market: EEGLAB is free GPL software from SCCN/UCSD with flat, moderate search interest (45, flat) and about 10 Reddit threads, so buyers are mostly EEG research labs and grad students, not enterprises.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, so ~$100/yr per lab or user is an assumption; willingness to pay is likely low because the core tool is free and academic budgets favor free or institution-licensed setups.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found no restriction signals, but packaging MATLAB itself in a container needs MathWorks licensing (an inference, not from the data), so a compiled or runtime-based image is the practical route.",
+    "key_risks": [
+      "The core product is free (EEGLAB is GPL), and MNE-Python is a free Python alternative, so paying for a container is hard to justify",
+      "MATLAB licensing limits what can be redistributed in an image, and users still need their own MATLAB license",
+      "Vendors hold 90% of the search results page, so organic discovery is weak and paid acquisition is costly for a low-price product"
+    ],
+    "key_opportunities": [
+      "Active Reddit help threads point to real setup and pipeline friction that a ready-made environment could reduce",
+      "Steady, flat interest in EEGLAB suggests a durable installed base in labs",
+      "Reproducibility needs (shared preprocessing pipelines, HPC or cloud runs) could support a paid team or lab tier"
+    ],
+    "value": 1000000,
+    "value_reasoning": "An assumed ~10,000 potential lab or user customers × ~$100/yr ≈ $1,000,000 total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The 'crowded' verdict caps this at 0.10, and a free open-source incumbent plus academic buyers with little budget make realistic paid penetration likely under 1%, so the moonshot tier fits."
+  }
+}

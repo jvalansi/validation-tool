@@ -1,0 +1,213 @@
+{
+  "query": "automated EEG preprocessing artifact removal software",
+  "search_query": "automated EEG preprocessing artifact removal software",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 41.8,
+      "trend_direction": "up",
+      "signal": "moderate",
+      "query_used": "EEG artifact removal"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "r/OpenBCI",
+          "url": "https://www.reddit.com/r/OpenBCI/",
+          "snippet": "September 10, 2021 -But as far as I can tell, no usable open-source standalone application exists that does this end-to-end — ingesting live EEG, solv"
+        },
+        {
+          "title": "EEG processing pipeline: Detect and Remove ERPs with ... - Reddit",
+          "url": "https://www.reddit.com/r/neuro/comments/138vxhg/eeg_processing_pipeline_detect_and_remove_erps/",
+          "snippet": "If it's working properly,removalof ICs (especially blinks with their large magnitude) should minimally disruptive of other signals. In any rate EEGLAB"
+        },
+        {
+          "title": "ICA images labelled by experts for EEG artifacts : r/neuroscience",
+          "url": "https://www.reddit.com/r/neuroscience/comments/du6kgr/ica_images_labelled_by_experts_for_eeg_artifacts/",
+          "snippet": "Like the commenter before said, Cohen is a fantastic source. I’d like to add this one for most artifacts you’ll see inEEGdata. Replyr/neuroscienceTop "
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "ZeroGPU: The compute efficient layer for AI inference ...",
+          "url": "https://www.producthunt.com/products/zerogpu",
+          "snippet": "The world can't build compute fast enough to keep up with AI demand. So we took a different path. Ze"
+        },
+        {
+          "name": "Unsloth: Local AI on your own hardware.OpenChatCut: Open-source AI agent video editor with a real ...Tessl: Tessl is the platform for building software factories ...",
+          "url": "https://www.producthunt.com/products/unsloth",
+          "snippet": "The basic fine-tuning experience is good, documentation could be expanded to cover more edge cases a"
+        },
+        {
+          "name": "Tessl: Tessl is the platform for building software factories ...",
+          "url": "https://www.producthunt.com/products/tessl",
+          "snippet": "Tessl helps your team build asoftwarefactory, one workflow at a time. First, evaluate and optimize y"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 10,
+      "operators": [
+        {
+          "name": "EEG Artifacts: Types, Detection, and Removal Techniques Bitbrain",
+          "host": "bitbrain.com",
+          "url": "https://www.bitbrain.com/blog/eeg-artifacts",
+          "snippet": "November 25, 2025 -BEST Toolbox: A Python package from the Mayo Clinic for long-term invasive and non-invasive EEG processing. Includes modules for artifact removal (e.g., DBS, movement) alongside sle"
+        },
+        {
+          "name": "EEG Preprocessing and Artifact Handling | Springer Nature Link",
+          "host": "link.springer.com",
+          "url": "https://link.springer.com/chapter/10.1007/978-3-032-20450-9_17",
+          "snippet": "Removal of muscular artifacts in EEG signals: A comparison of linear decomposition methods. Brain Informatics, 5(1), 13–22. https://doi.org/10.1007/s40708-017-0074-6 ... Gabard-Durnam, L. J., Mendez L"
+        },
+        {
+          "name": "Frontiers | The Harvard Automated Processing Pipeline for Electroencephalography",
+          "host": "frontiersin.org",
+          "url": "https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2018.00097/full",
+          "snippet": "February 6, 2018 -HAPPE removes more artifact than all alternative approaches while simultaneously preserving greater or equivalent amounts of EEG signal in almost all instances. We also provide distr"
+        },
+        {
+          "name": "Artifact reduction - encevis",
+          "host": "encevis.com",
+          "url": "https://encevis.com/solutions/artifact-reduction/",
+          "snippet": "May 6, 2024 -PureEEG allows you to automatically preprocess your data in order to obtain purified EEGs suitable for computational analyses. This saves you time and increases the amount of valid data f"
+        },
+        {
+          "name": "6. Reject artifacts - EEGLAB Wiki",
+          "host": "eeglab.org",
+          "url": "https://eeglab.org/tutorials/06_RejectArtifacts/",
+          "snippet": "EEGLAB pioneered the use of independent component analysis to reject artifacts and is implementing new measures such as artifact subspace reconstructions. This series of tutorials guides you through r"
+        },
+        {
+          "name": "Clean EEG – Advanced EEG Data Cleaning & Artifact Removal Software",
+          "host": "cleaneeg.com",
+          "url": "https://cleaneeg.com/",
+          "snippet": "Clean EEG is a professional EEG data cleaning and visualization tool for researchers. Remove artifacts, preprocess signals, and analyze EEG data efficiently in your browser."
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 0,
+        "government": 1,
+        "forum": 0,
+        "content": 9
+      },
+      "vendor_share": 0.0,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "gtec.at",
+        "pmc.ncbi.nlm.nih.gov",
+        "github.com",
+        "zipdo.co",
+        "arxiv.org",
+        "academia.edu",
+        "intechopen.com",
+        "hal.science",
+        "sccn.ucsd.edu",
+        "researchgate.net"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [
+      {
+        "raw": "$8",
+        "monthly_equiv": 8.0,
+        "period": "unknown",
+        "source": "frontiersin.org"
+      },
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "frontiersin.org"
+      },
+      {
+        "raw": "$2",
+        "monthly_equiv": 2.0,
+        "period": "unknown",
+        "source": "frontiersin.org"
+      },
+      {
+        "raw": "$5",
+        "monthly_equiv": 5.0,
+        "period": "unknown",
+        "source": "frontiersin.org"
+      }
+    ],
+    "price_anchor_usd": 5.0,
+    "price_is_recurring": false,
+    "price_source": "median of 4 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 4,
+    "price_observations": 4,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 20,
+      "optimistic": 200
+    },
+    "conservative_mrr": "$100",
+    "optimistic_mrr": "$1000",
+    "note": "MRR = observed price ($5.0 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "growing search trend",
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 10 vendors already selling",
+      "5 Product Hunt launches in this space",
+      "expected value $4/customer/yr is below the $200 acquisition floor (4 price observation(s))"
+    ],
+    "signal_count": 2,
+    "competition": "crowded",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Mid-sized niche market: the buyers are EEG research labs and clinical neurophysiology groups, search interest is moderate and rising ('EEG artifact removal', average 41.8, trending up), and the search results are dominated by academic sources (PMC, arXiv, sccn.ucsd.edu), which points to a research-heavy buyer base rather than a mass market.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "The extracted $1-$8 'prices' come from the frontiersin.org HAPPE paper, which describes a free academic pipeline, so they are probably text artifacts rather than real prices; commercial tools like encevis PureEEG and Clean EEG point to lab-license pricing of roughly $1000/yr (an assumption, since no real price was observed), under pressure from free tools like EEGLAB, HAPPE and MNE.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found no restriction signals (0 restriction hits, 0 government sources) for research-use software, but clinical diagnostic use would probably need medical-device clearance, which was not checked.",
+    "key_risks": [
+      "Free open-source tools (EEGLAB, HAPPE, MNE, the Mayo Clinic BEST Toolbox) are the default choice in academia and push willingness to pay toward zero",
+      "Crowded field: 10 incumbents found, including established commercial products such as encevis PureEEG and Clean EEG",
+      "The pipeline's revenue estimate of $4/customer/yr falls below the $200 acquisition floor, and academic purchasing cycles are slow and grant-dependent"
+    ],
+    "key_opportunities": [
+      "Search trend for 'EEG artifact removal' is rising",
+      "A Reddit user on r/OpenBCI reports that no usable open-source standalone application handles live EEG end-to-end",
+      "The search results page is not vendor-dominated (0% vendor share), so organic entry through content and SEO looks plausible"
+    ],
+    "value": 10000000,
+    "value_reasoning": "About 10,000 potential labs × about $1000/yr ≈ $10M total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The cap applies because below_acquisition_floor is true with 4 price observations, and the crowded, free-tool-dominated market also points to realistic penetration under 1%, though the underlying price data looks spurious and may understate real willingness to pay."
+  }
+}
