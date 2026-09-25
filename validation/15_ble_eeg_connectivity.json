@@ -1,0 +1,186 @@
+{
+  "query": "Muse OpenBCI bluetooth connection troubleshooting",
+  "search_query": "Muse OpenBCI bluetooth connection troubleshooting",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 44.0,
+      "trend_direction": "down",
+      "signal": "moderate",
+      "query_used": "Muse headband"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/11inzdr/unarcdll_error_code_14_fitgirl_this_is_not/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/OculusQuest/comments/uhdvw6/virtual_desktops_desktop_not_responding_try/?rdt=61540",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "Osmotic: Download your DJI Osmo footage to your Mac...",
+          "url": "https://www.producthunt.com/products/osmotic-2",
+          "snippet": "Free, open-source Mac app for DJI Osmo cameras. Pairs overBluetooth, joins the camera's Wi-Fi and do"
+        },
+        {
+          "name": "Kelam: Let your agent make the calls you don't want to.",
+          "url": "https://www.producthunt.com/products/kelam",
+          "snippet": "Your assistant can reach anything with a URL. The locksmith, the clinic and the garage don't have on"
+        },
+        {
+          "name": "15Five: 15Five is a leading people and performance...",
+          "url": "https://www.producthunt.com/products/15five?launch=15five-2",
+          "snippet": "Ask questions, find support, andconnect. Streaks. The most active community members."
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "Muse S Headbands — OpenBCI Forum",
+          "host": "openbci.com",
+          "url": "https://openbci.com/forum/index.php?p=/discussion/3942/muse-s-headbands",
+          "snippet": "Nov 15, 2024 ·Can I save aMuseS session then open it inOpenBCIand analyze it? Is there a way to runMuseS throughOpenBCIfor a live session?"
+        },
+        {
+          "name": "Bluetooth Troubleshooting",
+          "host": "choosemuse.my.site.com",
+          "url": "https://choosemuse.my.site.com/s/article/Bluetooth-Troubleshooting",
+          "snippet": "This article shares some key steps you can take totroubleshootand properlyconnectyourMusebyBluetooththrough theMuseapp.Museconnects byBluetoothdirectly through theMuseapp, not by pairing in your devic"
+        },
+        {
+          "name": "GitHub - kowalej/BlueMuse: Windows app to stream data from ...",
+          "host": "github.com",
+          "url": "https://github.com/kowalej/BlueMuse",
+          "snippet": "AddedMuseS Athena support (seeMuseS Athena). Added Esc key support to collapse/deselect the currently selectedMusein the list. Fixed intermittentBluetooth/GATT communication issues (JSON parsing error"
+        },
+        {
+          "name": "How to connect a Muse Headband to a PC or Raspberry Pi?",
+          "host": "petergamma.org",
+          "url": "https://petergamma.org/how-to-connect-a-muse-headband-to-a-pc-or-raspberry-pi/",
+          "snippet": "Jan 12, 2025 ·So the best way toconnecttheMuseto a PC or Raspberry Pi, or for getting access your EEG data is to choose another EEG device than theMuse, as for instanceOpenBCI."
+        },
+        {
+          "name": "Skill — Open-Source Real-Time EEG Analysis forMuse&OpenBCI",
+          "host": "neuroskill.com",
+          "url": "https://neuroskill.com/",
+          "snippet": "Connect. Power on yourMuseorOpenBCIdevice. Skill discovers it automatically —Muse2/S over BLE (256 Hz, 4 channels), or anyOpenBCIboard via BLE, USB serial, WiFi Shield, or UDP (4–24 channels, 125–1000"
+        },
+        {
+          "name": "How to fixBluetoothnot working,connecting, or pairing - Techlicious",
+          "host": "techlicious.com",
+          "url": "https://www.techlicious.com/how-to/how-to-fix-bluetooth-pairing-problems/",
+          "snippet": "Bluetoothnot working? Fix pairing problems when devices won't show up, won'tconnect, or keep reconnecting to the wrong gadget."
+        }
+      ],
+      "funding_mentions": [
+        {
+          "amount_usd": 5180000.0,
+          "headline": "Muse - 2026 Company Profile, Team, Funding, Competitors ...Musewearables - 2026 Funding Rounds & List of Investors - Tra",
+          "url": "https://tracxn.com/d/companies/muse/__866RY0u_J98f3IE3LV8CcCnCNCJrMPCEiUBIBOIJdSM"
+        }
+      ],
+      "max_funding_usd": 5180000.0,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 5,
+        "government": 0,
+        "forum": 0,
+        "content": 5
+      },
+      "vendor_share": 0.5,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "openbci.com",
+        "youtube.com",
+        "neuroskill.com",
+        "techlicious.com",
+        "support.microsoft.com",
+        "arghome.ru",
+        "ebay.com",
+        "petergamma.org",
+        "neurotechx.github.io",
+        "github.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "This is a niche market: 'Muse headband' has moderate Google Trends interest (44) that is trending down, Hacker News returned 0 results, and the Reddit hits are unrelated noise (a cracked-game DLL error and an Oculus thread), so the real audience is likely limited to developers and researchers streaming Muse data to a PC or OpenBCI.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 10,
+    "pricing_assessment": "No competitor price was observed, and the visible solutions are free (Muse's own Bluetooth troubleshooting article, the open-source BlueMuse on GitHub, and Neuroskill's free open-source app), so users are unlikely to pay more than a small one-off or roughly $10/yr fee; this price is an assumption, not an observed anchor.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing limits surfaced.",
+    "key_risks": [
+      "Free incumbents already cover the job: Muse's official support article, BlueMuse (open source, which already fixed intermittent Bluetooth/GATT issues), and Neuroskill's automatic BLE discovery for Muse and OpenBCI",
+      "Muse (about $5M in funding per Tracxn) can fix connectivity in its own app or firmware at any time, which would remove the problem",
+      "Vendors hold 50% of search results for the buyer-intent query and search interest is falling, which leaves paid acquisition as the likely channel for a very low-priced product"
+    ],
+    "key_opportunities": [
+      "The pain is real: users on the OpenBCI forum ask how to run a Muse S through OpenBCI live, and BlueMuse keeps shipping connection fixes for new models such as the Muse S Athena",
+      "The problem spans several platforms (Windows, Raspberry Pi, OpenBCI boards), which leaves room for a single cross-device connection and streaming tool",
+      "It could be bundled as a paid tier of a broader EEG data tool for researchers rather than sold as troubleshooting alone"
+    ],
+    "value": 100000,
+    "value_reasoning": "About 10,000 potential customers × about $10/yr gives roughly $100,000 in total addressable annual revenue; both inputs are assumptions because no price or customer count was observed.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The crowded verdict caps the tier at 0.10, and the lower 0.01 tier fits because the incumbent solutions are free and vendor-owned while demand is shrinking, so expected paid penetration is well under 1% of an already small niche."
+  }
+}

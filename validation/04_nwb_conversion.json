@@ -1,0 +1,179 @@
+{
+  "query": "NWB neurodata without borders conversion service",
+  "search_query": "NWB neurodata without borders conversion service",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 3.8,
+      "trend_direction": "flat",
+      "signal": "weak",
+      "query_used": "neurodata without borders"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BestofRedditorUpdates/new/?t=",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 3,
+      "top_products": [
+        {
+          "name": "CodeX: Build webapps in minutes for completely free | Product ...",
+          "url": "https://www.producthunt.com/products/codex-6",
+          "snippet": "CodeX - Revolutionary AI development platform with 27+ AI models, Designer Mode, Thinking Budget Sys"
+        },
+        {
+          "name": "NeuroBlock: No-code AI Lab: Train models, access datasets ...",
+          "url": "https://www.producthunt.com/products/neuroblock",
+          "snippet": "Jan 26, 2026 ·NeuroBlock is a no-code AI Lab that allows you to train custom lightweight AI models w"
+        },
+        {
+          "name": "NeuroVidz: See how a brain reacts to your clip",
+          "url": "https://www.producthunt.com/products/neurovidz",
+          "snippet": "Jul 15, 2026 ·Upload a video or audio clip. In about a minute, NeuroVidz maps how a brain would resp"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "NeurodataWithoutBorders",
+          "host": "nwb.org",
+          "url": "https://nwb.org/",
+          "snippet": "NeurodataWithoutBorders(NWB) is adatastandard for neurophysiology, providing neuroscientists with a common standard to share, archive, use, and build analysis tools for neurophysiologydata.TheNeurodat"
+        },
+        {
+          "name": "The Neurodata Without Borders ecosystem for ... - eLife",
+          "host": "elifesciences.org",
+          "url": "https://elifesciences.org/articles/78362",
+          "snippet": "Oct 4, 2022 ·Our open-source software (NeurodataWithoutBorders,NWB) defines and modularizes the interdependent, yet separable, components of a data language. We demonstrateNWB’s impact through unified"
+        },
+        {
+          "name": "NWB Conversions — CatalystNeuro",
+          "host": "catalystneuro.com",
+          "url": "https://catalystneuro.com/nwb-conversions/",
+          "snippet": "Comprehensive data standardizationservicestoconvertexisting Blackrock format neurophysiology datasets to theNeurodataWithoutBorders(NWB) format to enhance data interoperability and facilitate sharing."
+        },
+        {
+          "name": "Neurodata Without Borders (NWB) — BFFO",
+          "host": "bffo.org",
+          "url": "https://bffo.org/format/NWB/",
+          "snippet": "NWBfiles are typically produced during or after data acquisition. Acquisition systems such as SpikeGLX, Open Ephys, and Intan write proprietary formats that are then converted toNWBusing NeuroConv or "
+        },
+        {
+          "name": "NeurodataWithoutBorders· GitHub",
+          "host": "github.com",
+          "url": "https://github.com/NeurodataWithoutBorders",
+          "snippet": "NeurodataWithoutBordershas 36 repositories available.Main website for theNeurodataWithoutBorders(NWB)datastandard and software ecosystem."
+        },
+        {
+          "name": "AboutNWB-NeurodataWithoutBorders",
+          "host": "neurodatawithoutborders.github.io",
+          "url": "https://neurodatawithoutborders.github.io/about-us/",
+          "snippet": "NeurodataWithoutBorders(NWB) is adatastandard for neurophysiology, providing neuroscientists with a common standard to share, archive, use, and build common analysis tools for neurophysiologydata.NWBi"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 4,
+        "government": 1,
+        "forum": 0,
+        "content": 5
+      },
+      "vendor_share": 0.4,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "nwb.org",
+        "elifesciences.org",
+        "incf.org",
+        "neurodatawithoutborders.github.io",
+        "researchgate.net",
+        "github.com",
+        "proceedings.scipy.org",
+        "neurostars.org",
+        "pmc.ncbi.nlm.nih.gov",
+        "jneurosci.org"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: Google Trends interest for 'neurodata without borders' is 3.8 and flat, Hacker News returned 0 results, and the Reddit hits are placeholder pages with no NWB discussion, so demand is limited to neurophysiology labs that must share data in NWB format (assumed to number in the low thousands worldwide; not observed in the data).",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 10000,
+    "pricing_assessment": "No competitor price was observed, so the ~$10k/yr figure is an assumption that conversion is sold per project to grant-funded labs, as CatalystNeuro's service-based model suggests; the free, open-source NeuroConv tool (cited on bffo.org) caps what labs will pay for simple conversions.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing rules surfaced.",
+    "key_risks": [
+      "CatalystNeuro already sells NWB conversion services and is closely tied to the NWB ecosystem, so it is the default vendor for this work",
+      "Free open-source converters (NeuroConv, NWB GitHub org with 36 repos) let labs convert in-house at no cost",
+      "Demand depends on grant funding cycles, which makes revenue lumpy and project-based rather than recurring"
+    ],
+    "key_opportunities": [
+      "An incumbent selling conversion services (CatalystNeuro) shows that labs pay for this work",
+      "Many proprietary acquisition formats (SpikeGLX, Open Ephys, Intan, Blackrock) need conversion, which leaves room for format-specific or lower-cost offerings",
+      "Of the 9 'operators' found, most are the standard body, docs, and papers rather than paid vendors, so there are fewer direct competitors than the 'crowded' label suggests"
+    ],
+    "value": 10000000,
+    "value_reasoning": "~1000 labs (assumed) × ~$10,000/yr (assumed, no observed price) ≈ $10M total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "An established specialist (CatalystNeuro) plus free open-source tooling in a niche market with flat search interest point to a realistic new-entrant penetration of about 1-3%, which is closest to the moonshot tier and below the 0.10 ceiling set by the crowded competition."
+  }
+}
