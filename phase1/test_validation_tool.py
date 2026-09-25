@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from validation_tool import (
     _parse_funding, _assess_competition, _host, _classify_hosts,
     _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
-    _extract_prices,
+    _extract_prices, _is_non_vendor,
 )
 
 # --- _parse_funding: funding language required -------------------------------
@@ -25,6 +25,13 @@ assert _parse_funding("") is None
 # --- _host -------------------------------------------------------------------
 assert _host("https://www.ownwell.com/pricing") == "ownwell.com"
 assert _host("not a url") == ""
+
+# --- papers, code hosts and universities are not vendors ----------------------
+for h in ("frontiersin.org", "pmc.ncbi.nlm.nih.gov", "elifesciences.org", "github.com",
+          "spikeinterface.github.io", "sccn.ucsd.edu", "ucl.ac.uk", "unimelb.edu.au", "en.wikipedia.org"):
+    assert _is_non_vendor(h), h
+for h in ("encevis.com", "cleaneeg.com", "catalystneuro.com", "ownwell.com", "emotiv.com"):
+    assert not _is_non_vendor(h), h
 
 # --- the regression this was built for ---------------------------------------
 # Property tax appeals: absent from Product Hunt, but a $50M-funded incumbent

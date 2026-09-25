@@ -180,6 +180,30 @@ _DIRECTORY_HOSTS = (
     "news.ycombinator.com", "substack.com",
 )
 
+# Papers, code hosts and docs rank for pricing probes in academic niches but sell
+# nothing — counting them turned every neuroscience-tooling idea "crowded", and
+# "$1"/"$8" scraped from a Frontiers paper became the price anchor.
+_NON_VENDOR_HOSTS = (
+    "github.com", "github.io", "gitlab.com", "readthedocs.io", "arxiv.org", "biorxiv.org",
+    "medrxiv.org", "nih.gov", "elifesciences.org", "frontiersin.org", "springer.com",
+    "sciencedirect.com", "nature.com", "cell.com", "wiley.com", "plos.org", "mdpi.com",
+    "ieee.org", "researchgate.net", "sagepub.com", "tandfonline.com", "oup.com",
+    "biomedcentral.com", "iop.org", "acm.org", "semanticscholar.org", "zenodo.org",
+    "pubmed.gov", "jneurosci.org", "physiology.org", "hal.science",
+)
+_NON_VENDOR_SUFFIXES = (".edu", ".gov", ".mil")
+_NON_VENDOR_LABELS = ("ac", "edu")  # ucl.ac.uk, unimelb.edu.au
+
+
+def _is_non_vendor(host):
+    """True for hosts that cannot be a competitor selling the product."""
+    if any(host == d or host.endswith("." + d) for d in _DIRECTORY_HOSTS + _NON_VENDOR_HOSTS):
+        return True
+    if host.endswith(_NON_VENDOR_SUFFIXES):
+        return True
+    parts = host.split(".")
+    return len(parts) >= 3 and parts[-2] in _NON_VENDOR_LABELS
+
 
 def _parse_funding(text):
     """Largest USD funding amount mentioned in text, or None.
@@ -238,7 +262,7 @@ def _incumbent_search(query, limit=8):
             title = (r.get("title") or "").strip()
             snippet = (r.get("body") or "").strip()
             host = _host(url)
-            if not host or any(host == d or host.endswith("." + d) for d in _DIRECTORY_HOSTS):
+            if not host or _is_non_vendor(host):
                 continue
             amount = _parse_funding(f"{title} {snippet}")
             if amount and not [t for t in tokens if t in f"{title} {snippet}".lower()]:
