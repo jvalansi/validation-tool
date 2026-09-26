@@ -22,6 +22,26 @@ import urllib.parse
 import urllib.request
 from datetime import date
 
+ENV_FILE = "/home/ubuntu/slack-claude-bot/.env"
+
+
+def _load_env_file():
+    """Read GOOGLE_ADS_* straight from the .env file.
+
+    The monitor cron `source`s that file with bash, which aborts at the first
+    value bash can't parse (a backtick in an earlier line did exactly that),
+    silently dropping every variable after it — including these, which the
+    spend cap depends on.
+    """
+    if not os.path.exists(ENV_FILE):
+        return
+    for line in open(ENV_FILE):
+        k, sep, v = line.strip().partition("=")
+        if sep and k.startswith("GOOGLE_ADS_"):
+            os.environ.setdefault(k, v)
+
+
+_load_env_file()
 API_VERSION = os.environ.get("GOOGLE_ADS_API_VERSION", "v25")
 STATE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "ads_campaigns.json")
 
