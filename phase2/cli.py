@@ -217,7 +217,7 @@ def step4_ads(project_name, description, pain_desire, validation_query, price_pe
     from .ads import generate_ads_config
     print("\n[Step 4] Generating Google Ads config...")
     daily_budget = round(budget / days) if days else 15
-    return generate_ads_config(
+    result = generate_ads_config(
         project_name=project_name,
         description=description,
         pain_desire=pain_desire,
@@ -227,6 +227,16 @@ def step4_ads(project_name, description, pain_desire, validation_query, price_pe
         daily_budget=daily_budget,
         dry_run=dry_run,
     )
+    from . import google_ads
+    if dry_run or not google_ads.configured():
+        print("[Ads] Google Ads API not configured — use the CSV for manual import")
+        return result
+    if not landing_url:
+        print("[Ads] No deployed landing page — not launching ads")
+        return result
+    launched = google_ads.launch_campaign(result["config"], budget, days)
+    print(f"[Ads] Campaign live: {launched['campaign']} (cap ${budget:.0f}, ends {launched['end_date']})")
+    return {**result, "status": "launched", "campaign": launched}
 
 
 def step5_email(project_name, dry_run):

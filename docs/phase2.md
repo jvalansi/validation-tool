@@ -106,9 +106,14 @@ python -m phase2.cli <notion-page-id> --decide [--dry-run]
 | Daily monitor (Sheets → Slack) | ✅ `phase2/monitor.py` |
 | Outreach drafts (Claude → Slack) | ✅ `phase2/outreach.py` |
 | Day-7 decision (→ Slack + Notion) | ✅ `phase2/decision.py` |
-| Google Ads campaign creation (API) | ⏳ stub — manual import via Google Ads Editor |
+| Google Ads campaign creation (API) | ✅ `phase2/google_ads.py` — falls back to CSV if not configured |
+| Ad spend cap (pause at cap or end date) | ✅ `google_ads.enforce_caps()`, run first by the daily monitor |
 
-Google Ads API requires a developer token + OAuth — not yet implemented. For now, ads config is generated as CSV and written to a Google Sheet for manual import.
+Since 2026-09-09 Google Ads API access comes from the Google Cloud project behind the OAuth client; the developer token is optional. Campaigns are created paused and enabled only once every part succeeds.
+
+**Spend cap:** the monitor runs once a day and Google may spend up to 2x the daily budget in a day, so a campaign is paused once `spent + 2 x daily > cap` — with the default $100 / 7 days it stops at ~$72-100. For a hard backstop, also set an account-level budget in the Google Ads UI.
+
+**One-time setup:** create a Google Ads account + billing; in Cloud Console enable the Google Ads API, complete brand verification and apply for Basic access; create an OAuth client and a refresh token with scope `https://www.googleapis.com/auth/adwords`; add `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_CLIENT_ID`, `GOOGLE_ADS_CLIENT_SECRET`, `GOOGLE_ADS_REFRESH_TOKEN` to `/home/ubuntu/slack-claude-bot/.env` (the monitor cron sources it). Check: `python -m phase2.google_ads`.
 
 ---
 
@@ -121,7 +126,7 @@ Google Ads API requires a developer token + OAuth — not yet implemented. For n
 | Slack | `SLACK_BOT_TOKEN` | ✅ in `.env` |
 | Google Sheets (read) | Service account key | ✅ `/home/ubuntu/google-service-account.json` |
 | Google Forms | Same service account | ✅ form shared with `gclaude@...` |
-| Google Ads | Developer token + OAuth | ❌ not yet implemented |
+| Google Ads | OAuth client of approved Cloud project + refresh token | ⏳ code done, credentials not yet set |
 
 ---
 

@@ -165,6 +165,17 @@ def get_formspree_responses(project_name):
 
 def run_monitor(dry_run=False):
 
+    # Spend cap runs first and independently of signup tracking, so a failure
+    # reading the form can never leave an ad campaign spending past its cap.
+    from . import google_ads
+    if google_ads.configured() and not dry_run:
+        try:
+            lines = google_ads.enforce_caps()
+            if lines:
+                _slack("*Ad spend*\n" + "\n".join(lines))
+        except Exception as e:
+            _slack(f"Ad spend cap check FAILED — check campaigns manually: {e}")
+
     campaigns = load_campaigns()
     active = [c for c in campaigns if c.get("status") == "active"]
 
@@ -256,6 +267,7 @@ def run_monitor(dry_run=False):
 
     save_campaigns(campaigns)
 
-    # Remove cron if no active campaigns remain
-    if not any(c.get("status") == "active" for c in campaigns):
+    # Remove cron if no active campaigns remain — including ad campaigns, whose cap depends on it
+    ads_active = any(c["status"] == "active" for c in google_ads._load_state())
+    if not ads_active and not any(c.get("status") == "active" for c in campaigns):
         _uninstall_cron()
