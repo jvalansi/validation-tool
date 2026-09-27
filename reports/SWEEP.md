@@ -1,84 +1,84 @@
 # Opportunity sweep
 
-22 niches, 311 clusters (28 excluded by profile).
-Score = items × (1 + paying share) × fit; fit and clustering are Claude judgements.
+22 niches, 311 clusters (184 excluded by profile or under 3 items).
+Score = 100 × share of the niche's pains × (1 + paying share) × fit (clusters with ≥3 items); fit and clustering are Claude judgements.
 
 ## Top 5 — validated
 
-### 1. Hosted, version-pinned neuro-analysis environments (MNE/EEGLAB-alt/spike sorting) that launch in one click with known-good dependency sets.  (bci, score 68.2)
-- Pain: Building from source (CMake/Qt/submodules), missing prebuilt binaries, pinned-dependency conflicts, MATLAB toolbox/path/plugin-manager failures, paid-toolbox dependencies and upgrade churn (NumPy 2, matplotlib) break environments and reproducibility.
-- Items 104 · paying signals 20 · fit 0.55
-- Validation: **weak signal — reconsider or reframe** · competition contested · capture 0.01 · market ~$10,000,000/yr
-  - risk: The core tools are free open source, and free hosted alternatives exist (for example Neurodesk, brainlife.io, Binder; these come from general knowledge, not the research data), so there is little room to charge.
-  - risk: Vendors own 57% of the search results page, so paid acquisition may be the only channel, and academic buyers respond poorly to paid ads and have slow procurement tied to grant cycles.
-  - risk: Price evidence is thin: one observed price, no funded competitors, and no demand signals from HN, Reddit, or Product Hunt.
-  - https://github.com/brainflow-dev/brainflow/issues/425
-  - https://github.com/brainflow-dev/brainflow/issues/708
-  - https://github.com/brainflow-dev/brainflow/issues/628
-
-### 2. XDF/multistream sync analyzer that detects clock jumps and drift, dejitters, aligns streams and outputs a sync-quality report plus corrected files.  (bci, score 55.9)
-- Pain: Aligning EEG with eye trackers, physio sensors, video, VR and stimulus markers across machines is hard. Users hit LSL discovery failures, jittery or jumping timestamps, relative clocks, trigger delays, missing connectors, no browser/cloud relay, and no way to validate sync quality.
-- Items 73 · paying signals 13 · fit 0.65
-- Validation: **weak signal — reconsider or reframe** · competition unknown · capture 0.01 · market ~$1,000,000/yr
-  - risk: Free open-source tools (pyxdf, MNE, the LSL ecosystem) already cover the core dejitter and clock-sync functions, which pushes willingness to pay toward zero
-  - risk: Academic buyers have small budgets and slow procurement, and the total number of XDF-using labs is low
-  - risk: Incumbent search failed, so the competitive landscape is unknown rather than empty
-  - https://github.com/brainflow-dev/brainflow/issues/298
-  - https://github.com/brainflow-dev/brainflow/issues/670
-  - https://github.com/brainflow-dev/brainflow/issues/265
-
-### 3. Domain-tuned AI analysis copilot that writes, runs and sanity-checks MNE pipelines and statistical designs on the user's data.  (bci, score 55.2)
-- Pain: Users struggle with group STUDY designs, repeated-measures and cluster statistics, beamformer and forward-model setup, coordinate frames, connectivity and PAC choices, and spectral units, and they rely on forums for expert judgment.
-- Items 73 · paying signals 19 · fit 0.6
-- Validation: **weak signal — reconsider or reframe** · competition none_found · capture 0.01 · market ~$10,000,000/yr
-  - risk: General-purpose LLM assistants (ChatGPT, Claude, Copilot) already write MNE code for free or low cost, which limits how much users will pay for a specialized tool
-  - risk: Academic buyers have small, grant-bound budgets and slow procurement, and the niche caps TAM
-  - risk: No demand evidence surfaced (0 HN results, no vendors), so willingness to pay is unvalidated
-  - https://github.com/mne-tools/mne-python/issues/2796
-  - https://github.com/sccn/labstreaminglayer/issues/47
-  - https://github.com/braindecode/braindecode/issues/186
-
-### 4. Upload-to-report EEG preprocessing service with a validated default pipeline, ML artifact/ICA classification and reproducible QC reports.  (bci, score 53.25)
-- Pain: Researchers don't know the right preprocessing order (filtering, ICA, interpolation, AutoReject). Automated bad-channel and artifact detection is unreliable, ICA review is manual, events desync after cropping, and batch QC reports have to be hand-scripted.
-- Items 55 · paying signals 16 · fit 0.75
+### 1. Cheap hour logger with per-state licensure rule packs, multi-supervisor splits and exportable signed supervisor reports.  (private-practice, score 35.4)
+- Pain: Pre-licensure counselors and therapists log supervised direct, indirect and supervision hours in spreadsheets or pricey apps (Time2Track, TrackMyHours) that often miscount under state-specific rules, especially with multiple supervisors.
+- Items 6 · paying signals 4 · fit 0.85
 - Validation: **unviable — value per customer below the acquisition floor** · competition contested · capture 0.01 · market ~$10,000,000/yr
-  - risk: Free open-source tools (EEGLAB, MNE-Python, ICLabel, sEEGnal) cover the core pipeline, which limits willingness to pay
-  - risk: Academic buyers have small, grant-bound budgets and slow procurement, and researchers are reluctant to hand off preprocessing choices that reviewers will scrutinize
-  - risk: The measured value per customer ($6/yr) is below the $200 acquisition floor, so the unit economics are unproven
-  - https://github.com/sccn/eeglab/issues/108
-  - https://github.com/sccn/eeglab/issues/429
-  - https://github.com/sccn/eeglab/issues/178
+  - risk: Expected value of about $96 per customer per year is below the $200 acquisition floor, so paid acquisition likely loses money
+  - risk: Customers churn by design once they reach licensure, typically within 2-4 years
+  - risk: Several cheap incumbents already offer state board forms and per-supervisor PDFs (Psych Logger, License Trail), which leaves 'cheap' with little room to differentiate
+  - https://www.reddit.com/r/therapists/comments/uq4m90/how_do_you_keep_track_of_your_clinical_hours/
+  - https://www.reddit.com/r/therapists/comments/1d50x44/tracking_hours_lpc/
+  - https://www.reddit.com/r/therapists/comments/1dsg6zv/how_do_you_guys_keep_track_of_your_clinical_hours/
 
-### 5. Web/API converter and validator for EEG formats that preserves events, units and montages, with a diff report of anything lost.  (bci, score 50.25)
-- Pain: EDF+/BDF/BrainVision/MFF/CNT/Nihon Kohden and consumer CSV files fail to import or silently lose annotations, events, units and channel locations. Conversion between EEGLAB, MNE and FieldTrip is lossy, and there's no JS/browser reader.
-- Items 57 · paying signals 10 · fit 0.75
-- Validation: **weak signal — reconsider or reframe** · competition contested · capture 0.01 · market ~$1,000,000/yr
-  - risk: Free open-source tools (EEG-BIDS/EEGLAB, and MNE-Python, which was not in the data) already handle conversion, so willingness to pay is low
-  - risk: Academic labs have small, grant-bound budgets and slow procurement
-  - risk: Clinical users may refuse to upload patient EEG to a hosted web service
-  - https://github.com/OpenBCI/OpenBCI_GUI/issues/266
-  - https://github.com/OpenBCI/OpenBCI_GUI/issues/302
-  - https://github.com/sccn/eeglab/issues/267
+### 2. Trade-specific estimating app that learns from past jobs, catches missing or underpriced items, and exports a branded proposal.  (trades, score 26.7)
+- Pain: Residential and trade contractors, electricians especially, price jobs with homemade Excel/Word/VBA sheets, keep their own historical labor and material data, and often underbid because the process is error-prone.
+- Items 5 · paying signals 4 · fit 0.8
+- Validation: **crowded — multiple vendors already selling** · competition crowded · capture 0.1 · market ~$100,000,000/yr
+  - risk: Crowded field of 9 vendors, including trade-specific AI estimators like TradesQuote and TradeBidz with similar features
+  - risk: Field-service platforms such as ServiceTitan, Jobber and Housecall Pro already bundle estimating and branded proposals, so a standalone tool is easy to skip (inference, not from the research data)
+  - risk: Small contractors switch tools often and are price-sensitive, which raises churn and acquisition cost
+  - https://www.reddit.com/r/Construction/comments/9dpuw0/residential_estimating_spreadsheet/
+  - https://www.reddit.com/r/Construction/comments/slnome/bidding_spreadsheet/
+  - https://www.reddit.com/r/electricians/comments/yprfnm/electrical_estimating/
+
+### 3. Upload PDF statements, get clean QBO/Xero-ready CSV with rule-based and learned auto-categorization.  (bookkeeping, score 24.0)
+- Pain: Bookkeepers and small businesses key in transactions from PDF statements by hand and lack a reliable tool that converts them to CSV and auto-categorizes them with rules for QBO/Xero import.
+- Items 3 · paying signals 1 · fit 0.9
+- Validation: **validate further** · competition contested · capture 0.1 · market ~$100,000,000/yr
+  - risk: Commoditized category: at least six vendors and five Product Hunt launches sell nearly the same PDF-to-QBO/Xero conversion, which pushes prices down
+  - risk: Vendors hold about 71% of buyer-intent search results, so paid acquisition may be the only channel and CAC may exceed the value of low-volume users
+  - risk: QBO/Xero native bank feeds and rules, along with incumbents like MoneyThumb, cover most of the categorization value and limit how far learned categorization can differentiate
+  - https://www.reddit.com/r/Bookkeeping/comments/18w04m8/simple_categorizing_expenses_software/
+  - https://www.reddit.com/r/Bookkeeping/comments/11dg7pz/looking_for_software_to_read_pdf_bank_statements/
+  - https://www.reddit.com/r/Bookkeeping/comments/17k718p/converting_pdf_bank_statements_to_csv/
+
+### 4. Web app that analyzes a video's transcript and audio for natural pauses and suggests mid-roll ad breaks at a target interval, ready to paste into YouTube Studio.  (creators, score 23.4)
+- Pain: YouTube's auto mid-roll placement inserts too few ads or cuts mid-sentence, while manual placement across long videos and VODs is tedious and there is no interval setting.
+- Items 6 · paying signals 5 · fit 0.85
+- Validation: **unviable — value per customer below the acquisition floor** · competition crowded · capture 0.01 · market ~$10,000,000/yr
+  - risk: YouTube Studio already auto-places mid-roll ads for free, and native improvements could make this tool redundant
+  - risk: VidSeeds.ai already sells this exact feature (natural breaks, topic shifts, retention-aware timestamps), and Descript and Shortzly offer adjacent break detection
+  - risk: At ~$86/customer/yr expected value, revenue sits below the $200 acquisition floor, so paid acquisition cannot pay for itself
+  - https://www.reddit.com/r/PartneredYoutube/comments/1d6rf9k/dont_let_youtube_automatically_place_ads/
+  - https://www.reddit.com/r/PartneredYoutube/comments/148vywq/midroll_ads_better_to_place_manually_or/
+  - https://www.reddit.com/r/PartneredYoutube/comments/18rzirw/is_autoplacing_ads_a_mistake/
+
+### 5. Upload PDFs, auto-extract a structured evidence matrix with custom columns, then generate a cited literature-review draft organized by theme.  (academia, score 22.9)
+- Pain: Students struggle to pull key points from dense papers and remember them later. They log notes in homemade spreadsheets, pass synthesis tables around by hand, and can't turn those tables into a written review.
+- Items 4 · paying signals 3 · fit 0.85
+- Validation: **unviable — value per customer below the acquisition floor** · competition contested · capture 0.01 · market ~$10,000,000/yr
+  - risk: Expected value of about $6 per customer per year sits far below the $200 acquisition floor, so paid acquisition cannot pay back
+  - risk: Six direct competitors already offer PDF-to-evidence-matrix-to-cited-draft, and literaturereview.ai offers a free tier, which pushes prices toward zero
+  - risk: General tools like Scispace, UPDF AI, and general-purpose LLM chat can absorb the feature as an add-on
+  - https://www.reddit.com/r/AskAcademia/comments/ljgokx/how_to_read_long_tedious_research_articles/
+  - https://www.reddit.com/r/PhD/comments/qoyygf/tips_for_reading_papers_faster/
+  - https://www.reddit.com/r/PhD/comments/ptknqh/what_hacks_do_you_have_for_literature_review/
 
 ## Next 20 by score
 
-- 35.0 · bci · Guided NWB/BIDS converter with plain-English validation, metadata editing, de-identification and cloud-optimized output.
-- 31.5 · bci · Harmonized, validated EEG dataset hub with partial downloads and a hosted leaderboard that runs submitted decoders under standard CV protocols.
-- 30.6 · bci · Upload-and-verify recording QA that flags dropped samples, rate mismatches, dead aux channels and format corruption, with a repaired export.
-- 22.2 · bci · Cross-platform connection doctor that walks through a device/OS diagnostic checklist and maps opaque SDK errors to fixes.
-- 20.15 · bci · Web-based figure studio for EEG/MEG (topomaps, 3D sources, montage library) that works without a local graphics stack.
-- 18.7 · bci · Project-based interactive BCI curriculum with hosted notebooks on public datasets and auto-graded checkpoints.
-- 18.0 · bci · Browser-based low-code real-time BCI builder with a device simulator, reusable feature recipes and exports to Unity/OSC.
-- 13.6 · sysadmin-devops · A GitHub App adding approval gates, scheduled releases and image promotion for non-Enterprise teams, plus a local workflow runner.
-- 12.1 · bci · Cloud spike-sorting service: upload or point to data, pick a sorter, get curated-ready Phy/NWB outputs.
-- 11.25 · indie-devs · Bookmark and curated-site search engine that full-text indexes saved pages and sends LLM digests.
-- 10.8 · bci · Structured EEG headset comparison and feasibility checker built from SDK tests and public benchmark data.
-- 10.4 · indie-devs · Cheap usage-priced automation and internal-app builder generated from a plain-English workflow description.
-- 9.6 · teachers · Gradebook overlay that imports LMS/CSV scores, applies arbitrary grading policies, and publishes a student-facing 'what I need' view.
-- 9.35 · creators · Web app that analyzes a video's transcript and audio for natural pauses and suggests mid-roll ad breaks at a target interval, ready to paste into YouTube Studio.
-- 9.1 · sysadmin-devops · A GitHub App that spins up per-branch preview subdomains for docker-compose stacks on the customer's own cloud account.
-- 9.0 · data-analytics · An affordable desktop Alteryx alternative: record or describe cleanup steps, run them locally on large files, with an optional on-device LLM.
-- 9.0 · indie-devs · Agent that researches narrowly defined ICP prospects from the open web and scores fit, with built-in outreach tracking.
-- 9.0 · ecommerce · Low-cost profit dashboard that pulls in Amazon, Shopify, and Etsy fees and orders and computes per-SKU net margin from user-entered COGS.
-- 8.5 · teachers · Upload a rubric and a stack of submissions, get draft scores and editable feedback comments in the teacher's voice.
-- 8.5 · private-practice · Cheap hour logger with per-state licensure rule packs, multi-supervisor splits and exportable signed supervisor reports.
+- 22.3 · restaurants · Mobile-friendly daily prime-cost/P&L dashboard that pulls from POS APIs and rolls up all locations.
+- 22.2 · freelance-agency · Tracker that records work activity locally, redacts sensitive content, and produces tamper-evident work summaries clients can verify.
+- 20.9 · teachers · Gradebook overlay that imports LMS/CSV scores, applies arbitrary grading policies, and publishes a student-facing 'what I need' view.
+- 19.1 · ecommerce · Low-cost profit dashboard that pulls in Amazon, Shopify, and Etsy fees and orders and computes per-SKU net margin from user-entered COGS.
+- 18.5 · teachers · Upload a rubric and a stack of submissions, get draft scores and editable feedback comments in the teacher's voice.
+- 18.3 · property-management · Sheets-simple CRM that imports lead lists and runs AI conversational text and email drips, handing off to the agent when a contact replies with intent.
+- 16.5 · creators · Upload raw footage and get an auto rough cut (silences, retakes, filler removed) exported as an NLE timeline.
+- 15.9 · small-business · Cheap income and expense tracker that imports bank CSVs and auto-categorizes transactions into Schedule C lines.
+- 15.6 · sysadmin-devops · A GitHub App adding approval gates, scheduled releases and image promotion for non-Enterprise teams, plus a local workflow runner.
+- 15.5 · property-management · Connect spend and CRM/deal exports to get cost-per-closing by lead source and platform, with alerts when one source's share of revenue gets too concentrated.
+- 15.0 · private-practice · Stripe-based card-on-file autopay with FSA/HSA support, automated balance reminders and self-serve payment plans.
+- 14.8 · marketing · WordStream-style self-serve optimizer that audits Google/Meta/LinkedIn accounts weekly and proposes one-click fixes (negatives, match-type waste, bid and budget shifts) with ROI diagnostics.
+- 13.9 · marketing · Low-cost connector that syncs Meta, Google Ads, Instagram and LinkedIn metrics into Google Sheets/Looker Studio with prebuilt client-report templates.
+- 13.9 · trades · Mobile app that turns a job description into a clear scope/price agreement and change orders the client e-signs before work starts.
+- 13.5 · academia · Browser extension that saves a link as a tagged, editable citation in one click and shows its forward citations from OpenAlex.
+- 13.3 · marketing · Crawl a site plus Search Console data and output a prioritized, page-by-page list of concrete edits with keyword-to-page mapping and cannibalization flags.
+- 12.7 · recruiting-hr · LLM-powered resume parser API/embeddable widget that ATS vendors and career sites drop in to replace their broken parsers.
+- 12.6 · freelance-agency · Deliverable locker that shows watermarked previews and releases final files automatically when the deposit or balance invoice is paid.
+- 12.5 · freelance-agency · Browser extension that scores marketplace jobs for scam risk, client quality and competition, and hides blocked clients.
+- 12.5 · logistics · Low-cost vetting tool that scores carriers and dispatchers from FMCSA history and flags identity mismatches at booking and pickup.
