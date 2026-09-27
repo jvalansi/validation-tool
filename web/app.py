@@ -31,7 +31,7 @@ SAMPLE = os.path.join(ROOT, "web", "sample_report.json")
 PYTHON = os.path.join(ROOT, ".venv", "bin", "python")
 TOOL = os.path.join(ROOT, "phase1", "validation_tool.py")
 
-BASE_URL = os.environ.get("BASE_URL", "https://mvpverdict.com").rstrip("/")
+BASE_URL = os.environ.get("BASE_URL", "https://verdict.javolabs.com").rstrip("/")
 BRAND = "MVP Verdict"
 PRICE_USD = int(os.environ.get("PRICE_USD", "29"))
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
