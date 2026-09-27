@@ -281,14 +281,14 @@ state-bar boilerplate does not flag every idea. DuckDuckGo results vary between
 runs; a clean result is weak evidence, and `search_failed` marks the case where
 every probe errored so that silence is never read as clearance.
 
-## Paid reports web app (`web/`)
+## Paid reports web app — MVP Verdict (`web/`)
 
-Phase 1 sold as a one-time report at https://validate.jvalansi.com — landing form → Stripe Checkout → a worker
+Phase 1 sold as a one-time report at https://mvpverdict.com — landing form → Stripe Checkout → a worker
 runs `phase1/validation_tool.py report` with the Claude API (`VALIDATION_LLM=api`) → report at `/r/<token>`.
 Failed runs are refunded automatically; the report link is in the Stripe receipt.
 
-- Service: `validation-web` (systemd, gunicorn on 127.0.0.1:8010, 1 worker), nginx site `validate.jvalansi.com`.
+- Service: `validation-web` (systemd, gunicorn on 127.0.0.1:8010, 1 worker), nginx site `mvpverdict.com` (validate.jvalansi.com 301s to it).
 - Config: `web/.env` (not in git) — Stripe keys + webhook secret, `PRICE_USD`, `ADMIN_TOKEN`, `ANTHROPIC_API_KEY`.
   Without an API key the site shows "orders paused" and takes no payments.
-- Free test run: `curl -X POST -d idea=... "https://validate.jvalansi.com/admin/run?token=$ADMIN_TOKEN"`.
+- Free test run: `curl -X POST -d idea=... "https://mvpverdict.com/admin/run?token=$ADMIN_TOKEN"`.
 - Check: `.venv/bin/python web/test_app.py`.

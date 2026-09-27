@@ -31,7 +31,8 @@ SAMPLE = os.path.join(ROOT, "web", "sample_report.json")
 PYTHON = os.path.join(ROOT, ".venv", "bin", "python")
 TOOL = os.path.join(ROOT, "phase1", "validation_tool.py")
 
-BASE_URL = os.environ.get("BASE_URL", "https://validate.jvalansi.com").rstrip("/")
+BASE_URL = os.environ.get("BASE_URL", "https://mvpverdict.com").rstrip("/")
+BRAND = "MVP Verdict"
 PRICE_USD = int(os.environ.get("PRICE_USD", "29"))
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
@@ -148,9 +149,8 @@ def page(title, body, refresh=None):
     meta = f'<meta http-equiv="refresh" content="{refresh}">' if refresh else ""
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">{meta}'
-            f"<title>{html.escape(title)}</title><style>{CSS}</style></head><body>{body}"
-            f'<footer>Validation Tool · <a href="https://apps.jvalansi.com/privacy.html">Privacy</a> · '
-            f'<a href="https://apps.jvalansi.com/terms.html">Terms</a> · '
+            f"<title>{html.escape(title)} · {BRAND}</title><style>{CSS}</style></head><body>{body}"
+            f'<footer><a href="/">{BRAND}</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · '
             f"If a report fails to generate, you are refunded automatically.</footer></body></html>")
 
 
@@ -158,6 +158,7 @@ def page(title, body, refresh=None):
 def index():
     closed = "" if llm_ready() else '<p class="neg">New orders are paused briefly — please check back soon.</p>'
     return page("Validate your startup idea in 10 minutes", f"""
+<p class="muted"><b>{BRAND}</b></p>
 <h1>Is anyone already paying for your idea?</h1>
 <p>Describe your product idea. In about 10 minutes you get an evidence-based report: who already sells it
 and what they raised, what competitors charge, whether people are asking for it on Reddit and Hacker News,
@@ -251,6 +252,26 @@ def sample():
         abort(404)
     rep = json.load(open(SAMPLE))
     return page("Sample report", '<p class="muted">Sample report</p>' + render_report(rep, html.escape(rep["query"])))
+
+
+@app.get("/privacy")
+def privacy():
+    return page("Privacy", f"""<h1>Privacy</h1><p class="muted">Last updated: September 27, 2026</p>
+<p>{BRAND} stores the idea text you submit, your report, and a Stripe checkout reference. Payment details are
+handled by Stripe and never reach us. Your idea is sent to Anthropic's Claude API and to public web search engines
+to research the market; it is not sold or shared otherwise.</p>
+<p>Reports are reachable only through their private, unguessable link. To have your idea and report deleted,
+reply to your Stripe receipt email.</p>""")
+
+
+@app.get("/terms")
+def terms():
+    return page("Terms", f"""<h1>Terms</h1><p class="muted">Last updated: September 27, 2026</p>
+<p>{BRAND} sells a one-time, automated market-research report for ${PRICE_USD}. Reports are order-of-magnitude
+estimates built from public web evidence and an AI analysis; they are not financial, legal or investment advice,
+and you should verify key findings before acting on them.</p>
+<p>If a report fails to generate, the payment is refunded automatically. For any other refund request, reply to
+your Stripe receipt within 14 days.</p>""")
 
 
 @app.post("/admin/run")
