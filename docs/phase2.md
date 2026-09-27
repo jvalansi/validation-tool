@@ -29,7 +29,7 @@ All inputs are already in the Projects table:
 
 ### 1. Landing Page
 
-One-pager deployed to GitHub Pages (`jvalansi.github.io/validate-<project-slug>`):
+One-pager deployed to GitHub Pages and served at `https://<project-slug>.javolabs.com/` (`LANDING_DOMAIN`; DNS in Route 53, empty = GitHub Pages path):
 
 - **Hero:** Problem statement (from `Pain/Desire`) + one-line solution (from `Description`)
 - **CTA:** "Join the beta" → inline form collecting email, monthly spend, role

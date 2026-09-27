@@ -12,6 +12,8 @@ import urllib.error
 
 
 GH_TOKEN = os.environ.get("GH_TOKEN")
+# Umbrella domain for landing pages: each test gets <slug>.<LANDING_DOMAIN>. Empty = GitHub Pages path.
+LANDING_DOMAIN = os.environ.get("LANDING_DOMAIN", "javolabs.com")
 GH_API = "https://api.github.com"
 
 
@@ -465,9 +467,33 @@ def deploy_landing_page(project_name, description, pain_desire, price_per_year, 
         pages_url = f"https://{owner}.github.io/{repo_name}"
         print(f"Warning: unexpected pages status {pages_status}: {pages_data}")
 
+    if LANDING_DOMAIN:
+        pages_url = _use_custom_domain(owner, repo_name, f"{slugify(project_name)}.{LANDING_DOMAIN}")
+
     return {
         "repo_name": repo_name,
         "repo_url": f"https://github.com/{owner}/{repo_name}",
         "pages_url": pages_url,
         "status": "deployed",
     }
+
+
+def _use_custom_domain(owner, repo_name, host):
+    """Serve the page at https://<slug>.<LANDING_DOMAIN>/ instead of a path under the personal site.
+
+    DNS lives in Route 53 (AWS keys in ~/.env); GitHub issues the HTTPS certificate once DNS resolves,
+    which can take up to an hour — the ads launcher waits for the page before spending.
+    """
+    import subprocess
+    env = {**os.environ, **dict(l.strip().split("=", 1) for l in open(os.path.expanduser("~/.env"))
+                                if l.startswith("AWS_") and "=" in l)}
+    zone = subprocess.run(["aws", "route53", "list-hosted-zones-by-name", "--dns-name", LANDING_DOMAIN,
+                           "--query", "HostedZones[0].Id", "--output", "text"],
+                          capture_output=True, text=True, env=env, check=True).stdout.strip()
+    batch = {"Changes": [{"Action": "UPSERT", "ResourceRecordSet": {
+        "Name": host, "Type": "CNAME", "TTL": 300, "ResourceRecords": [{"Value": f"{owner}.github.io"}]}}]}
+    subprocess.run(["aws", "route53", "change-resource-record-sets", "--hosted-zone-id", zone,
+                    "--change-batch", json.dumps(batch)], capture_output=True, text=True, env=env, check=True)
+    _, status = gh_request("PUT", f"/repos/{owner}/{repo_name}/pages", {"cname": host})
+    print(f"Custom domain {host} (DNS set, Pages cname status {status})")
+    return f"https://{host}/"

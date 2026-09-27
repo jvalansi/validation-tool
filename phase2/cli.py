@@ -234,9 +234,10 @@ def step4_ads(project_name, description, pain_desire, validation_query, price_pe
     if not landing_url:
         print("[Ads] No deployed landing page — not launching ads")
         return result
-    # GitHub Pages builds for a few minutes after deploy; ads must not send paid clicks to a 404.
+    # GitHub Pages builds for a few minutes after deploy (and a new custom domain waits up to an hour for
+    # its HTTPS certificate); ads must not send paid clicks to a 404 or a certificate error.
     import time
-    for _ in range(40):
+    for _ in range(240):
         try:
             with urllib.request.urlopen(landing_url, timeout=10) as r:
                 if r.status == 200:
@@ -245,7 +246,7 @@ def step4_ads(project_name, description, pain_desire, validation_query, price_pe
             pass
         time.sleep(15)
     else:
-        print(f"[Ads] {landing_url} not live after 10 min — not launching ads")
+        print(f"[Ads] {landing_url} not live after 60 min — not launching ads")
         return result
     launched = google_ads.launch_campaign(result["config"], budget, days)
     print(f"[Ads] Campaign live: {launched['campaign']} (cap ${budget:.0f}, ends {launched['end_date']})")
