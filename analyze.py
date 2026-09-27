@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Turn data/raw.jsonl into a ranked pain-point report (report.md).
+Turn data/<niche>/raw.jsonl into a ranked pain-point report (reports/<niche>.md) plus
+data/<niche>/clusters.json for the cross-niche sweep.
 
   1. extract  — Claude labels each item: is it a recurring pain a product/service could solve?
                 Who has it, how severe, any sign of paying. Cached in data/extracted.jsonl.
@@ -8,7 +9,7 @@ Turn data/raw.jsonl into a ranked pain-point report (report.md).
   3. assign   — Claude assigns every pain to a cluster.
   4. report   — rank clusters by score() and write report.md.
 
-Usage: python analyze.py
+Usage: python analyze.py <niche>
 """
 
 import json
@@ -19,20 +20,30 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-RAW = os.path.join(HERE, "data", "raw.jsonl")
-EXTRACTED = os.path.join(HERE, "data", "extracted.jsonl")
-TAXONOMY = os.path.join(HERE, "data", "taxonomy.json")
-ASSIGNED = os.path.join(HERE, "data", "assigned.json")
-REPORT = os.path.join(HERE, "report.md")
+NICHE = ""  # set in main(); paths below are filled in by set_niche()
+RAW = EXTRACTED = TAXONOMY = ASSIGNED = CLUSTERS = REPORT = ""
+AUDIENCE = ""
+
+
+def set_niche(niche):
+    global NICHE, RAW, EXTRACTED, TAXONOMY, ASSIGNED, CLUSTERS, REPORT, AUDIENCE
+    NICHE = niche
+    d = os.path.join(HERE, "data", niche)
+    RAW, EXTRACTED = os.path.join(d, "raw.jsonl"), os.path.join(d, "extracted.jsonl")
+    TAXONOMY, ASSIGNED = os.path.join(d, "taxonomy.json"), os.path.join(d, "assigned.json")
+    CLUSTERS, REPORT = os.path.join(d, "clusters.json"), os.path.join(HERE, "reports", f"{niche}.md")
+    AUDIENCE = json.load(open(os.path.join(HERE, "niches", f"{niche}.json"))).get("audience", niche)
 CLAUDE_PATH = os.environ.get("CLAUDE_PATH", "/home/ubuntu/.local/bin/claude")
 BATCH = 30
 WORKERS = 4
 
 PROFILE = (
-    "The builder is an ML engineer with neural-decoding experience (spiking-data latent models, "
-    "transformers on NLB/FALCON benchmarks), limited to ~3 evening hours/day, who can run servers "
-    "and write software but has no wet lab or hardware manufacturing."
+    "The builder is a solo software/ML engineer with ~15 hours/week; AI agents do most of the building. "
+    "Good fits are self-serve, multi-tenant software whose support hours stay flat as customers grow, sold "
+    "without sales calls. Bad fits: hardware, per-client service work, regulated advice (legal, medical, "
+    "financial), and anything related to Apple's business (employment IP clause)."
 )
+EXCLUSIONS = ("apple_related", "service_heavy", "regulated", "hardware", "no_software_solution")
 
 
 def claude_json(prompt):
@@ -56,14 +67,14 @@ def write_atomic(path, text):
 def extract_batch(items):
     compact = [{"id": i["id"], "source": i["source"], "title": i["title"], "body": i["body"][:800]} for i in items]
     prompt = (
-        "You are mining brain-computer-interface / neural-data communities for product pain points.\n"
-        "For each item decide if it reveals a RECURRING pain in doing BCI/EEG/neural-data work that a "
-        "product or paid service could solve (e.g. setup friction, data wrangling, signal quality, "
-        "reproducibility, compute, hardware/software integration, missing tooling, expertise gaps). "
+        f"You are mining online communities of {AUDIENCE} for product pain points.\n"
+        "For each item decide if it reveals a RECURRING pain in their work that a product or paid "
+        "service could solve (e.g. tedious manual work, spreadsheets, missing or bad tooling, integration "
+        "gaps, expensive or hated incumbents, expertise gaps). "
         "One-off bugs in a specific function, announcements, news, and hype are NOT pains.\n"
         "Return ONLY a JSON array, one object per item:\n"
         '  {"id": str, "is_pain": bool, "pain": str (one generalized sentence, empty if not a pain), '
-        '"who": "hobbyist"|"student"|"academic_lab"|"startup"|"clinician"|"developer"|"unknown", '
+        '"who": "hobbyist"|"student"|"freelancer"|"small_business"|"employee"|"enterprise"|"developer"|"unknown", '
         '"severity": 1|2|3, "pay_signal": str (quote showing money/time spent or willingness to pay, else "")}\n\n'
         f"Items:\n{json.dumps(compact, ensure_ascii=False)}"
     )
@@ -100,13 +111,14 @@ def _safe_extract(batch):
 def taxonomy(pains):
     lines = "\n".join(f"- [{p['who']}] {p['pain']}" for p in pains)
     prompt = (
-        f"Below are {len(pains)} pain points mined from BCI/EEG/neural-data communities.\n"
-        "Group them into 15-25 distinct clusters that each could be addressed by one product or service.\n"
+        f"Below are {len(pains)} pain points mined from communities of {AUDIENCE}.\n"
+        "Group them into 8-15 distinct clusters that each could be addressed by one product.\n"
         f"Builder profile: {PROFILE}\n"
         "Return ONLY a JSON array of objects: "
         '{"cid": short_snake_case, "name": str, "description": str, '
         '"ml_fit": float 0-1 (how well the builder profile can solve it), "fit_reason": str, '
-        '"product_idea": str (one line)}\n\n' + lines
+        '"product_idea": str (one line), '
+        f'"excluded": null or one of {list(EXCLUSIONS)} (a hard mismatch with the profile)}}\n\n' + lines
     )
     return claude_json(prompt)
 
@@ -147,12 +159,18 @@ def report(raw, pains, clusters, assigned):
     for c in clusters:
         members = [p for p in pains if assigned.get(p["id"]) == c["cid"]]
         pay = [p for p in members if p.get("pay_signal")]
-        rows.append((score(len(members), len(pay), c["ml_fit"]), c, members, pay))
+        s = 0.0 if c.get("excluded") else score(len(members), len(pay), c["ml_fit"])
+        rows.append((s, c, members, pay))
     rows.sort(key=lambda r: r[0], reverse=True)
+    write_atomic(CLUSTERS, json.dumps([{
+        "niche": NICHE, "score": s, "items": len(m), "paying": len(p),
+        **{k: c.get(k) for k in ("cid", "name", "description", "ml_fit", "fit_reason", "product_idea", "excluded")},
+        "evidence": [by_id[x["id"]]["url"] for x in m if x["id"] in by_id][:5],
+    } for s, c, m, p in rows], indent=1, ensure_ascii=False))
 
     src = Counter(r["source"].split(":")[0] for r in raw)
     out = [
-        "# BCI pain points — ranked",
+        f"# {NICHE} pain points — ranked",
         "",
         f"Items scanned: {len(raw)} ({', '.join(f'{k} {v}' for k, v in src.items())}); "
         f"labelled as pains: {len(pains)}.",
@@ -167,7 +185,7 @@ def report(raw, pains, clusters, assigned):
             f"- {c['description']}",
             f"- Items: {len(members)} · paying signals: {len(pay)} · engagement: {eng} · who: "
             + ", ".join(f"{w} {n}" for w, n in who),
-            f"- ML fit {c['ml_fit']}: {c['fit_reason']}",
+            f"- Fit {c['ml_fit']}: {c['fit_reason']}" + (f" · **excluded: {c['excluded']}**" if c.get("excluded") else ""),
             f"- Product idea: {c['product_idea']}",
             "- Evidence:",
         ]
@@ -181,6 +199,8 @@ def report(raw, pains, clusters, assigned):
 
 
 def main():
+    set_niche(sys.argv[1])
+    os.makedirs(os.path.dirname(REPORT), exist_ok=True)
     raw = [json.loads(line) for line in open(RAW)]
     extracted = extract(raw)
     pains = [d for d in extracted.values() if d.get("is_pain") and d.get("pain")]

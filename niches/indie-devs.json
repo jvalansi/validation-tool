@@ -1,0 +1,13 @@
+{
+ "audience": "indie hackers and solo SaaS founders",
+ "subreddits": [
+  "SaaS",
+  "indiehackers",
+  "microsaas"
+ ],
+ "hn_queries": [
+  "Ask HN is there a tool",
+  "Ask HN I wish there was",
+  "Ask HN would pay for"
+ ]
+}

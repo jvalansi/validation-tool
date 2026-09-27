@@ -1,8 +1,9 @@
 #!/bin/bash
-# Full pipeline: refresh Reddit token, fetch, analyze.
-set -e
+# Full sweep: refresh Reddit token, then fetch + analyze every niche, rank, validate the top, push reports.
 cd "$(dirname "$0")"
 export GH_TOKEN=$(grep -oP '^GH_TOKEN=\K\S+' /home/ubuntu/.env)
 /home/ubuntu/miniconda3/bin/python ../reddit-tool/refresh_token.py
-python3 fetch.py
-python3 analyze.py
+/home/ubuntu/validation-tool/.venv/bin/python sweep.py "$@"
+git add reports && git commit -qm "Sweep reports $(date +%F)
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>" && git push -q https://$GH_TOKEN@github.com/jvalansi/opportunity-scout.git HEAD:main

@@ -1,0 +1,13 @@
+{
+ "audience": "data engineers and analysts",
+ "subreddits": [
+  "dataengineering",
+  "analytics",
+  "BusinessIntelligence",
+  "excel"
+ ],
+ "hn_queries": [
+  "Ask HN data pipeline tool",
+  "Ask HN spreadsheet alternative"
+ ]
+}

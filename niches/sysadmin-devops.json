@@ -1,0 +1,12 @@
+{
+ "audience": "sysadmins and DevOps engineers",
+ "subreddits": [
+  "sysadmin",
+  "devops",
+  "msp"
+ ],
+ "hn_queries": [
+  "Ask HN is there a tool devops",
+  "Ask HN sysadmin tool"
+ ]
+}
