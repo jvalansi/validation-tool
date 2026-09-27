@@ -8,26 +8,9 @@ import os
 import subprocess
 import urllib.request
 
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_CHANNEL = "#proj-project-validation"
 
 
-def _slack(text, thread_ts=None):
-    if not SLACK_BOT_TOKEN:
-        print(f"[Slack] {text}")
-        return None
-    payload = {"channel": SLACK_CHANNEL, "text": text}
-    if thread_ts:
-        payload["thread_ts"] = thread_ts
-    body = json.dumps(payload).encode()
-    req = urllib.request.Request(
-        "https://slack.com/api/chat.postMessage",
-        data=body,
-        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}", "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=10) as r:
-        result = json.loads(r.read())
-        return result.get("ts")
+from .notify import post as _slack  # Discord #validation-tool
 
 
 def _claude(prompt):

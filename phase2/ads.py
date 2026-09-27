@@ -6,7 +6,7 @@ Outputs:
 - RSA headlines (15 × ≤30 chars) and descriptions (4 × ≤90 chars)
 - Suggested campaign settings
 
-Posts config to Slack and saves to data/ads_<slug>.json.
+Saves to data/ads_<slug>.json.
 """
 
 import json
@@ -18,8 +18,6 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_CHANNEL = "#proj-project-validation"
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 
 
@@ -27,21 +25,7 @@ def _slug(name):
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
 
-def _slack(text, thread_ts=None):
-    if not SLACK_BOT_TOKEN:
-        print(f"[Slack] {text}")
-        return None
-    payload = {"channel": SLACK_CHANNEL, "text": text}
-    if thread_ts:
-        payload["thread_ts"] = thread_ts
-    body = json.dumps(payload).encode()
-    req = urllib.request.Request(
-        "https://slack.com/api/chat.postMessage",
-        data=body,
-        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}", "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=10) as r:
-        return json.loads(r.read()).get("ts")
+from .notify import post as _slack  # Discord #validation-tool
 
 
 def _claude_json(prompt):

@@ -1,6 +1,6 @@
 """
 Daily monitor for active validation campaigns.
-Reads Tally form responses, computes metrics, posts summary to Slack.
+Reads Tally form responses, computes metrics, posts summary to Discord #validation-tool.
 """
 
 import json
@@ -9,25 +9,10 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_CHANNEL = "#proj-project-validation"
 CAMPAIGNS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "campaigns.json")
 
 
-def _slack(text):
-    if not SLACK_BOT_TOKEN:
-        print(f"[Slack] {text}")
-        return
-    payload = json.dumps({"channel": SLACK_CHANNEL, "text": text}).encode()
-    req = urllib.request.Request(
-        "https://slack.com/api/chat.postMessage",
-        data=payload,
-        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}", "Content-Type": "application/json"},
-    )
-    try:
-        urllib.request.urlopen(req, timeout=10)
-    except Exception as e:
-        print(f"Slack post failed: {e}")
+from .notify import post as _slack  # Discord #validation-tool
 
 
 def load_campaigns():

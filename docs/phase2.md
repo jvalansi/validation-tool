@@ -48,7 +48,7 @@ Structure:
 
 ### 3. Measurement (Days 1–7)
 
-Daily Slack report to `#proj-project-validation` via cron at 8:47 AM:
+Daily Discord report to `#validation-tool` via cron at 8:47 AM:
 
 | Metric | Good signal | Kill signal |
 |---|---|---|
@@ -59,7 +59,7 @@ Daily Slack report to `#proj-project-validation` via cron at 8:47 AM:
 
 ### 4. Outreach (Day 5 — auto-triggered)
 
-Claude generates personalised outreach drafts per signup, posted as a Slack thread for manual review and sending:
+Claude generates personalised outreach drafts per signup, posted to Discord `#validation-tool` for manual review and sending:
 - "What's your monthly spend on [problem]?"
 - "Would you pay $[Price/Customer/yr ÷ 12]/mo for [solution]?"
 - Offer a live demo → ask for $99 pre-order
@@ -103,9 +103,9 @@ python -m phase2.cli <notion-page-id> --decide [--dry-run]
 |---|---|
 | Landing page deploy (GitHub Pages) | ✅ `phase2/landing.py` |
 | Signup form (inline → Google Form) | ✅ `phase2/landing.py` |
-| Daily monitor (Sheets → Slack) | ✅ `phase2/monitor.py` |
-| Outreach drafts (Claude → Slack) | ✅ `phase2/outreach.py` |
-| Day-7 decision (→ Slack + Notion) | ✅ `phase2/decision.py` |
+| Daily monitor (Sheets → Discord) | ✅ `phase2/monitor.py` |
+| Outreach drafts (Claude → Discord) | ✅ `phase2/outreach.py` |
+| Day-7 decision (→ Discord + Notion) | ✅ `phase2/decision.py` |
 | Google Ads campaign creation (API) | ✅ `phase2/google_ads.py` — falls back to CSV if not configured |
 | Ad spend cap (pause at cap or end date) | ✅ `google_ads.enforce_caps()`, run first by the daily monitor |
 
@@ -123,7 +123,7 @@ Since 2026-09-09 Google Ads API access comes from the Google Cloud project behin
 |---|---|---|
 | GitHub | `GH_TOKEN` | ✅ in `.env` |
 | Notion | `NOTION_TOKEN` | ✅ in `.env` |
-| Slack | `SLACK_BOT_TOKEN` | ✅ in `.env` |
+| Discord | cc-connect bot token (`~/.cc-connect/config.toml`), channel `#validation-tool` | ✅ `phase2/notify.py` |
 | Google Sheets (read) | Service account key | ✅ `/home/ubuntu/google-service-account.json` |
 | Google Forms | Same service account | ✅ form shared with `gclaude@...` |
 | Google Ads | OAuth client of approved Cloud project + refresh token | ⏳ code done, credentials not yet set |
@@ -138,9 +138,9 @@ validation-tool/
     cli.py           # main entry point + CLI
     setup.sh         # one-time setup: checks env, installs deps, sets up cron
     landing.py       # HTML generator + GitHub Pages deployment
-    monitor.py       # daily metrics, Sheets reader, Slack report, auto-triggers
-    outreach.py      # Claude-generated outreach drafts → Slack
-    decision.py      # day-7 kill/build logic → Slack + Notion
+    monitor.py       # daily metrics, Sheets reader, Discord report, auto-triggers
+    outreach.py      # Claude-generated outreach drafts → Discord
+    decision.py      # day-7 kill/build logic → Discord + Notion
     ads.py           # Google Ads config generator
     forms.py         # (legacy Tally helpers, unused)
   data/

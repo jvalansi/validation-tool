@@ -8,23 +8,11 @@ import os
 import urllib.request
 import urllib.parse
 
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_CHANNEL = "#proj-project-validation"
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 NOTION_API = "https://api.notion.com/v1"
 
 
-def _slack(text):
-    if not SLACK_BOT_TOKEN:
-        print(f"[Slack] {text}")
-        return
-    body = json.dumps({"channel": SLACK_CHANNEL, "text": text}).encode()
-    req = urllib.request.Request(
-        "https://slack.com/api/chat.postMessage",
-        data=body,
-        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}", "Content-Type": "application/json"},
-    )
-    urllib.request.urlopen(req, timeout=10)
+from .notify import post as _slack  # Discord #validation-tool
 
 
 def _notion_patch(path, data):
