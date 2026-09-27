@@ -27,8 +27,15 @@ def run(cmd):
 
 
 def rank(clusters):
-    """Excluded clusters never rank; ties broken by paying signals."""
-    return sorted((c for c in clusters if not c.get("excluded")),
+    """Rank by each cluster's share of its own niche's pains, so a niche with 10x more data
+    (BCI: 1,356 items vs ~50 elsewhere) doesn't take every slot. Excluded clusters never rank."""
+    totals = {}
+    for c in clusters:
+        totals[c["niche"]] = totals.get(c["niche"], 0) + c["items"]
+    for c in clusters:
+        share = c["items"] / totals[c["niche"]] if totals[c["niche"]] else 0
+        c["score"] = round(100 * share * (1 + c["paying"] / c["items"]) * c["ml_fit"], 1) if c["items"] else 0.0
+    return sorted((c for c in clusters if not c.get("excluded") and c["items"] >= 3),
                   key=lambda c: (c["score"], c["paying"]), reverse=True)
 
 
@@ -72,8 +79,8 @@ def main():
         results.append((c, v))
 
     lines = ["# Opportunity sweep", "",
-             f"{len(niches)} niches, {len(clusters)} clusters ({len(clusters) - len(ranked)} excluded by profile).",
-             "Score = items × (1 + paying share) × fit; fit and clustering are Claude judgements.", "",
+             f"{len(niches)} niches, {len(clusters)} clusters ({len(clusters) - len(ranked)} excluded by profile or under 3 items).",
+             "Score = 100 × share of the niche's pains × (1 + paying share) × fit (clusters with ≥3 items); fit and clustering are Claude judgements.", "",
              f"## Top {len(results)} — validated", ""]
     for i, (c, v) in enumerate(results, 1):
         lines += [f"### {i}. {c['product_idea']}  ({c['niche']}, score {c['score']})",
