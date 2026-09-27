@@ -1,0 +1,259 @@
+{
+ "query": "An app that answers building-code questions for small contractors",
+ "search_query": "An app that answers building-code questions for small contractors",
+ "sources": {
+  "hacker_news": {
+   "total_results": 0,
+   "top_posts": []
+  },
+  "google_trends": {
+   "signal": "no data"
+  },
+  "reddit": {
+   "total_results": 10,
+   "top_posts": [
+    {
+     "title": "Is there an App available for building codes? : r/Contractor - Reddit",
+     "url": "https://www.reddit.com/r/Contractor/comments/18uix9k/is_there_an_app_available_for_building_codes/",
+     "snippet": "I've been looking for a \"good\" app to use to quickly find the building codes I need for residential building. The couple I have found on the App Store"
+    },
+    {
+     "title": "Architects, Does an App That Answers Questions About Building Codes ...",
+     "url": "https://www.reddit.com/r/BuildingCodes/comments/17uuxjv/architects_does_an_app_that_answers_questions/",
+     "snippet": "Dear Building Code Experts of Reddit, As a former architectural designer turned software engineer. I thought it would be a cool idea to create an appl"
+    },
+    {
+     "title": "Building Code Assistant Powered by ChatGPT : r/askarchitects",
+     "url": "https://www.reddit.com/r/askarchitects/comments/12b9rpp/building_code_assistant_powered_by_chatgpt/",
+     "snippet": "Lol he's talking about building codes like the 2021 national electric code or the 2021 international buidling code, not code for software development."
+    }
+   ]
+  },
+  "product_hunt": {
+   "existing_products": 4,
+   "top_products": [
+    {
+     "name": "Forma by Caid: AI for hardware design workflows",
+     "url": "https://www.producthunt.com/products/forma-oss",
+     "snippet": "Forma turns a prompt or image into an editable hardware project with parts, wiring, mechanical layou"
+    },
+    {
+     "name": "CodeWords: The one automation platform to build and run your ...",
+     "url": "https://www.producthunt.com/products/codewords",
+     "snippet": "CodeWords turns plain English into powerful automations in minutes. Build, edit, deploy and fix work"
+    },
+    {
+     "name": "AppWizzy: Rent a private VM with Codex to build production ...",
+     "url": "https://www.producthunt.com/products/appwizzy",
+     "snippet": "May 25, 2026 \u00b7 AppWizzy gives you a private VM with Codex installed where you build, run, and host p"
+    }
+   ]
+  },
+  "incumbents": {
+   "operators_found": 8,
+   "operators": [
+    {
+     "name": "AI\u2011Powered Building Code Answers By State | CodePro App",
+     "host": "codeproapp.com",
+     "url": "https://codeproapp.com/",
+     "snippet": "May 11, 2026 - With CodePro\u2019s flexible pricing options, I can get expert-backed, state-specific answers instantly\u2014without committing to a subscription. It\u2019s a lifesaver for those critical moments in n"
+    },
+    {
+     "name": "CodePro: AI For Building Codes - App Store - Apple",
+     "host": "apps.apple.com",
+     "url": "https://apps.apple.com/us/app/codepro-ai-for-building-codes/id6621251928",
+     "snippet": "Finding the right answer meant digging through code books and government websites. It was slow, frustrating, and inefficient. So we built a system that organizes building codes, state adoptions, and l"
+    },
+    {
+     "name": "CodePro: Building Code Answers - Apps on Google Play",
+     "host": "play.google.com",
+     "url": "https://play.google.com/store/apps/details?id=com.codepro.app&hl=en_US",
+     "snippet": "May 19, 2026 - CodePro gives you instant, location-specific answers to construction code questions \u2014 fast, accurate, and always on point. Built for Builders, Inspectors, and Contractors who need clari"
+    },
+    {
+     "name": "OneClick Code: Building Code Software | Try for Free",
+     "host": "oneclickcode.com",
+     "url": "https://www.oneclickcode.com/",
+     "snippet": "Adjusters, Contractors, and Insurance Carriers now have one source of truth for building code requirements. Less friction. Accurate payments."
+    },
+    {
+     "name": "UpCodes | Searchable Platform for Building Codes, Assemblies, and Building Produ",
+     "host": "up.codes",
+     "url": "https://up.codes/",
+     "snippet": "UpCodes is a comprehensive code compliance platform. Research, collaborate, and calculate code requirements efficiently, all in one place."
+    },
+    {
+     "name": "This New App Wants to Answer All Your Building Code Questions | ArchDaily",
+     "host": "archdaily.com",
+     "url": "https://www.archdaily.com/877444/this-new-app-wants-to-answer-all-your-building-code-questions",
+     "snippet": "October 2, 2024 - UpCodes is a website and mobile app where architects can use a tailored search engine to easily gather building code data from multiple sources into one place."
+    }
+   ],
+   "funding_mentions": [
+    {
+     "amount_usd": 13300000000.0,
+     "headline": "Lovable, the app-building startup, just doubled its value to $13.3 billion - Northeast Times",
+     "url": "https://northeasttimes.com/2026/08/13/lovable-the-app-building-startup-just-doubled-its-value-to-13-3-billion/"
+    },
+    {
+     "amount_usd": 7600000.0,
+     "headline": "UpCodes launches Copilot, an AI-based research assistant for building codes | TechCrunch",
+     "url": "https://techcrunch.com/2023/05/30/upcodes-copilot-series-a/"
+    },
+    {
+     "amount_usd": 3500000.0,
+     "headline": "UpCodes launches AI-powered building code tool | Facilities Dive",
+     "url": "https://www.facilitiesdive.com/news/upcodes-ai-building-codes-copilot-tool/652202/"
+    }
+   ],
+   "max_funding_usd": 13300000000.0,
+   "probes_failed": 0,
+   "search_failed": false
+  },
+  "regulatory": {
+   "restriction_hits": 1,
+   "restriction_terms": [
+    "licensed attorney",
+    "practice of law",
+    "unauthorized practice"
+   ],
+   "gov_sources": 0,
+   "probes_failed": 0,
+   "search_failed": false,
+   "top_hits": [
+    {
+     "title": "Unauthorized Practice of Law Claims Against LegalZoom ...",
+     "url": "https://www.law.georgetown.edu/legal-ethics-journal/wp-content/uploads/sites/24/2019/11/GT-GJLE190045.pdf",
+     "matched": [
+      "licensed attorney",
+      "unauthorized practice",
+      "practice of law"
+     ],
+     "snippet": "on the consumer\u2019s answers to questions presented by the software. . . .\u201d64 The \u00b7 rule also imposes the same conditions that the consent agreement required \u00b7 from LegalZoom, such as to have a North Car"
+    }
+   ],
+   "status": "restricted \u2014 verify the statute before building"
+  },
+  "serp_ownership": {
+   "results_examined": 10,
+   "breakdown": {
+    "vendor": 7,
+    "government": 0,
+    "forum": 2,
+    "content": 1
+   },
+   "vendor_share": 0.7,
+   "read": "vendors own the results page \u2014 paid acquisition is likely the only door",
+   "hosts": [
+    "apps.apple.com",
+    "play.google.com",
+    "codeproapp.com",
+    "reddit.com",
+    "oneclickcode.com",
+    "buildcodeai.app",
+    "reddit.com",
+    "archdaily.com",
+    "codeproapp.com",
+    "up.codes"
+   ]
+  }
+ },
+ "revenue_estimate": {
+  "tam_tier": "niche",
+  "competitor_prices_found": [
+   {
+    "raw": "$19.99 \n   /month",
+    "monthly_equiv": 19.99,
+    "period": "monthly",
+    "source": "codeproapp.com"
+   },
+   {
+    "raw": "$6.99 \n   /month",
+    "monthly_equiv": 6.99,
+    "period": "monthly",
+    "source": "codeproapp.com"
+   },
+   {
+    "raw": "$6.99",
+    "monthly_equiv": 6.99,
+    "period": "unknown",
+    "source": "apps.apple.com"
+   },
+   {
+    "raw": "$19.99",
+    "monthly_equiv": 19.99,
+    "period": "unknown",
+    "source": "apps.apple.com"
+   },
+   {
+    "raw": "$9.99",
+    "monthly_equiv": 9.99,
+    "period": "unknown",
+    "source": "apps.apple.com"
+   },
+   {
+    "raw": "$3.99",
+    "monthly_equiv": 3.99,
+    "period": "unknown",
+    "source": "apps.apple.com"
+   },
+   {
+    "raw": "$29.99",
+    "monthly_equiv": 29.99,
+    "period": "unknown",
+    "source": "apps.apple.com"
+   }
+  ],
+  "price_anchor_usd": 19.99,
+  "price_is_recurring": true,
+  "price_source": "median of 2 prices with an explicit period",
+  "gross_margin_assumed": 0.8,
+  "ev_per_customer_annual_usd": 192,
+  "price_observations": 2,
+  "acquisition_floor_usd": 200,
+  "below_acquisition_floor": true,
+  "customers_assumed_per_month": {
+   "conservative": 5,
+   "optimistic": 50
+  },
+  "conservative_mrr": "$100",
+  "optimistic_mrr": "$999",
+  "note": "MRR = observed price ($19.99/mo) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+ },
+ "summary": {
+  "positive_signals": [
+   "active Reddit discussion"
+  ],
+  "negative_signals": [
+   "category owner in the market ($13300M raised) \u2014 outspends you on every channel",
+   "licensing/standing signals found (licensed attorney, practice of law) \u2014 verify the statute",
+   "expected value $192/customer/yr is below the $200 acquisition floor (2 price observation(s))",
+   "vendors own the buyer-intent results page \u2014 paid may be the only channel"
+  ],
+  "signal_count": 1,
+  "competition": "dominant",
+  "verdict": "unviable \u2014 value per customer below the acquisition floor"
+ },
+ "claude_analysis": {
+  "tam_assessment": "This is a niche vertical tool for US residential and small commercial contractors: Reddit shows real demand (r/Contractor users looking for a 'good' building-code app) but Google Trends and Hacker News show no signal, and the customer count is an assumption rather than something the research measured.",
+  "tam_customers": 1000000,
+  "price_per_customer_annual": 100,
+  "pricing_assessment": "Observed CodePro prices run $3.99-$29.99, clustered at $6.99 and $19.99/mo, so a consumer-style subscription of about $100-$200/yr is the ceiling; CodePro's 'answers without a subscription' pitch suggests buyers resist recurring fees.",
+  "legal_status": "unknown",
+  "legal_reasoning": "The only regulatory hit is a Georgetown paper on LegalZoom and the unauthorized practice of law, which covers legal-document software rather than building-code lookup, so the 'restricted' flag looks like a false positive; no government source was found and engineering or code-official licensing rules are unverified.",
+  "key_risks": [
+   "Established direct competitors: UpCodes (reported rounds of $7.6M and $3.5M) plus CodePro, OneClick Code and buildcodeai.app already sell AI code answers",
+   "Estimated value per customer (~$192/yr) is below the ~$200 acquisition floor, and vendors hold 70% of the search results page, so paid ads may be the main channel",
+   "Liability if a wrong code answer leads to a failed inspection or unsafe work, which pushes users back to official code books"
+  ],
+  "key_opportunities": [
+   "Contractors on Reddit say existing code apps are inadequate",
+   "Code adoption varies by state and locality, which leaves room for a hyper-local, jurisdiction-accurate product",
+   "UpCodes' funding and CodePro's multi-platform presence show buyers will pay for this category"
+  ],
+  "value": 100000000,
+  "value_reasoning": "About 1,000,000 potential contractor customers \u00d7 about $100/yr per customer \u2248 $100M total addressable annual revenue.",
+  "suggested_probability": 0.01,
+  "probability_reasoning": "The acquisition-floor ceiling applies ($192 < $200 with 2 price observations), which caps this at 0.01, i.e. under 1% realistic penetration; the 'dominant' competition label comes from a misattributed $13.3B Lovable valuation, and the real incumbent is UpCodes at about $10M raised, but the cap stands regardless."
+ }
+}

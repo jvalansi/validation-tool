@@ -796,7 +796,7 @@ def _claude_review(query, report, assume_tech_exists=False):
     import shutil
 
     claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
-    if not os.path.exists(claude_path):
+    if not os.path.exists(claude_path) and os.environ.get("VALIDATION_LLM") != "api":
         return None
 
     tech_context = (
@@ -847,6 +847,9 @@ Provide your assessment as JSON with these fields:
 
 Return only valid JSON, no markdown."""
 
+    if os.environ.get("VALIDATION_LLM") == "api":
+        return _claude_api_json(prompt)
+
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     try:
         result = subprocess.run(
@@ -865,6 +868,36 @@ Return only valid JSON, no markdown."""
         return {"error": str(e)}
 
     return None
+
+
+def _claude_api_json(prompt):
+    """Same review through the Anthropic API — used by the paid web app (VALIDATION_LLM=api),
+    where the personal Claude Code subscription must not serve customers."""
+    import anthropic
+
+    client = anthropic.Anthropic()  # ANTHROPIC_API_KEY
+    try:
+        response = client.beta.messages.create(
+            model="claude-opus-5",
+            max_tokens=16000,
+            output_config={"effort": "medium"},
+            betas=["server-side-fallback-2026-07-01"],
+            fallbacks="default",
+            messages=[{"role": "user", "content": prompt}],
+        )
+    except anthropic.APIStatusError as e:
+        return {"error": f"Claude API {e.status_code}: {e.message}"}
+    except anthropic.APIConnectionError as e:
+        return {"error": f"Claude API connection error: {e}"}
+    if response.stop_reason == "refusal":
+        return {"error": "Claude declined to assess this idea"}
+    text = "".join(b.text for b in response.content if b.type == "text").strip()
+    if text.startswith("```"):
+        text = "\n".join(text.split("\n")[1:]).rsplit("```", 1)[0].strip()
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return {"error": "Claude returned unparseable JSON"}
 
 
 # ---------------------------------------------------------------------------
