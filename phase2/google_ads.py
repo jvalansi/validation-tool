@@ -50,6 +50,8 @@ GEO_TARGETS = [2840, 2826, 2124, 2036]
 LANGUAGE_ENGLISH = 1000
 # Google may spend up to 2x the daily budget on any one day.
 OVERDELIVERY = 2
+# Max CPC under Maximize Clicks; without it one click on a thin keyword cost $28.25.
+MAX_CPC_MICROS = "3000000"
 
 
 def configured():
@@ -131,7 +133,7 @@ def launch_campaign(config, total_budget_usd, days):
         "status": "PAUSED",
         "advertisingChannelType": "SEARCH",
         "campaignBudget": budget,
-        "targetSpend": {},  # Maximize clicks
+        "targetSpend": {"cpcBidCeilingMicros": MAX_CPC_MICROS},  # Maximize clicks
         "networkSettings": {"targetGoogleSearch": True, "targetSearchNetwork": False,
                             "targetContentNetwork": False, "targetPartnerSearchNetwork": False},
         "containsEuPoliticalAdvertising": "DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING",
