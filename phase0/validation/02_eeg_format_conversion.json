@@ -1,0 +1,177 @@
+{
+  "query": "EEG file format converter",
+  "search_query": "EEG file format converter",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "signal": "no data"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "WeTransfer: The simplest way to send yourfilesaround...",
+          "url": "https://www.producthunt.com/products/wetransfer",
+          "snippet": "WeTransfer is afile-sharing platform that allows users to easily send largefilesup to 2GB for free. "
+        },
+        {
+          "name": "Send anyfileto any device - Airclap",
+          "url": "https://www.producthunt.com/products/airclap?utm_souce=badge-airclap&launch=airclap",
+          "snippet": "Visit website.Filestorage and sharing apps. Send anyfileto any device within Local Area Network - cr"
+        },
+        {
+          "name": "Acethinker Free PDF to Word:ConvertPDF to Word on...",
+          "url": "https://www.producthunt.com/products/acethinker-free-pdf-to-word?launch=acethinker-screen-grabber-pro-3",
+          "snippet": "This free online PDF to DOCconverterallows you toconverta PDFfileto an editable Word documentformat."
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "ConvertElectroencephalography Data to EDF, CSV, TXTfiles",
+          "host": "convert.guru",
+          "url": "https://convert.guru/eeg-converter",
+          "snippet": "Drop or upload your .EEGfile. OnlineFileConverter..Convertfileto...Convert.Guru analyzes yourEEGfile, detects the exactformat, and lets you read the text inside. Users alsoconvertedE, EDF, EGG, BDF, E"
+        },
+        {
+          "name": "VariousEEGfileformatsand Conventions",
+          "host": "paulbourke.net",
+          "url": "https://paulbourke.net/dataformats/eeg/",
+          "snippet": "NeuroScanEEGFileFormats. April 1997, updated September 1997.Basic C source code that takes a WestmeadEEGfileandconvertsit into an asciifileis given here: westmead2ascii.c. It can be readily modified a"
+        },
+        {
+          "name": "Convertio —FileConverter",
+          "host": "convertio.co",
+          "url": "https://convertio.co/",
+          "snippet": "FileConverter.Convertyourfilesto anyformat. We'veconverted3,191,036,609fileswith a total size of 58,299 TB."
+        },
+        {
+          "name": "EEGFileExtension- What is it? How to open anEEGfile?",
+          "host": "filext.com",
+          "url": "https://filext.com/file-extension/EEG",
+          "snippet": "aneegdatafileis a specialfileformatand should only be edited and saved with the appropriate software. How to solve problems withEEGfiles. Associate theEEGfileextensionwith the correct application. Upd"
+        },
+        {
+          "name": "reproducible research - Is there anyfileformatstandard forEEGdata?",
+          "host": "psychology.stackexchange.com",
+          "url": "https://psychology.stackexchange.com/questions/6163/is-there-any-file-format-standard-for-eeg-data",
+          "snippet": "Is there anyEEGformatout there that is considered standard? Do theEEGmanufacturers provideconvertersto thatformatin their software? Thanks, -drd."
+        },
+        {
+          "name": "BiosemiEEGECG EMG BSPM NEURO amplifiers systems",
+          "host": "biosemi.com",
+          "url": "https://biosemi.com/faq/file_format.htm",
+          "snippet": "What is the .bdffileformat? (BioSemi DataFormat).Each BDF/EDFfilestarts with a header followed by the number of Data records indicated in the header."
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 3,
+        "government": 0,
+        "forum": 1,
+        "content": 6
+      },
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "convert.guru",
+        "paulbourke.net",
+        "github.com",
+        "sv.uio.no",
+        "wiki.besa.de",
+        "psychology.stackexchange.com",
+        "filext.com",
+        "researchgate.net",
+        "mne.tools",
+        "teuniz.net"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "crowded",
+    "verdict": "crowded — multiple vendors already selling"
+  },
+  "claude_analysis": {
+    "tam_assessment": "This is a niche market: the search results are mostly format documentation and free open-source tools (mne.tools, teuniz.net/EDFbrowser, paulbourke.net), there is no Google Trends signal, there are 0 Hacker News results, and the 6 Reddit hits are mostly unrelated (e.g. r/CrackSupport), so demand is limited to EEG research labs, clinics and BCI hobbyists.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, so ~$100/yr is an assumption; willingness to pay looks weak because free converters (convert.guru, MNE-Python, EDFbrowser) and vendor-supplied export tools already cover common formats like EDF, BDF and CSV.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing restriction surfaced for a file-conversion tool that isn't sold as a medical device.",
+    "key_risks": [
+      "Free open-source tools (MNE-Python, EDFbrowser) and free web converters (convert.guru, Convertio) set the price anchor at $0",
+      "EEG hardware vendors (BioSemi, NeuroScan, BESA) document their formats and include export tools with their software, which reduces the need for a standalone converter",
+      "Vendors hold 30% of the results page and the audience is small, so paid acquisition costs could exceed ~$100/yr per-customer revenue"
+    ],
+    "key_opportunities": [
+      "Many proprietary formats and no clear standard (the psychology.stackexchange question asks exactly this), which creates friction for multi-site or multi-vendor research",
+      "The consumer and BCI hardware market (e.g. OpenBCI users on r/BCI) needs simple, no-code conversion to research formats",
+      "A possible upsell to BIDS-compliant conversion and validation for labs preparing data for publication or sharing"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential customers × about $100/yr each (an assumed price, since none was observed) ≈ $1,000,000 total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Competition is rated crowded, which caps probability at 0.10, but mature free tools already meet the core need, so realistic paid penetration is likely under 1% of an already niche market."
+  }
+}

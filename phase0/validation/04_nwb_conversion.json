@@ -1,0 +1,161 @@
+{
+  "query": "NWB neurodata without borders conversion service",
+  "search_query": "NWB neurodata without borders conversion service",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 3.8,
+      "trend_direction": "flat",
+      "signal": "weak",
+      "query_used": "neurodata without borders"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "r/neuroscience on Reddit: Thinking of building software for ...",
+          "url": "https://www.reddit.com/r/neuroscience/comments/762sdo/thinking_of_building_software_for_organizing/",
+          "snippet": "/r/neuroscienceis dedicated to the academic discussion of the discipline. While we welcome beginners to browse and learn, front page posts are heavily"
+        },
+        {
+          "title": "Becoming a neuroscientist being a physician? : r/neuroscience",
+          "url": "https://www.reddit.com/r/neuroscience/comments/ghnnit/becoming_a_neuroscientist_being_a_physician/",
+          "snippet": "In order to maintain a high-quality subreddit, ther/neurosciencemoderator team manually reviews all text post and link submissions that are not from a"
+        },
+        {
+          "title": "r/neuroscience on Reddit: I’m interested in computational ...",
+          "url": "https://www.reddit.com/r/neuroscience/comments/cpv2ok/im_interested_in_computational_neuroscience_could/",
+          "snippet": "I’ve taken an interest in computationalneuroscienceand think I might pursue a PhD in it. What kind of jobs (non medical and no animal direct animal te"
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 3,
+      "top_products": [
+        {
+          "name": "CodeX: Build webapps in minutes for completely free | Product ...",
+          "url": "https://www.producthunt.com/products/codex-6",
+          "snippet": "CodeX - Revolutionary AI development platform with 27+ AI models, Designer Mode, Thinking Budget Sys"
+        },
+        {
+          "name": "NeuroBlock: No-code AI Lab: Train models, access datasets ...",
+          "url": "https://www.producthunt.com/products/neuroblock",
+          "snippet": "Jan 26, 2026 ·NeuroBlock is a no-code AI Lab that allows you to train custom lightweight AI models w"
+        },
+        {
+          "name": "NeuroVidz: See how a brain reacts to your clip",
+          "url": "https://www.producthunt.com/products/neurovidz",
+          "snippet": "Jul 15, 2026 ·Upload a video or audio clip. In about a minute, NeuroVidz maps how a brain would resp"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 3,
+      "operators": [
+        {
+          "name": "NeurodataWithoutBorders",
+          "host": "nwb.org",
+          "url": "https://nwb.org/",
+          "snippet": "NeurodataWithoutBorders(NWB) is adatastandard for neurophysiology, providing neuroscientists with a common standard to share, archive, use, and build analysis tools for neurophysiologydata.TheNeurodat"
+        },
+        {
+          "name": "Conversionof public neurophysiology datasets toNeuroDataWithout...",
+          "host": "incf.org",
+          "url": "https://www.incf.org/sig/conversion-public-neurophysiology-datasets-neurodata-without-borders-format",
+          "snippet": "TheNeurodataWithoutBorders(NWB1 ) Initiative provides neurophysiology datasets in a standardized HDF5 format that employs domain knowledge to alleviate the burden of differentdataformats and structure"
+        },
+        {
+          "name": "GSoC 2021 project idea 12.2:Conversionof public... - Neurostars",
+          "host": "neurostars.org",
+          "url": "https://neurostars.org/t/gsoc-2021-project-idea-12-2-conversion-of-public-neurophysiology-datasets-to-neurodata-without-borders-format/18164",
+          "snippet": "This project will involveconvertinga number of publicly available datasets toNWBformat, adding structured metadata to ensure maximal understandability and reusability of thedata.Read the Open Source B"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 3,
+        "government": 1,
+        "forum": 0,
+        "content": 6
+      },
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "nwb.org",
+        "elifesciences.org",
+        "incf.org",
+        "neurodatawithoutborders.github.io",
+        "researchgate.net",
+        "github.com",
+        "proceedings.scipy.org",
+        "neurostars.org",
+        "pmc.ncbi.nlm.nih.gov",
+        "youtube.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "3 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "validate further"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: Google Trends interest for 'neurodata without borders' averages 3.8 and is flat, Hacker News has 0 results, and the 3 'incumbents' found (nwb.org, INCF, a Neurostars GSoC post) are standards bodies and volunteer projects rather than paying vendors, so buyers are mainly the neurophysiology labs that must meet data-sharing mandates, an estimated ~1000 labs (assumption, not observed in the data).",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 10000,
+    "pricing_assessment": "No competitor price was observed, so the ~$10000/yr per lab figure is an assumption based on project-based conversion work paid from grant data-management budgets, and willingness to pay is limited because the open-source NWB tools and free community conversion efforts are the default alternative.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe returned 0 restriction hits and 0 government sources, so no licensing or standing rules limiting who can sell this surfaced.",
+    "key_risks": [
+      "Free open-source tooling (NWB/NeuroConv) and grant-funded community conversion efforts (INCF SIG, GSoC) set the reference price near zero",
+      "Very small buyer pool with weak, flat search interest (3.8) and no observed paid pricing to confirm willingness to pay",
+      "Spending depends on grant cycles and funder mandates, so revenue is lumpy and project-based rather than recurring"
+    ],
+    "key_opportunities": [
+      "Funder data-sharing mandates push labs toward standardized formats like NWB, which creates compliance-driven demand",
+      "Labs with custom or legacy acquisition formats face high conversion effort that they may prefer to outsource",
+      "No funded vendor surfaced in the data (funding_mentions empty, and the Product Hunt and Reddit hits are unrelated to NWB), so the space is not crowded"
+    ],
+    "value": 10000000,
+    "value_reasoning": "~1000 labs (tam_customers) × ~$10000/yr (price_per_customer_annual) ≈ $10000000 total addressable annual revenue.",
+    "suggested_probability": 0.1,
+    "probability_reasoning": "Competition is 'contested' so no ceiling applies, but free tooling, grant-dependent budgets and the lack of any observed price point make ~5-10% penetration of a niche market the realistic outcome."
+  }
+}

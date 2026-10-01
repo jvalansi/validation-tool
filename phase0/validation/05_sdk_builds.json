@@ -1,0 +1,234 @@
+{
+  "query": "brainflow liblsl prebuilt binaries support",
+  "search_query": "brainflow liblsl prebuilt binaries support",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 44.8,
+      "trend_direction": "up",
+      "signal": "moderate",
+      "query_used": "brainflow"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/OpenBCI/comments/2vebp6/so_who_here_owns_a_copy_of_openbci/?rdt=61546",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 4,
+      "top_products": [
+        {
+          "name": "Koreshield: Security and evidence for AIsupportagents",
+          "url": "https://www.producthunt.com/products/koreshield",
+          "snippet": "Every AIsupportagent takes input from someone it should not trust: the customer message, the documen"
+        },
+        {
+          "name": "Rask AI: AI-powered platform for localization and...",
+          "url": "https://www.producthunt.com/products/ai-video-localization-dubbing-tool",
+          "snippet": "ForumsAsk questions, findsupport, and connect. Kitty Points LeaderboardThe highest scoring community"
+        },
+        {
+          "name": "RunLLM: AI that doesn’t just respond—it resolves",
+          "url": "https://www.producthunt.com/products/runllm-the-ai-support-engineer",
+          "snippet": "Builton 10 years of UC Berkeley research, RunLLM reads logs, code and docs to resolve complexsupport"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "python - Connecting MUSE 2016 headband viabrainflow",
+          "host": "stackoverflow.com",
+          "url": "https://stackoverflow.com/questions/79987783/connecting-muse-2016-headband-via-brainflow",
+          "snippet": "I am currently working on analyzing EEG data. I am trying to connect the MUSE headband viabrainflowand bluetooth but the headband does not connect. Python tries to connect 3 times and fails and then t"
+        },
+        {
+          "name": "Latest Releases | Adoptium",
+          "host": "adoptium.net",
+          "url": "https://adoptium.net/temurin/releases",
+          "snippet": "Eclipse Adoptium providesprebuiltOpenJDKbinariesfrom a fully open source set ofbuildscripts and infrastructure.We are creating the September 2026 feature releasebinariesfor Eclipse Temurin."
+        },
+        {
+          "name": "Kling AI: Next-Gen AI Video & Image Generator",
+          "host": "kling.ai",
+          "url": "https://kling.ai/?ref=copyrocket.ai",
+          "snippet": "Pricing. Documentation. Quick Start.Kling 3.0. Model Series.Builton a fully upgraded architecture, VIDEO 3.0 and VIDEO 3.0 Omni nativelysupportdeep multimodal instruction parsing and cross-task integr"
+        },
+        {
+          "name": "Higgsfield Genjutsu — Reality Manipulation for Video",
+          "host": "higgsfield.ai",
+          "url": "https://higgsfield.ai/genjutsu",
+          "snippet": "The creditpricingis surprisingly affordable compared to similar platforms, and what impresses me most is how consistently they keep shipping new features. You can tell the team actually listens and ke"
+        },
+        {
+          "name": "Python library forLSL(lab streaming layer)",
+          "host": "pypi.org",
+          "url": "https://pypi.org/project/pylsl/",
+          "snippet": "Minimumsupportedliblsl: 1.16.0 (i.e. pylsl.library_version() >= 116). pylsl bindslsl_create_outlet_ex unconditionally when it loads the library, and that function was introduced inliblsl1.16.0."
+        },
+        {
+          "name": "AppleServiceand Repair for iPhone Battery - AppleSupport",
+          "host": "support.apple.com",
+          "url": "https://support.apple.com/iphone/repair/battery-replacement",
+          "snippet": "Estimatedservicecost. Batteryservice$129. Back glass damage$159.You can get personalsupportat any Genius Bar or Apple AuthorizedServiceProvider. Our trained technicians will inspect your iPhone, expla"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 1,
+        "government": 0,
+        "forum": 1,
+        "content": 8
+      },
+      "vendor_share": 0.1,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "brainflow.readthedocs.io",
+        "github.com",
+        "openbci.com",
+        "stackoverflow.com",
+        "youtube.com",
+        "adoptium.net",
+        "ffmpeg.download",
+        "huggingface.co",
+        "githubissues.com",
+        "johnvansickle.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [
+      {
+        "raw": "$129",
+        "monthly_equiv": 129.0,
+        "period": "unknown"
+      },
+      {
+        "raw": "$159",
+        "monthly_equiv": 159.0,
+        "period": "unknown"
+      },
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "adoptium.net"
+      },
+      {
+        "raw": "$8",
+        "monthly_equiv": 8.0,
+        "period": "unknown",
+        "source": "adoptium.net"
+      },
+      {
+        "raw": "$12",
+        "monthly_equiv": 12.0,
+        "period": "unknown",
+        "source": "adoptium.net"
+      },
+      {
+        "raw": "$20",
+        "monthly_equiv": 20.0,
+        "period": "unknown",
+        "source": "adoptium.net"
+      },
+      {
+        "raw": "$25",
+        "monthly_equiv": 25.0,
+        "period": "unknown",
+        "source": "adoptium.net"
+      },
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "kling.ai"
+      }
+    ],
+    "price_anchor_usd": 20.0,
+    "price_is_recurring": false,
+    "price_source": "median of 8 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 16,
+    "price_observations": 8,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 20,
+      "optimistic": 200
+    },
+    "conservative_mrr": "$400",
+    "optimistic_mrr": "$4000",
+    "note": "MRR = observed price ($20.0 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "growing search trend",
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "expected value $16/customer/yr is below the $200 acquisition floor (8 price observation(s))"
+    ],
+    "signal_count": 2,
+    "competition": "crowded",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: the users are EEG/BCI researchers and hobbyists running BrainFlow or LSL (moderate, rising 'brainflow' Google Trends interest of about 45, 6 Reddit hits mostly in r/BCI and r/OpenBCI, and 0 Hacker News posts), and both projects already publish free prebuilt binaries through PyPI wheels and GitHub releases.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "The $20 price anchor comes from unrelated vendors (Adoptium, Kling, Apple battery repair), so it is not a real competitor price; paid build and support for open-source academic tooling realistically reaches only about $100/yr, mostly from lab grants or small hardware vendors.",
+    "legal_status": "clear",
+    "legal_reasoning": "No licensing or standing restrictions surfaced (0 restriction hits, 0 government sources), and BrainFlow (MIT) and liblsl (MIT) allow redistributing binaries.",
+    "key_risks": [
+      "Upstream projects already ship free prebuilt binaries, so there is little to pay for",
+      "Academic users have low budgets and a strong expectation that open-source tooling is free",
+      "Expected value per customer is well below the $200 acquisition floor"
+    ],
+    "key_opportunities": [
+      "Search interest in brainflow is rising",
+      "Build and connection pain is real, e.g. a StackOverflow question on connecting a Muse headband through BrainFlow and pylsl's minimum liblsl 1.16 requirement",
+      "The search results page is not dominated by vendors (10% vendor share), so organic entry is plausible"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential BrainFlow/LSL users × about $100/yr gives roughly $1M total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The below-acquisition-floor ceiling applies (8 price observations), and free upstream binaries mean realistic penetration is under 1% of an already niche market."
+  }
+}

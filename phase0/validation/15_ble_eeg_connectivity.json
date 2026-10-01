@@ -1,0 +1,158 @@
+{
+  "query": "Muse OpenBCI bluetooth connection troubleshooting",
+  "search_query": "Muse OpenBCI bluetooth connection troubleshooting",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "error": "The request failed: Google returned a response with code 429"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/11inzdr/unarcdll_error_code_14_fitgirl_this_is_not/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/OculusQuest/comments/uhdvw6/virtual_desktops_desktop_not_responding_try/?rdt=61540",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 1,
+      "top_products": [
+        {
+          "name": "Muse by Meta: Your personal AI agent that gets things done ...",
+          "url": "https://www.producthunt.com/products/muse-22",
+          "snippet": "Sep 8, 2026 ·TryMuse, your personal AI agent that gets things done. GiveMusea goal or an everyday ta"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 5,
+      "operators": [
+        {
+          "name": "Muse S Headbands — OpenBCI Forum",
+          "host": "openbci.com",
+          "url": "https://openbci.com/forum/index.php?p=/discussion/3942/muse-s-headbands",
+          "snippet": "Nov 15, 2024 ·Can I save aMuseS session then open it inOpenBCIand analyze it? Is there a way to runMuseS throughOpenBCIfor a live session?"
+        },
+        {
+          "name": "Bluetooth Troubleshooting",
+          "host": "choosemuse.my.site.com",
+          "url": "https://choosemuse.my.site.com/s/article/Bluetooth-Troubleshooting",
+          "snippet": "This article shares some key steps you can take totroubleshootand properlyconnectyourMusebyBluetooththrough theMuseapp.Museconnects byBluetoothdirectly through theMuseapp, not by pairing in your devic"
+        },
+        {
+          "name": "How to connect a Muse Headband to a PC or Raspberry Pi?",
+          "host": "petergamma.org",
+          "url": "https://petergamma.org/how-to-connect-a-muse-headband-to-a-pc-or-raspberry-pi/",
+          "snippet": "Jan 12, 2025 ·So the best way toconnecttheMuseto a PC or Raspberry Pi, or for getting access your EEG data is to choose another EEG device than theMuse, as for instanceOpenBCI."
+        },
+        {
+          "name": "MuseGlobal - Muse Support Web Site",
+          "host": "support.museglobal.com",
+          "url": "https://support.museglobal.com/",
+          "snippet": "TheMuseSupport Web Site provides a variety of support options to help theMusepartners in quicklytroubleshootingtheMuseProducts. It is a collection of documents and tools such as: Frequently Asked Ques"
+        },
+        {
+          "name": "Troubleshooting Flocus — Muse Connection & Signal Help",
+          "host": "flocus.org",
+          "url": "https://flocus.org/troubleshooting",
+          "snippet": "Fix common Flocus issues:Museheadbandconnectionproblems, poor signal quality,Bluetoothpairing, browser support, and calibration trouble, with clear steps."
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 2,
+        "government": 0,
+        "forum": 0,
+        "content": 8
+      },
+      "vendor_share": 0.2,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "openbci.com",
+        "youtube.com",
+        "neuroskill.com",
+        "techlicious.com",
+        "support.microsoft.com",
+        "ebay.com",
+        "arghome.ru",
+        "petergamma.org",
+        "help.hatch.co",
+        "neurotechx.github.io"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "5 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "validate further"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: the only relevant evidence is 5 free support/troubleshooting pages (choosemuse.my.site.com, flocus.org, petergamma.org, an OpenBCI forum thread, museglobal), while the 'Reddit discussion' results are unrelated pages (FitGirl crack support, Oculus Quest) and the Product Hunt hit is an unrelated Meta AI agent, so no real demand signal was observed.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 10,
+    "pricing_assessment": "No competitor price was observed and every incumbent offers troubleshooting free (including the vendor's own Bluetooth Troubleshooting article), so willingness to pay is likely a one-off ~$10 utility fee at most; this price is an assumption, not an observed figure.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe returned 0 restriction hits and 0 government sources (status: 'no restriction signals found').",
+    "key_risks": [
+      "The hardware vendor (Interaxon/Muse) publishes free first-party Bluetooth troubleshooting, which substitutes directly for a paid product",
+      "The 'active Reddit discussion' signal is a false positive (all results are unrelated), so demand is unvalidated",
+      "Tiny addressable base of Muse owners who also want OpenBCI/PC/Raspberry Pi connectivity, and some guides tell them to switch to OpenBCI hardware instead"
+    ],
+    "key_opportunities": [
+      "The results page is not vendor-dominated (20% vendor share), so an SEO/content entry is plausible",
+      "Recurring cross-device questions (Muse S to OpenBCI GUI, Muse to PC or Raspberry Pi) show a real, if small, pain point",
+      "No funded competitors and no regulatory barriers"
+    ],
+    "value": 100000,
+    "value_reasoning": "An assumed 10,000 potential customers × an assumed $10/yr ≈ $100,000 total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Competition is 'contested', so no ceiling applies, but free vendor and community guides plus no validated demand make realistic paid penetration likely under 1% of an already tiny niche."
+  }
+}

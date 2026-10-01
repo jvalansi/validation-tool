@@ -1,0 +1,177 @@
+{
+  "query": "public EEG dataset catalog",
+  "search_query": "public EEG dataset catalog",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "error": "The request failed: Google returned a response with code 429"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BestofRedditorUpdates/new/?t=",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/NMSCoordinateExchange/?rdt=49209",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "Agora Merchants: Increase your e-commerce store sales",
+          "url": "https://www.producthunt.com/products/agora-merchants",
+          "snippet": "@william_jin Both Shopify and WooCommerce stores havepublicdatafiles and APIs available to check gen"
+        },
+        {
+          "name": "World Signal: See where the world is behaving...",
+          "url": "https://www.producthunt.com/products/world-signal",
+          "snippet": "If you could add one new real-worlddatasource, what would it be?Earthquakes are in onedataset. Wildf"
+        },
+        {
+          "name": "Adadot: Making good developers great, throughdata| Product Hunt",
+          "url": "https://www.producthunt.com/products/adadot",
+          "snippet": "We leverage the world’s most completedataseton what actions help tens of thousands of developers get"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 7,
+      "operators": [
+        {
+          "name": "EEGDash/ds004951 ·Datasetsat Hugging Face",
+          "host": "huggingface.co",
+          "url": "https://huggingface.co/datasets/EEGDash/ds004951",
+          "snippet": "Thisdatasetcontains the rawEEGdataaccompanying the paper \"The transformation of sensory to perceptual braille letter representations in the visually deprived brain\"."
+        },
+        {
+          "name": "Find OpenDatasetsand Machine Learning Projects | Kaggle",
+          "host": "kaggle.com",
+          "url": "https://www.kaggle.com/datasets",
+          "snippet": "Browse and download hundreds of thousands of opendatasetsfor AI research, model training, and analysis. Join a community of millions of researchers, developers, and builders to share and collaborate o"
+        },
+        {
+          "name": "DETAILS OFPUBLICEEGDATABASES, University of BonnDataset",
+          "host": "ebrary.net",
+          "url": "https://ebrary.net/59044/education/details_public_databases",
+          "snippet": "Thesedatasetsinclude the University of Bonndataset, the CHB-MITdataset, and the European Epilepsydataset. The first two are freely available online and the lastdatasetneeds to be paid for."
+        },
+        {
+          "name": "PassengerEEG: AnEEGDatasetfor Passenger Hazard Perception in...",
+          "host": "d3ty06pe9ejbnf.cloudfront.net",
+          "url": "https://d3ty06pe9ejbnf.cloudfront.net/documents/passengereeg-eeg-dataset-passenger-hazard-perception-avs",
+          "snippet": "In total, thedatasetcomprises approximately 4 hours ofEEGrecordings per participant and around 400 event-relatedEEGsegments. Each event-specificEEGsegment is 8 seconds long: 2 seconds serve as baselin"
+        },
+        {
+          "name": "IIST BCIDataset-14: Male and FemaleEEGDataset... | IEEE DataPort",
+          "host": "ieee-dataport.org",
+          "url": "https://ieee-dataport.org/documents/iist-bci-dataset-14-male-and-female-eeg-dataset-odia-vowels-and-consonants",
+          "snippet": "However, there exist limiteddatasetsfor Odia language. In thisdatadescriptive paper, we constructed anEEG-based BCIdatasetthat captures neural responses corresponding to Odia vowels and consonants."
+        },
+        {
+          "name": "Tutorialdata- EEGLAB Wiki",
+          "host": "eeglab.org",
+          "url": "https://eeglab.org/tutorials/tutorial_data.html",
+          "snippet": "EEGdataavailable forpublicdownload. Downloaddataused in the workshops and in tutorials.There is an increasing amount ofEEGdataavailable on the internet. The list below is by no way exhaustive but may "
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 3,
+        "government": 0,
+        "forum": 0,
+        "content": 7
+      },
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "github.com",
+        "github.com",
+        "sccn.ucsd.edu",
+        "ebrary.net",
+        "eeglab.org",
+        "researchgate.net",
+        "huggingface.co",
+        "heyadam.dev",
+        "awesomeopensource.com",
+        "nemar.org"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "7 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "validate further"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: the addressable buyers are EEG/BCI research labs and neuro-ML developers, and the existing catalogs in the data (EEGDash on Hugging Face, NEMAR, EEGLAB's tutorial data list, IEEE DataPort, GitHub awesome-lists) are all free; the Reddit and Product Hunt hits are unrelated noise, not demand evidence.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, and the main alternatives (OpenNeuro/NEMAR, EEGDash, Kaggle, EEGLAB lists) are free, so ~$100/yr is an assumption that only holds for value-add like harmonized formats, ML-ready loaders, or lab/institutional licenses.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found no restriction signals and no government sources, though each dataset's own license (e.g. CC-BY, or a paid dataset like the European Epilepsy database) limits what can be redistributed rather than what can be catalogued.",
+    "key_risks": [
+      "Free, academically backed incumbents (NEMAR/OpenNeuro, EEGDash on Hugging Face, EEGLAB) already do cataloguing, which leaves little room to charge",
+      "Buyers are grant-funded academics with low willingness to pay for discovery tooling",
+      "Redistribution is limited by each dataset's license, so the product may only link out and not host data"
+    ],
+    "key_opportunities": [
+      "Discovery is fragmented: search results spread across GitHub, ResearchGate, Hugging Face, IEEE DataPort and personal blogs",
+      "No incumbent shows funding, which suggests no well-resourced commercial player",
+      "EEG foundation-model and BCI ML work creates demand for standardized, ML-ready aggregated corpora"
+    ],
+    "value": 1000000,
+    "value_reasoning": "~10,000 potential lab/developer customers x ~$100/yr ≈ $1,000,000 total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "No ceiling applies because competition is rated 'contested', but free, community-run catalogs already exist and there is no evidence of willingness to pay, so realistic paid penetration is likely under 1%."
+  }
+}

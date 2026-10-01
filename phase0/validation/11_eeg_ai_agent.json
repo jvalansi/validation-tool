@@ -1,0 +1,198 @@
+{
+  "query": "AI assistant for EEG MEG analysis MNE",
+  "search_query": "AI assistant for EEG MEG analysis MNE",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "error": "The request failed: Google returned a response with code 429"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/Chub_AI/hot/?rdt=33982",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "AIAssistantand Bot Builder: Visually buildAI...",
+          "url": "https://www.producthunt.com/products/ai-bot-builder",
+          "snippet": "Experience the most easiest yet powerful way to createAIAssistantusing OpenAI, Claude & Azure models"
+        },
+        {
+          "name": "Monica: YourAIassistanton all websites.",
+          "url": "https://www.producthunt.com/products/monica-3",
+          "snippet": "ChatGPTassistanton any webpages.Reviewers mostly describe Monica as a handy, all-in-oneAIassistantth"
+        },
+        {
+          "name": "Logically: The all-in-one workspace for writing and...",
+          "url": "https://www.producthunt.com/products/afforai",
+          "snippet": "I've been using Afforai.aifor nearly a year, which has transformed how I work. The platform is intui"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 2,
+      "operators": [
+        {
+          "name": "Algorithms and other implementation... —MNE1.13.2 documentation",
+          "host": "mne.tools",
+          "url": "https://mne.tools/stable/documentation/implementation.html",
+          "snippet": "Overview ofMEG/EEGanalysiswithMNE-Python. Modifying data in-place. Parsing events from raw data.Display sensitivity mapsforEEGandMEGsensors. Generate a left cerebellum volume source space."
+        },
+        {
+          "name": "MNE.book",
+          "host": "nitrc.org",
+          "url": "https://www.nitrc.org/docman/view.php/168/486/MNE-manual-2.5.pdf",
+          "snippet": "Interactiveanalysisof theMEG/EEGdata and source estimates is facili-tated by themne_analyzetool. Its features include: 1. Viewing of evoked-response data or data segments in a topographical layout."
+        }
+      ],
+      "funding_mentions": [
+        {
+          "amount_usd": 500000000.0,
+          "headline": "AIassistantSanaraises$55m in aroundled by NEA | Sifted",
+          "url": "https://sifted.eu/articles/nea-backs-ai-startup-sana-with-55m-news"
+        }
+      ],
+      "max_funding_usd": 500000000.0,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 3,
+        "government": 0,
+        "forum": 0,
+        "content": 7
+      },
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "github.com",
+        "mne.tools",
+        "github.com",
+        "mne.tools",
+        "sciencedirect.com",
+        "pypi.org",
+        "sciencedirect.com",
+        "github.com",
+        "mne.tools",
+        "mne-cpp.github.io"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [
+      {
+        "raw": "$8",
+        "monthly_equiv": 8.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$4",
+        "monthly_equiv": 4.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$6",
+        "monthly_equiv": 6.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$7",
+        "monthly_equiv": 7.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      },
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "nitrc.org"
+      }
+    ],
+    "price_anchor_usd": 6.0,
+    "price_is_recurring": false,
+    "price_source": "median of 5 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 5,
+    "price_observations": 5,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 5,
+      "optimistic": 50
+    },
+    "conservative_mrr": "$30",
+    "optimistic_mrr": "$300",
+    "note": "MRR = observed price ($6.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "category owner in the market ($500M raised) — outspends you on every channel",
+      "5 Product Hunt launches in this space",
+      "expected value $5/customer/yr is below the $200 acquisition floor (5 price observation(s))",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 1,
+    "competition": "dominant",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: the incumbents are free open-source tools (mne.tools, NITRC, MNE-CPP on GitHub/PyPI), and no Hacker News posts or relevant Reddit discussion turned up, which points to roughly 10^4 academic and clinical EEG/MEG researchers rather than a broad market.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "The $1-8 'competitor prices' come from an MNE manual PDF on nitrc.org and probably aren't product prices, since MNE is free; academic research tooling at about $100/yr per seat fits grant-funded budgets, but willingness to pay is limited when the base tool costs nothing.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probes returned no restriction terms or government sources, and research-use analysis software isn't subject to medical-device rules unless it's marketed for clinical diagnosis.",
+    "key_risks": [
+      "The free open-source MNE ecosystem, plus general coding assistants like Claude and ChatGPT that already write MNE-Python code, leave little room for a paid product",
+      "Academic buyers have small budgets and slow, grant-driven purchasing, and each customer is worth less than the $200 acquisition floor",
+      "Search results are dominated by docs and GitHub (7/10 content, 3/10 vendor), so there's no clear organic or paid acquisition channel"
+    ],
+    "key_opportunities": [
+      "MNE's steep learning curve (source spaces, forward models, preprocessing pipelines) is a real pain point for newcomers to EEG/MEG",
+      "The 'dominant $500M competitor' signal is a parsing error (Sana, a general AI assistant, raised $55M), so no one owns the MNE-specific assistant niche",
+      "Consumer and BCI EEG (OpenBCI discussion on Reddit) could extend the audience beyond academic labs"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential customers × about $100/yr ≈ $1,000,000 in total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The ceilings for 'dominant' competition and for falling below the acquisition floor with 5 or more price observations both cap this at 0.01; both rest on noisy data, but a free incumbent and general LLM substitutes still point to under 1% realistic penetration."
+  }
+}

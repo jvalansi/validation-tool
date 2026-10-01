@@ -1,0 +1,218 @@
+{
+  "query": "brain computer interface online course",
+  "search_query": "brain computer interface online course",
+  "sources": {
+    "hacker_news": {
+      "total_results": 1,
+      "top_posts": [
+        {
+          "title": "Ask HN: I'd like to dabble with brain computer interface, recommendations?",
+          "points": 8,
+          "url": "https://news.ycombinator.com/item?id=16106927"
+        }
+      ]
+    },
+    "google_trends": {
+      "average_interest": 26.3,
+      "trend_direction": "up",
+      "signal": "moderate",
+      "query_used": "brain computer interface course"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "Brain-Computer Interfaces, Thought-controlled computing",
+          "url": "https://www.reddit.com/r/BCI/",
+          "snippet": "Seeking Guidance: How to Begin Research inBrain-ComputerInterfaces (BCI) for aComputerScience Undergraduate I am an undergraduate student majoring inc"
+        },
+        {
+          "title": "[Question] How to get into a career in brain-computer ...",
+          "url": "https://www.reddit.com/r/neuroscience/comments/65pam4/question_how_to_get_into_a_career_in/",
+          "snippet": "Math: Calculus, Linear Algebra, Discrete Math, Differential Equations, Several courses in statistics that get deep into machine learning and dimension"
+        },
+        {
+          "title": "What are the recommended books for brain-computer interface ...",
+          "url": "https://www.reddit.com/r/BCI/comments/15bqlid/what_are_the_recommended_books_for_braincomputer/",
+          "snippet": "Hey guys, I'm paying attention to brain-computerinterface, hoping to learn some knowledge systematically from books, can you recommend some brain-comp"
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "GoIT LMS: Empowering emerging markets with high-quality tech ...AGINE Academy: A story-driven game for learning Claude by ...Agent Interface: Give AI agents a better way to use computers ...Sidegent: Learn to build AI agents by actually building them ...Creatium: Make interactive learning that doesn’t suck ...Brainstream: Agentic AI notes: smart search, briefs & tasks ...Rosply: AI agent that controls your computer autonomously ...",
+          "url": "https://www.producthunt.com/products/goit-lms",
+          "snippet": "Mar 17, 2023 ·GoIT built its LMS to kickstart your career in tech. By entering emerging markets, we "
+        },
+        {
+          "name": "Agent Interface: Give AI agents a better way to use computers ...",
+          "url": "https://www.producthunt.com/products/agent-interface",
+          "snippet": "Sep 14, 2026 ·AI agents need bettercomputertools, not just better models. AgentInterfaceis an open-s"
+        },
+        {
+          "name": "Brainstream: Agentic AI notes: smart search, briefs & tasks ...",
+          "url": "https://www.producthunt.com/products/brainstream",
+          "snippet": "Feb 10, 2026 ·Turn scattered thoughts into organized action with Brainstream - an AI-powered note-ta"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 11,
+      "operators": [
+        {
+          "name": "Neuralink — PioneeringBrainComputerInterfaces",
+          "host": "neuralink.com",
+          "url": "https://neuralink.com/",
+          "snippet": "Creating a generalizedbraininterfaceto restore autonomy to those with unmet medical needs today and unlock human potential tomorrow."
+        },
+        {
+          "name": "FreeCourse: Multimedia,Brain-ComputerInterfaces... | Class Central",
+          "host": "classcentral.com",
+          "url": "https://www.classcentral.com/course/youtube-icip-2021-rabab-ward-dispatches-of-a-pioneer-woman-in-engineering-across-continents-171868",
+          "snippet": "Help.Pricing. FreeOnlineCourse.Start your review of Multimedia,Brain-ComputerInterfacesand Medical Instrumentation - Dispatches of a Pioneer Woman in Engineering Across Continents."
+        },
+        {
+          "name": "Braincomputerinterfacewith deep learning - INFOGNU",
+          "host": "infognu.com",
+          "url": "https://infognu.com/brain-computer-interface-with-deep-learning/2368791",
+          "snippet": "Description. Dive into the amazing world ofBrain-ComputerInterfaces(BCI) with ourcourse, \"Mind Meets Machine: ExploringBrain-ComputerInterfaces(BCI)\" . Discover how BCIs have evolved from early experi"
+        },
+        {
+          "name": "sciencedirect.com/topics/neuroscience/brain-computer-interface",
+          "host": "sciencedirect.com",
+          "url": "https://www.sciencedirect.com/topics/neuroscience/brain-computer-interface",
+          "snippet": "Brain-ComputerInterface- an overview | …"
+        },
+        {
+          "name": "100% Off -Braincomputerinterfacewith deep learning",
+          "host": "scrollcoupons.com",
+          "url": "https://scrollcoupons.com/course/brain-computer-interface-with-deep-learning/6584",
+          "snippet": "CourseUpdated 1 month(s) ago.Coursesname as desc. The Art of Living: Mastering a Balanced and Fulfilled Life. Accredited Child Psychology Comprehensive Guide."
+        },
+        {
+          "name": "\"The Incredibles\" - Syndrome MainComputer",
+          "host": "syndromemaincomputer.app",
+          "url": "https://syndromemaincomputer.app/",
+          "snippet": "Created by. Giuseppe Del Campo. Syndrome MainComputeris a faithful recreation of Syndrome’scomputerinterfacefrom The Incredibles (2004), built as a modern web app with React, Next.js and Chakra UI. Vi"
+        }
+      ],
+      "funding_mentions": [
+        {
+          "amount_usd": 850000000.0,
+          "headline": "OpenAI invests in Sam Altman’sbraincomputerinterfacestartup...",
+          "url": "https://www.todayonai.ai/p/openai-invests-in-sam-altman-s-brain-computer-interface-startup-merge-labs"
+        },
+        {
+          "amount_usd": 650000000.0,
+          "headline": "Elon Musk’s Neuralink Secures $650M From Ark... - video Dailymotion",
+          "url": "https://www.dailymotion.com/video/x9kqkak"
+        },
+        {
+          "amount_usd": 21000000.0,
+          "headline": "A ChineseBrain-ComputerInterfacestartupraised$21M just two...",
+          "url": "https://pod.wave.co/podcast/techcrunch-startup-news/a-chinese-brain-computer-interface-startup-raised-21m-just-two-months-after-launch-plus-gumloop-turn"
+        }
+      ],
+      "max_funding_usd": 850000000.0,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 3,
+        "government": 0,
+        "forum": 0,
+        "content": 7
+      },
+      "vendor_share": 0.3,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "ep.jhu.edu",
+        "classcentral.com",
+        "udemy.com",
+        "udemy.com",
+        "bciguys.com",
+        "courses.impodays.com",
+        "futuretechfoundation.github.io",
+        "youtube.com",
+        "infognu.com",
+        "sciencedirect.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [
+      {
+        "raw": "$11.99",
+        "monthly_equiv": 11.99,
+        "period": "unknown",
+        "source": "infognu.com"
+      }
+    ],
+    "price_anchor_usd": 11.99,
+    "price_is_recurring": false,
+    "price_source": "median of 1 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 10,
+    "price_observations": 1,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 20,
+      "optimistic": 200
+    },
+    "conservative_mrr": "$240",
+    "optimistic_mrr": "$2398",
+    "note": "MRR = observed price ($11.99 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "growing search trend",
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "category owner in the market ($850M raised) — outspends you on every channel",
+      "5 Product Hunt launches in this space",
+      "expected value $10/customer/yr is below the $200 acquisition floor (1 price observation(s))",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 2,
+    "competition": "dominant",
+    "verdict": "crowded — a category owner already serves this market"
+  },
+  "claude_analysis": {
+    "tam_assessment": "The market is a niche mid-tier market of students, engineers and hobbyists learning BCI: Google Trends interest is moderate and rising (26.3, 'brain computer interface course'), Reddit has 10 threads asking how to get started, and Hacker News has only 1 thread (8 points).",
+    "tam_customers": 100000,
+    "price_per_customer_annual": 10,
+    "pricing_assessment": "The only observed price is a $11.99 one-time Udemy-style course (infognu.com), and free alternatives exist (Class Central, YouTube, JHU content), so willingness to pay is roughly $10 one-time unless the course is repositioned toward premium career or certification buyers.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probes found no licensing or restriction signals (0 restriction hits, 0 gov sources) for selling an educational course.",
+    "key_risks": [
+      "Expected value of about $10 per customer is far below the roughly $200 acquisition floor, so paid acquisition loses money on each customer",
+      "Free and discounted alternatives (Class Central free courses, YouTube, 100%-off Udemy coupons) push the price toward zero",
+      "Vendors and content sites own the search results page, which leaves paid channels as the likely way in"
+    ],
+    "key_opportunities": [
+      "Search interest in BCI courses is trending up, likely helped by attention from Neuralink ($650M) and Merge Labs ($850M) funding",
+      "Reddit shows active, unmet demand for structured learning paths (career guidance, book lists, where to start)",
+      "Few dedicated BCI education providers exist; the funded 'category owner' (Neuralink) builds devices and does not sell courses"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 100,000 potential learners x about $10 per year (a one-time ~$12 course) gives roughly $1,000,000 in total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The summary's competition rating of 'dominant' caps probability at 0.01, and with EV below acquisition cost and free substitutes, realistic penetration is under 1%, even though the flagged incumbent (Neuralink) does not actually sell courses."
+  }
+}

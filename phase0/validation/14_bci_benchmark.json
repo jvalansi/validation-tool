@@ -1,0 +1,233 @@
+{
+  "query": "BCI EEG decoding benchmark leaderboard",
+  "search_query": "BCI EEG decoding benchmark leaderboard",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "error": "The request failed: Google returned a response with code 429"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "OpenBCI EEG Assembly, Software installation, and Recording",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "Still improving my editing so the video is not great, maybe watch it on 2x speed to get through it faster. But for anyone who is considering starting "
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/ChiknNuggit/comments/118t27p/chikn_nuggit_smash_or_pass/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "Benchmark| Upload a fintech proposal & see if the...",
+          "url": "https://www.producthunt.com/products/are-you-beeing-spreaded",
+          "snippet": "Nobenchmarks, no transparency — information asymmetry benefits incumbents. Upload a PDF proposal for"
+        },
+        {
+          "name": "The Free Website Guys Reviews (2026)Product Hunt: The place to discover your next favorite thing ...Bypass Paywalls Competitors & Alternatives (2026)Unreal Engine Reviews (2026)Euphony: Render AI chat data and Codex logs into browsable ...Exstats: Track your browser extensions and competitors in one ...CAT ME app: See yourself or your friends as cats",
+          "url": "https://www.producthunt.com/products/the-free-website-guys/reviews",
+          "snippet": "Read reviews and experiences from users of The Free Website Guys. Get comprehensive feedback about f"
+        },
+        {
+          "name": "Product Hunt: The place to discover your next favorite thing ...Bypass Paywalls Competitors & Alternatives (2026)Unreal Engine Reviews (2026)Euphony: Render AI chat data and Codex logs into browsable ...Exstats: Track your browser extensions and competitors in one ...CAT ME app: See yourself or your friends as cats",
+          "url": "https://www.producthunt.com/products/producthunt",
+          "snippet": "Founded in 2013 as a tiny side project, Product Hunt has become the place for makers and companies t"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 4,
+      "operators": [
+        {
+          "name": "AILeaderboard2026: Rankings for 300+ Top AI Models by...",
+          "host": "llm-stats.com",
+          "url": "https://llm-stats.com/",
+          "snippet": "The AILeaderboard— independent rankings of GPT, Claude, Gemini, Llama, DeepSeek and 300+ AI models by intelligence, speed andprice. Composite LLM Stats Score updated continuously from publicbenchmarks"
+        },
+        {
+          "name": "Deep LearningBenchmarkfor Ear-EEGBCI- BCIwiki.com",
+          "host": "bciwiki.com",
+          "url": "https://bciwiki.com/en/item/deep-learning-benchmark-for-ear-eeg-bci-bios16080437/",
+          "snippet": "Summary A systematicbenchmarkof 23 deep learning architectures for ear-EEGBCImental-task classification identifies FBLightConvNet as the top performer. Why it matters Ear-EEGis a practical modality fo"
+        },
+        {
+          "name": "LLMLeaderboard& AI ModelBenchmarks— September 2026",
+          "host": "benchlm.ai",
+          "url": "https://benchlm.ai/",
+          "snippet": "Compare 497 AI models across 446benchmarks, with 230 ranked scores, source evidence, API pricing, context windows, runtime, and head-to-head pages."
+        },
+        {
+          "name": "Replicating a NeurIPS VisualDecodingPaper with... | Hackaday.io",
+          "host": "hackaday.io",
+          "url": "https://hackaday.io/project/205753-neuradock-a-hackable-7-channel-eeg-workstation/log/248002-replicating-a-neurips-visual-decoding-paper-with-7-channel-dry-electrodes",
+          "snippet": "*Tags:**EEG·BCI· VisualDecoding· NeurIPS 2024 · Dry Electrodes · ADS1299 --- ## OverviewEEG-based visualdecodinghas long been the domain of well-funded neuroscience labs. The bottleneck isn't the algo"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 0,
+        "government": 1,
+        "forum": 0,
+        "content": 9
+      },
+      "vendor_share": 0.0,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "bci.report",
+        "github.com",
+        "neural-interfaces26.github.io",
+        "sota2.com",
+        "sylyoung.github.io",
+        "neural-interfaces26.github.io",
+        "arxiv.org",
+        "pmc.ncbi.nlm.nih.gov",
+        "universite-paris-saclay.hal.science",
+        "researchgate.net"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [
+      {
+        "raw": "$2.00 /",
+        "monthly_equiv": 2.0,
+        "period": "unknown",
+        "source": "llm-stats.com"
+      },
+      {
+        "raw": "$ 4.76",
+        "monthly_equiv": 4.76,
+        "period": "unknown",
+        "source": "llm-stats.com"
+      },
+      {
+        "raw": "$ 11.90",
+        "monthly_equiv": 11.9,
+        "period": "unknown",
+        "source": "llm-stats.com"
+      },
+      {
+        "raw": "$ 5.95",
+        "monthly_equiv": 5.95,
+        "period": "unknown",
+        "source": "llm-stats.com"
+      },
+      {
+        "raw": "$ 6.19",
+        "monthly_equiv": 6.19,
+        "period": "unknown",
+        "source": "llm-stats.com"
+      },
+      {
+        "raw": "$10.00 /",
+        "monthly_equiv": 10.0,
+        "period": "unknown",
+        "source": "benchlm.ai"
+      },
+      {
+        "raw": "$50.00",
+        "monthly_equiv": 50.0,
+        "period": "unknown",
+        "source": "benchlm.ai"
+      },
+      {
+        "raw": "$4.00 /",
+        "monthly_equiv": 4.0,
+        "period": "unknown",
+        "source": "benchlm.ai"
+      },
+      {
+        "raw": "$20.00",
+        "monthly_equiv": 20.0,
+        "period": "unknown",
+        "source": "benchlm.ai"
+      },
+      {
+        "raw": "$2.00 /",
+        "monthly_equiv": 2.0,
+        "period": "unknown",
+        "source": "benchlm.ai"
+      }
+    ],
+    "price_anchor_usd": 6.19,
+    "price_is_recurring": false,
+    "price_source": "median of 10 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 5,
+    "price_observations": 10,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 5,
+      "optimistic": 50
+    },
+    "conservative_mrr": "$31",
+    "optimistic_mrr": "$310",
+    "note": "MRR = observed price ($6.19 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "4 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "5 Product Hunt launches in this space",
+      "expected value $5/customer/yr is below the $200 acquisition floor (10 price observation(s))"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche market: zero Hacker News results, one relevant Reddit thread (OpenBCI), and search results dominated by academic content (arxiv, PMC, HAL, GitHub) point to about 1000 potential paying customers, mostly BCI labs and neurotech companies.",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "The observed $2-$50 price points come from general LLM leaderboards (llm-stats.com, benchlm.ai), not EEG products, so they are a weak anchor; academic users expect benchmarks to be free (e.g., GitHub and neural-interfaces26.github.io), so any revenue would have to come from B2B sponsorship or private-evaluation fees of about $1000/yr from neurotech vendors, and that figure is an assumption.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found 0 restriction hits and 0 government sources, so no licensing or standing rules surfaced.",
+    "key_risks": [
+      "Open academic benchmarks (MOABB-style GitHub repos, workshop leaderboards like neural-interfaces26.github.io) set the expected price at zero",
+      "The observed value per customer (~$5/yr) is below the $200 acquisition floor, so paid acquisition does not pay back",
+      "The buyer base is very small and concentrated in grant-funded labs with limited discretionary budgets"
+    ],
+    "key_opportunities": [
+      "Search results are not vendor-dominated (0% vendor share), so organic entry is plausible",
+      "No funded incumbent exists; current EEG benchmarks are scattered papers (bciwiki ear-EEG benchmark, NeurIPS replications)",
+      "Growing hobbyist and dry-electrode activity (OpenBCI, Hackaday NeuraDock) could widen the audience beyond academic labs"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 1000 potential customers × about $1000/yr per customer gives about $1000000 in total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "The below-acquisition-floor ceiling applies (10 price observations), and because users expect benchmarks to be free, realistic paid penetration is under 1% of an already niche market."
+  }
+}

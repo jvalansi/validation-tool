@@ -1,0 +1,157 @@
+{
+  "query": "EEGLAB MATLAB environment container",
+  "search_query": "EEGLAB MATLAB environment container",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 45.0,
+      "trend_direction": "flat",
+      "signal": "moderate",
+      "query_used": "EEGLAB"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BestofRedditorUpdates/new/?t=",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/vipuy8/infomation_about_bci_software/?rdt=32904",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 1,
+      "top_products": [
+        {
+          "name": "witr: Why is this running? Trace process, port, container or ...",
+          "url": "https://www.producthunt.com/products/witr",
+          "snippet": "Jul 30, 2026 ·Container: witr-dd-test (id d0a9b15ffb6f) Image : alpine Why It Exists : docker → witr"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 4,
+      "operators": [
+        {
+          "name": "EEGLAB- File Exchange -MATLABCentral",
+          "host": "mathworks.com",
+          "url": "https://www.mathworks.com/matlabcentral/fileexchange/56415-eeglab",
+          "snippet": "EEGLABis an open-source signal processingenvironmentfor electrophysiological signals running onMatlaband developed at the SCCN/UCSD. Download from the project website rather than GitHub to make sure a"
+        },
+        {
+          "name": "EEGLABDocumentation including tutorials and workshops information",
+          "host": "eeglab.org",
+          "url": "https://eeglab.org/others/TIPS_and_FAQ.html",
+          "snippet": "BecauseMATLABsometimes uses large amount of RAM, we also took great care of inserting options inEEGLABand in several processing functions to handle low memory conditions. On the other hand theMATLABen"
+        },
+        {
+          "name": "eeglab:Matlabtoolbox for EEG signal processing",
+          "host": "numfer.com",
+          "url": "https://numfer.com/sccn/eeglab",
+          "snippet": "EEGLABprovides a comprehensiveenvironmentfor analyzing electroencephalography (EEG) data inMatlab, offering tools for preprocessing, source localization, and spectral analysis. Screenshot of sccn/eegl"
+        },
+        {
+          "name": "NITRC:EEGLAB: Tool/Resource Info",
+          "host": "nitrc.org",
+          "url": "https://www.nitrc.org/projects/eeglab/",
+          "snippet": "EEGLABoffers a wealth of methods for visualizing and modeling event-related brain dynamics, both at the level of individualEEGLAB'datasets' and/or across a collection of datasets. For experiencedMatla"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 4,
+        "government": 0,
+        "forum": 0,
+        "content": 6
+      },
+      "vendor_share": 0.4,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "sccn.ucsd.edu",
+        "mathworks.com",
+        "eeglab.org",
+        "github.com",
+        "carpentries-incubator.github.io",
+        "youtube.com",
+        "docs.openbci.com",
+        "nitrc.org",
+        "researchgate.net",
+        "numfer.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "4 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "validate further"
+  },
+  "claude_analysis": {
+    "tam_assessment": "EEGLAB is a niche academic tool with moderate, flat search interest (Google Trends 45), no Hacker News posts, and only 6 Reddit hits, so the market is likely limited to EEG research labs and grad students, estimated at roughly 10,000 potential customers.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "No competitor price was observed, so ~$100/yr per lab is an assumption; willingness to pay is likely low because the 4 'incumbents' found (MathWorks File Exchange, eeglab.org, NITRC, numfer) are free distribution channels rather than paid vendors, and academic users expect free open-source tooling.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe found no restriction signals and no government sources, but MathWorks licensing terms may limit bundling full MATLAB in a redistributable container, and the probe did not cover that.",
+    "key_risks": [
+      "Free substitutes are the default: EEGLAB is open source and distributed free via eeglab.org, MathWorks File Exchange and NITRC, and Python/Octave toolchains can replace it",
+      "MATLAB licensing may force users to bring their own license, which reduces the value of the container and complicates distribution",
+      "Price-sensitive academic buyers, with 40% of search results owned by vendor or official sites, leave little room for organic acquisition"
+    ],
+    "key_opportunities": [
+      "Steady research demand (flat, moderate Trends interest), plus Reddit r/BCI threads about installation and setup pain",
+      "No funded competitor was found, so there is room for a reproducible, preconfigured environment aimed at labs and HPC clusters",
+      "Possible expansion into hosted or cloud EEG processing, or OpenBCI hobbyist onboarding"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential customers × about $100/yr ≈ $1,000,000 total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Competition is 'contested' so no ceiling applies, but free official distributions and a free-software norm in academia make realistic paid penetration likely well under 1%, which puts this in the moonshot tier."
+  }
+}

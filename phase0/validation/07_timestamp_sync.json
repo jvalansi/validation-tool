@@ -1,0 +1,180 @@
+{
+  "query": "EEG multi-device timestamp synchronization",
+  "search_query": "EEG multi-device timestamp synchronization",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 44.2,
+      "trend_direction": "down",
+      "signal": "moderate",
+      "query_used": "EEG synchronization"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/BCI/comments/14k1ihd/openbci_eeg_assembly_software_installation_and/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "3peat.io: Translatemultiplelanguages simultaneously.",
+          "url": "https://www.producthunt.com/products/3peat-io?launch=3peat-io",
+          "snippet": "Getmultiplelanguage translations and natural text-to-speech."
+        },
+        {
+          "name": "Send any file to anydevice- Airclap",
+          "url": "https://www.producthunt.com/products/airclap?utm_souce=badge-airclap&launch=airclap",
+          "snippet": "Browser airdrop to send files to anyone, on anydevice.The Pro version has no restrictions and only r"
+        },
+        {
+          "name": "1Password: The world’s most-loved password manager",
+          "url": "https://www.producthunt.com/products/1password?launch=1password-business",
+          "snippet": "multi-platform support (4). chrome extension (2). password sharing (2).synchronizationacrossdevices("
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 7,
+      "operators": [
+        {
+          "name": "What Is Hyperscanning?EEGMulti-Brain Experiments | Neurosity",
+          "host": "neurosity.co",
+          "url": "https://neurosity.co/guides/what-is-hyperscanning-eeg-multi-brain",
+          "snippet": "Asynchronizationmethod. This can be as simple as pressing a button that sends atimestampto bothdevicessimultaneously, or using network-syncedclocks to align the data streams post-hoc. An ecologically "
+        },
+        {
+          "name": "EEGSynchronizationTest | Mentalab Hypersync",
+          "host": "mentalab.com",
+          "url": "https://mentalab.com/eeg-exg-multimodal-hyperscanning-synchronization-validation/",
+          "snippet": "You can validatesynchronizationby comparing hardware triggertimestampsto LSL markers in the XDF file and computingtimingerror distributions to confirm sub-millisecond latency and jitter. What research"
+        },
+        {
+          "name": "android -Synchronizetimestampsacrossmultipledevices",
+          "host": "stackoverflow.com",
+          "url": "https://stackoverflow.com/questions/18323859/synchronize-timestamps-across-multiple-devices",
+          "snippet": "Explore Stack Internal.Synchronizetimestampsacrossmultipledevices. Ask Question.How can Isyncup two or more devices so that their internal clocks will be no more than 100 ms apart from each other? Is "
+        },
+        {
+          "name": "UnixTimeStamp- Epoch Converter",
+          "host": "unixtimestamp.com",
+          "url": "https://www.unixtimestamp.com/",
+          "snippet": "Epoch and unixtimestampconverter for developers. Date andtimefunction syntax reference for various programming languages."
+        },
+        {
+          "name": "SynchronizingMultipleMFLI Lock-in Amplifiers | Zurich Instruments",
+          "host": "zhinst.com",
+          "url": "https://www.zhinst.com/en/blogs/synchronizing-multiple-mfli-lock-in-amplifiers/",
+          "snippet": "Multipleinstruments can besynchronizedby the MDS toolbox to convert them to onemulti-channeldevicecapable of generating and measuring several signal ports simultaneously. MDSsynchronizesinstruments at"
+        },
+        {
+          "name": "Smarting PRO — 32-Channel WirelessEEGSystem | mBrainTrain",
+          "host": "mbraintrain.com",
+          "url": "https://mbraintrain.com/smarting-pro-32/",
+          "snippet": "Smarting PRO. Fully mobileEEGFor any study setup. Introducing a mobile 32-channelEEGdevicefor seamless high-quality recordings on a PC and mobile phone. Its unparalleled wireless connection reliabilit"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 1,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 5,
+        "government": 0,
+        "forum": 0,
+        "content": 5
+      },
+      "vendor_share": 0.5,
+      "read": "vendors own the results page — paid acquisition is likely the only door",
+      "hosts": [
+        "bitbrain.com",
+        "sciencedirect.com",
+        "mindrove.com",
+        "sciencedirect.com",
+        "mentalab.com",
+        "neurosity.co",
+        "zhinst.com",
+        "docs.luxonis.com",
+        "mbraintrain.com",
+        "unixtimestamp.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [],
+    "price_anchor_usd": null,
+    "price_is_recurring": null,
+    "price_source": "no competitor price observed",
+    "ev_per_customer_annual_usd": null,
+    "below_acquisition_floor": null,
+    "conservative_mrr": "",
+    "optimistic_mrr": "",
+    "note": "No observed price — revenue left unestimated rather than inferred from search volume."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "7 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "5 Product Hunt launches in this space",
+      "vendors own the buyer-intent results page — paid may be the only channel"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "validate further"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche research-tooling market: the only real evidence is a handful of EEG hardware vendors (Mentalab, mBrainTrain, Neurosity, Bitbrain, MindRove) that sell their own synchronization features, a declining 'EEG synchronization' Google Trends curve (avg 44, down), zero Hacker News posts, and Reddit/Product Hunt hits that are mostly unrelated (password managers, file transfer), so the buyer pool looks limited to academic and clinical EEG, hyperscanning, and multimodal labs, which I estimate at around 10,000 worldwide.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "The data contains no observed competitor price, so ~$1,000/yr per lab is an assumption based on typical research-software and sync-hardware budgets, and willingness to pay is limited because the free, open-source Lab Streaming Layer (LSL, referenced in the Mentalab snippet) is the default method and vendors bundle sync with their own devices.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory probe returned 0 restriction hits and 0 government sources, so no licensing or standing rules surfaced for selling research sync software, though a clinical/diagnostic positioning could trigger medical-device rules that were not probed.",
+    "key_risks": [
+      "The free open-source Lab Streaming Layer is already the default method for timestamp alignment",
+      "EEG hardware vendors (Mentalab Hypersync, mBrainTrain) bundle synchronization with their own devices, which limits the market for third-party tools",
+      "Search results are owned by vendors (50% vendor share) and academic buyers have slow grant-driven purchasing, which raises acquisition cost"
+    ],
+    "key_opportunities": [
+      "Cross-vendor sync for labs that mix devices from different manufacturers is not handled by single-vendor bundles",
+      "Growth in hyperscanning and multimodal (EEG + eye-tracking/motion/fNIRS) research raises the need for validated sub-millisecond sync",
+      "None of the incumbents found shows any recorded funding, so no well-capitalized player owns the cross-device niche"
+    ],
+    "value": 10000000,
+    "value_reasoning": "10,000 potential labs × $1,000/yr ≈ $10M total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Competition is 'contested', so no ceiling applies, but the free LSL standard and vendor-bundled sync keep realistic penetration of an already small niche at around 1% or less, which puts this in the moonshot tier."
+  }
+}

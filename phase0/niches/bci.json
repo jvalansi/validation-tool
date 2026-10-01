@@ -1,0 +1,24 @@
+{
+ "audience": "brain-computer-interface, EEG and neural-data researchers and hobbyists",
+ "subreddits": [
+  "BCI",
+  "OpenBCI",
+  "neurotechnology",
+  "compmathneuro"
+ ],
+ "github_repos": [
+  "mne-tools/mne-python",
+  "brainflow-dev/brainflow",
+  "OpenBCI/OpenBCI_GUI",
+  "sccn/labstreaminglayer",
+  "NeurodataWithoutBorders/pynwb",
+  "NeuroTechX/moabb",
+  "braindecode/braindecode",
+  "sccn/eeglab",
+  "SpikeInterface/spikeinterface",
+  "timeflux/timeflux"
+ ],
+ "discourse": [
+  "https://mne.discourse.group"
+ ]
+}

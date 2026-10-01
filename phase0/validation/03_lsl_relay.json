@@ -1,0 +1,213 @@
+{
+  "query": "lab streaming layer cloud relay websocket",
+  "search_query": "lab streaming layer cloud relay websocket",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "average_interest": 35.4,
+      "trend_direction": "up",
+      "signal": "moderate",
+      "query_used": "lab streaming layer"
+    },
+    "reddit": {
+      "total_results": 6,
+      "top_posts": [
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/HomeLab/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/r/CrackSupport/comments/12dx56g/mx_bikes_license_key/",
+          "snippet": "The site owner hides the web page description."
+        },
+        {
+          "title": "Link to reddit.com",
+          "url": "https://www.reddit.com/",
+          "snippet": "The site owner hides the web page description."
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "DualStream: Simultaneous desktop and mobile streaming, the ...",
+          "url": "https://www.producthunt.com/products/dualstream",
+          "snippet": "Jul 14, 2026 ·Beautifully powerfulstreaming. Astonishingly easy. DualStream brings Desktop and Mobil"
+        },
+        {
+          "name": "Relay: Free live chat for your website.HFlow: Scalable multimodal data pipelines for robotics ...ccshare: multiplayer claude codeGhost: Open-source, self-hosted game serversTrustedRouter: Every model with a unified interface. Privacy ...Cortex: Turn API specs into docs, SDKs, and MCP servers ...",
+          "url": "https://www.producthunt.com/products/relay",
+          "snippet": "RelayChat adds anonymous, IRC-style chat on every domain on the Internet, so you can chat with other"
+        },
+        {
+          "name": "HFlow: Scalable multimodal data pipelines for robotics ...",
+          "url": "https://www.producthunt.com/products/hflow",
+          "snippet": "Aug 26, 2026 ·HFlow is an open source SDK for scalable multimodal data pipelines in robotics and phy"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 9,
+      "operators": [
+        {
+          "name": "Free Live Streaming & Recording Software | Streamlabs",
+          "host": "streamlabs.com",
+          "url": "https://streamlabs.com/",
+          "snippet": "The most popularstreamingplatform for Twitch, YouTube and Facebook.Cloud-based and used by 70% of Twitch. Grow with Streamlabs Desktop, alerts, 1000+ overlays, analytics, chatbot, tipping, merch and m"
+        },
+        {
+          "name": "Lab Streaming Layer (LSL): The Definitive Guide for ...",
+          "host": "mindrove.com",
+          "url": "https://mindrove.com/2026/03/17/lab-streaming-layer-lsl-the-definitive-guide-for-multimodal-research/",
+          "snippet": "Mar 17, 2026 ·Master thelabstreaminglayerto achieve sub-millisecond data sync for multimodal research. This guide eliminates clock drift and latency for precise BCI."
+        },
+        {
+          "name": "Reference | sccn/labstreaminglayer | DeepWiki",
+          "host": "deepwiki.com",
+          "url": "https://deepwiki.com/sccn/labstreaminglayer/6-reference",
+          "snippet": "Feb 12, 2026 ·Relevant source files This section provides comprehensive reference documentation forLabStreamingLayer, including configuration file specifications, API documentation, frequently asked q"
+        },
+        {
+          "name": "Pricing· Cloudflare Workers docs",
+          "host": "developers.cloudflare.com",
+          "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+          "snippet": "Workers plans andpricinginformation.2WebSocketconnections made to a Worker are charged as a request, representing the initial Upgrade connection made to establish theWebSocket.WebSocketmessages routed"
+        },
+        {
+          "name": "json -websocketrelaywith Autobahn python - Stack Overflow",
+          "host": "stackoverflow.com",
+          "url": "https://stackoverflow.com/questions/67233605/websocket-relay-with-autobahn-python",
+          "snippet": "I am trying to build awebsocketserver using Autobahn python which acts as a man-in-the-middle orrelayfor IBM Watson's text-to-speechservice."
+        },
+        {
+          "name": "Connecting LINE Bot to HomeLabWithout cloudflared —WebSocket...",
+          "host": "dev.to",
+          "url": "https://dev.to/linou518/connecting-line-bot-to-home-lab-without-cloudflared-websocket-relay-architecture-4f8h",
+          "snippet": "The local line_bridge.py keeps a persistent outboundWebSocketconnection to it. Since the connection is outbound (inside → outside), it passes through firewalls without any port forwarding. When a LINE"
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 2,
+        "government": 0,
+        "forum": 1,
+        "content": 7
+      },
+      "vendor_share": 0.2,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "dev.to",
+        "stackoverflow.com",
+        "github.com",
+        "pypi.org",
+        "docs.altnautica.com",
+        "deepwiki.com",
+        "docs.relay.link",
+        "secretlab.eu",
+        "useflowlyapp.com",
+        "better-messages.com"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "mid",
+    "competitor_prices_found": [
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "deepwiki.com"
+      },
+      {
+        "raw": "$8",
+        "monthly_equiv": 8.0,
+        "period": "unknown",
+        "source": "deepwiki.com"
+      },
+      {
+        "raw": "$12",
+        "monthly_equiv": 12.0,
+        "period": "unknown",
+        "source": "deepwiki.com"
+      },
+      {
+        "raw": "$14",
+        "monthly_equiv": 14.0,
+        "period": "unknown",
+        "source": "deepwiki.com"
+      }
+    ],
+    "price_anchor_usd": 12.0,
+    "price_is_recurring": false,
+    "price_source": "median of 4 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 10,
+    "price_observations": 4,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 20,
+      "optimistic": 200
+    },
+    "conservative_mrr": "$240",
+    "optimistic_mrr": "$2400",
+    "note": "MRR = observed price ($12.0 one-time) x assumed customers/mo (20 conservative, 200 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "growing search trend",
+      "active Reddit discussion"
+    ],
+    "negative_signals": [
+      "crowded: 9 vendors already selling",
+      "5 Product Hunt launches in this space",
+      "expected value $10/customer/yr is below the $200 acquisition floor (4 price observation(s))"
+    ],
+    "signal_count": 2,
+    "competition": "crowded",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Lab Streaming Layer is a niche open-source tool for neuroscience, BCI and multimodal research labs, with moderate, rising search interest (35.4, up) and no Hacker News discussion, so the market is probably around 10,000 labs and developers worldwide.",
+    "tam_customers": 10000,
+    "price_per_customer_annual": 100,
+    "pricing_assessment": "The observed $1-$14 prices come from deepwiki.com, a documentation site, so they are probably not real competitor prices; a hosted relay for research labs could plausibly charge about $100/yr as B2B SaaS, but the data only supports about $10/yr per customer.",
+    "legal_status": "clear",
+    "legal_reasoning": "The regulatory search found no restriction hits and no government sources, so no licensing rules limit who may sell this.",
+    "key_risks": [
+      "The expected value of about $10/customer/yr from observed prices is below the $200 acquisition floor, so paid acquisition does not pay back",
+      "Academic labs have small budgets and can self-host free WebSocket relays (Autobahn, Cloudflare Workers, DIY bridges)",
+      "Research labs value LSL for sub-millisecond sync, so a cloud relay's latency may limit it to non-critical use"
+    ],
+    "key_opportunities": [
+      "Search interest in 'lab streaming layer' is moderate and trending up",
+      "The search results page is not dominated by vendors (20% vendor share), so organic entry is plausible",
+      "No direct LSL cloud relay product showed up; the listed incumbents (Streamlabs, Cloudflare) serve adjacent markets"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 10,000 potential customers × about $100/yr gives roughly $1,000,000 in total addressable annual revenue.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Probability is capped at 0.01 because value per customer is below the acquisition floor with 4 price observations and competition is rated crowded; expected penetration is under 1% of an already small academic niche."
+  }
+}

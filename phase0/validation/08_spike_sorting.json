@@ -1,0 +1,197 @@
+{
+  "query": "cloud spike sorting service neuropixels",
+  "search_query": "cloud spike sorting service neuropixels",
+  "sources": {
+    "hacker_news": {
+      "total_results": 0,
+      "top_posts": []
+    },
+    "google_trends": {
+      "error": "The request failed: Google returned a response with code 429"
+    },
+    "reddit": {
+      "total_results": 10,
+      "top_posts": [
+        {
+          "title": "r/neuroscience on Reddit: What kind of computer specs are ...",
+          "url": "https://www.reddit.com/r/neuroscience/comments/1cszlot/what_kind_of_computer_specs_are_needed_for/",
+          "snippet": "/r/neuroscienceis dedicated to the academic discussion of the discipline. While we welcome beginners to browse and learn, front page posts are heavily"
+        },
+        {
+          "title": "How much work and money does it cost to start ... - Reddit",
+          "url": "https://www.reddit.com/r/neuro/comments/jjdbnf/how_much_work_and_money_does_it_cost_to_start/",
+          "snippet": "/r/neuro, involving neuroscience: Discussion and news pertaining to neurobiology, cognitive studies, clinical neuroscience, the laboratory, and anythi"
+        },
+        {
+          "title": "Spike Sorting help : r/neuroscience - Reddit",
+          "url": "https://www.reddit.com/r/neuroscience/comments/27rj83/spike_sorting_help/",
+          "snippet": "A subreddit where you will find discussions related to cognitive testing and the sharing cognitive tests and resources. Theories, criticisms to the th"
+        }
+      ]
+    },
+    "product_hunt": {
+      "existing_products": 5,
+      "top_products": [
+        {
+          "name": "Altogic: Backend as aserviceplatform to develop apps...",
+          "url": "https://www.producthunt.com/products/altogic",
+          "snippet": "Altogic is a backend as aserviceplatform, a Firebase alternative, providing database, storage,cloudf"
+        },
+        {
+          "name": "iCloud: Acloudstorage andcloudcomputingservice| Product Hunt",
+          "url": "https://www.producthunt.com/products/icloud",
+          "snippet": "Sign in to iCloud to access your photos, videos, documents, notes, contacts, and more. Use your Appl"
+        },
+        {
+          "name": "Air: Don't let good ideas get lost in bad systems",
+          "url": "https://www.producthunt.com/products/air?launch=1stagram",
+          "snippet": "Hey Product Hunt Air Co-Founder and CEO here! Three years ago, we launched Air with a simple idea: m"
+        }
+      ]
+    },
+    "incumbents": {
+      "operators_found": 6,
+      "operators": [
+        {
+          "name": "Multi-Neuropixels Electrophysiology | Allen Institute for ...",
+          "host": "allenneuraldynamics.org",
+          "url": "https://www.allenneuraldynamics.org/platforms/neuropixels-electrophysiology",
+          "snippet": "Our pipeline encompasses all steps ofspikesorting. It starts by reading rawNeuropixelsdata stored in Open Ephys, SpikeGLX, or NWB formats followed by low-level signal processing. The output of each pr"
+        },
+        {
+          "name": "Order | Neuropixels",
+          "host": "neuropixels.org",
+          "url": "https://www.neuropixels.org/order",
+          "snippet": "Neuropixelsis the first silicon CMOS digital neural probe that combines best-in-class performance with unrivalled cost-effectiveness and reliability for next-generation in vivo neuroscience research b"
+        },
+        {
+          "name": "Neuropixels 2.0 specs, price & features (2026) — allbcis.com",
+          "host": "allbcis.com",
+          "url": "https://www.allbcis.com/devices/neuropixels-2",
+          "snippet": "Sep 17, 2026 ·Neuropixels2.0: invasive LFP, research-grade, 5120-channel. Complete sourced specifications, regulatory status,pricing, and where to buy."
+        },
+        {
+          "name": "Scientific Neuropixels Analysis | Claude Code Playbooks",
+          "host": "claudecodehq.com",
+          "url": "https://www.claudecodehq.com/playbooks/scientific-neuropixels-analysis",
+          "snippet": "YourNeuropixelsrecording has thousands of channels and millions ofspikesthat needsorting, quality control, and analysis — a pipeline that takes weeks to set up from scratch. This workflow handles the "
+        },
+        {
+          "name": "Neuropixels Data Analysis - End-to-End Neural Recording ...",
+          "host": "openskills.cc",
+          "url": "https://openskills.cc/skills/k-dense-ai-skills-neuropixels-analysis",
+          "snippet": "neuropixels-analysis: An end-to-end analysis toolkit forNeuropixelshigh-density neural recordings based on SpikeInterface. Supports loading SpikeGLX/Open Ephys/NWB data, preprocessing, Kilosort4spikes"
+        },
+        {
+          "name": "Pricing Overview | Google Cloud",
+          "host": "cloud.google.com",
+          "url": "https://cloud.google.com/pricing",
+          "snippet": "With GoogleCloud’s pay-as-you-go pricing, you only pay for theservicesyou use. No upfrontcosts. No terminationfees."
+        }
+      ],
+      "funding_mentions": [],
+      "max_funding_usd": null,
+      "probes_failed": 0,
+      "search_failed": false
+    },
+    "regulatory": {
+      "restriction_hits": 0,
+      "restriction_terms": [],
+      "gov_sources": 0,
+      "probes_failed": 0,
+      "search_failed": false,
+      "top_hits": [],
+      "status": "no restriction signals found"
+    },
+    "serp_ownership": {
+      "results_examined": 10,
+      "breakdown": {
+        "vendor": 2,
+        "government": 0,
+        "forum": 0,
+        "content": 8
+      },
+      "vendor_share": 0.2,
+      "read": "results page not vendor-dominated — organic entry plausible",
+      "hosts": [
+        "claudecodehq.com",
+        "github.com",
+        "elifesciences.org",
+        "elifesciences.org",
+        "github.com",
+        "openskills.cc",
+        "spikeinterface.readthedocs.io",
+        "allensdk.readthedocs.io",
+        "github.com",
+        "spikeinterface.github.io"
+      ]
+    }
+  },
+  "revenue_estimate": {
+    "tam_tier": "niche",
+    "competitor_prices_found": [
+      {
+        "raw": "$1",
+        "monthly_equiv": 1.0,
+        "period": "unknown",
+        "source": "allbcis.com"
+      },
+      {
+        "raw": "$17",
+        "monthly_equiv": 17.0,
+        "period": "unknown",
+        "source": "allbcis.com"
+      }
+    ],
+    "price_anchor_usd": 17.0,
+    "price_is_recurring": false,
+    "price_source": "median of 2 prices with no stated period — treated as one-time, not recurring",
+    "gross_margin_assumed": 0.8,
+    "ev_per_customer_annual_usd": 14,
+    "price_observations": 2,
+    "acquisition_floor_usd": 200,
+    "below_acquisition_floor": true,
+    "customers_assumed_per_month": {
+      "conservative": 5,
+      "optimistic": 50
+    },
+    "conservative_mrr": "$85",
+    "optimistic_mrr": "$850",
+    "note": "MRR = observed price ($17.0 one-time) x assumed customers/mo (5 conservative, 50 optimistic). The customer counts are assumptions; the price is an observation."
+  },
+  "summary": {
+    "positive_signals": [
+      "active Reddit discussion",
+      "6 small vendors selling, none funded — demand proven, room to differentiate"
+    ],
+    "negative_signals": [
+      "5 Product Hunt launches in this space",
+      "expected value $14/customer/yr is below the $200 acquisition floor (2 price observation(s))"
+    ],
+    "signal_count": 2,
+    "competition": "contested",
+    "verdict": "unviable — value per customer below the acquisition floor"
+  },
+  "claude_analysis": {
+    "tam_assessment": "Niche academic market: the only operators found are the Allen Institute's in-house pipeline and free SpikeInterface/Kilosort4 toolkits (claudecodehq.com, openskills.cc), with no funded vendors; the buyer base is assumed, not sourced, to be roughly 1,000 Neuropixels-using labs worldwide.",
+    "tam_customers": 1000,
+    "price_per_customer_annual": 1000,
+    "pricing_assessment": "The $1 and $17 'competitor prices' come from a Neuropixels 2.0 hardware spec page on allbcis.com, not from a spike-sorting service, so they are a weak anchor; a compute-plus-support service for grant-funded labs at ~$1,000/yr is an assumption, not an observed price.",
+    "legal_status": "clear",
+    "legal_reasoning": "No restriction terms or government sources came up in the regulatory probe (0 hits).",
+    "key_risks": [
+      "Free open-source alternatives (SpikeInterface, Kilosort4) and institutional pipelines such as the Allen Institute's make it hard to charge for sorting itself",
+      "Labs can run the same pipelines on their own GPUs or on pay-as-you-go cloud (Google Cloud), which squeezes the margin to a thin layer over raw compute cost",
+      "The pipeline's revenue signal puts value per customer ($14/yr) below the $200 acquisition floor, and small academic budgets with grant-cycle purchasing slow sales"
+    ],
+    "key_opportunities": [
+      "Reddit threads on required computer specs and spike-sorting help point to compute and setup pain points",
+      "Search results are not vendor-dominated (20% vendor share), so organic and SEO entry looks plausible",
+      "No funded commercial competitor was found, leaving room for a managed, QC-included service"
+    ],
+    "value": 1000000,
+    "value_reasoning": "About 1,000 labs × ~$1,000/yr ≈ $1,000,000 total addressable annual revenue; both inputs are assumptions.",
+    "suggested_probability": 0.01,
+    "probability_reasoning": "Because the revenue estimate falls below the acquisition floor with 2 price observations, the probability is capped at 0.01, and with free open-source tools covering the core function, realistic penetration is under 1% of an already niche market."
+  }
+}
