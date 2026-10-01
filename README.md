@@ -4,6 +4,7 @@ Multi-source project idea validator. Gathers market signals from HN, Google Tren
 
 ## Validation Phases
 
+- **Phase 0 — Idea sourcing** (`phase0/`): mines ~20 niche communities for recurring pain points, ranks them, sends the top ones to phase 1. See `phase0/README.md`.
 - **Phase 1 — Passive signals** (`phase1/`): HN, Reddit, Google Trends, Product Hunt, incumbents → market signal + ROI score
 - **Phase 2 — Active intent** ([Google Ads + Landing Page](docs/phase2.md)): paid search → clicks → email signups → pre-orders. Run when Phase 1 returns strong signal.
 

@@ -10,7 +10,7 @@ Reddit gets top posts plus pain-phrase searches ("is there a tool", "I hate", ..
 which surface complaints far more densely than top posts alone.
 
 Usage: python fetch.py <niche>
-Reddit needs a fresh token: /home/ubuntu/miniconda3/bin/python ../reddit-tool/refresh_token.py
+Reddit needs a fresh token: /home/ubuntu/miniconda3/bin/python ../../reddit-tool/refresh_token.py
 """
 
 import json
@@ -21,7 +21,7 @@ import time
 import urllib.parse
 import urllib.request
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "reddit-tool"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "reddit-tool"))
 from reddit_playwright import api as reddit_api  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))

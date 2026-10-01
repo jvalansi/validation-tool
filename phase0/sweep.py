@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Sweep every niche in niches/, rank all pain clusters together, and run the top ones
-through validation-tool's phase-1 report. Posts the result to Discord #validation-tool.
+through phase1/validation_tool.py. Posts the result to Discord #validation-tool.
 
 Steps per niche are cached (raw.jsonl, extracted.jsonl, taxonomy.json, assigned.json),
 so a killed sweep resumes where it stopped. Delete data/<niche>/ to redo a niche.
@@ -16,7 +16,7 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VT = os.path.join(HERE, "..", "validation-tool")
+VT = os.path.join(HERE, "..")
 PY = sys.executable
 SWEEP = os.path.join(HERE, "reports", "SWEEP.md")
 
@@ -101,7 +101,7 @@ def main():
     from phase2.notify import post
     post("**Opportunity sweep done** — top ideas after validation:\n" + "\n".join(
         f"{i}. {c['product_idea']} ({c['niche']}) — {v.get('verdict')}" for i, (c, v) in enumerate(results, 1))
-        + "\nFull report: https://github.com/jvalansi/opportunity-scout/blob/main/reports/SWEEP.md")
+        + "\nFull report: https://github.com/jvalansi/validation-tool/blob/main/phase0/reports/SWEEP.md")
 
 
 if __name__ == "__main__":

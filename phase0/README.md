@@ -1,7 +1,7 @@
-# opportunity-scout
+# phase0 — idea sourcing (formerly opportunity-scout)
 
 Sweeps online communities across ~20 niches for recurring pain points, ranks them as product opportunities for a
-solo builder, and runs the top ones through `../validation-tool` phase 1. Started as the BCI pain-point study.
+solo builder, and runs the top ones through `../phase1` (validation_tool.py). Started as the BCI pain-point study.
 
 - `niches/<name>.json` — audience + sources (subreddits, GitHub repos, Discourse forums, HN queries).
 - `fetch.py <niche>` → `data/<niche>/raw.jsonl` (Reddit API, or a DuckDuckGo `site:` fallback when the API/proxy is down).
