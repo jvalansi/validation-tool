@@ -10,21 +10,21 @@ Reddit gets top posts plus pain-phrase searches ("is there a tool", "I hate", ..
 which surface complaints far more densely than top posts alone.
 
 Usage: python fetch.py <niche>
-Reddit needs a fresh token: /home/ubuntu/miniconda3/bin/python ../../reddit-tool/refresh_token.py
+Reddit goes through rdt-cli, which needs a logged-in reddit_session cookie in
+~/.config/rdt-cli/credential.json (see README).
 """
 
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 import urllib.parse
 import urllib.request
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "reddit-tool"))
-from reddit_playwright import api as reddit_api  # noqa: E402
-
 HERE = os.path.dirname(os.path.abspath(__file__))
+RDT = os.path.join(os.path.dirname(sys.executable), "rdt")
 BODY_CHARS = 1500
 PAIN_QUERIES = ['"is there a tool"', '"is there software"', '"I hate"', '"so tedious"',
                 '"wish there was"', "spreadsheet", '"manually"', '"would pay"']
@@ -90,24 +90,33 @@ def reddit_via_search(subreddits):
             time.sleep(2)
 
 
+def rdt(*args):
+    """Run rdt-cli and return the listing's children. Raises on auth/network failure."""
+    out = subprocess.run([RDT, *args, "--json"], capture_output=True, text=True, timeout=120)
+    d = json.loads(out.stdout or "{}")
+    if not d.get("ok"):
+        raise RuntimeError((d.get("error") or {}).get("message") or out.stderr.strip()[-200:])
+    return d["data"]["data"]["children"]
+
+
 def reddit(subreddits):
     try:
-        reddit_api("GET", "/api/v1/me")
+        rdt("search", "tool", "-n", "1")
     except Exception as e:
-        print(f"reddit API unavailable ({e}) — using search fallback", file=sys.stderr)
+        print(f"rdt-cli unavailable ({e}) — using search fallback", file=sys.stderr)
         yield from reddit_via_search(subreddits)
         return
     for sub in subreddits:
-        paths = [f"/r/{sub}/top?t=year&limit=100"] + [
-            f"/r/{sub}/search?q={urllib.parse.quote(q)}&restrict_sr=1&sort=top&t=all&limit=25" for q in PAIN_QUERIES]
+        calls = [("sub", sub, "-s", "top", "-t", "year", "-n", "100")] + [
+            ("search", q, "-r", sub, "-s", "top", "-t", "all", "-n", "25") for q in PAIN_QUERIES]
         seen = set()
-        for path in paths:
+        for args in calls:
             try:
-                data = reddit_api("GET", path)
+                children = rdt(*args)
             except Exception as e:
-                print(f"reddit {sub} {path[:40]}: {e}", file=sys.stderr)
+                print(f"reddit {sub} {args[1][:30]}: {e}", file=sys.stderr)
                 continue
-            for c in data.get("data", {}).get("children", []):
+            for c in children:
                 if c["data"]["id"] not in seen:
                     seen.add(c["data"]["id"])
                     yield _reddit_item(c["data"], sub)

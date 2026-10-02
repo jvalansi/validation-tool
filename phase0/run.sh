@@ -1,8 +1,7 @@
 #!/bin/bash
-# Full sweep: refresh Reddit token, then fetch + analyze every niche, rank, validate the top, push reports.
+# Full sweep: fetch + analyze every niche, rank, validate the top, push reports.
 cd "$(dirname "$0")"
 export GH_TOKEN=$(grep -oP '^GH_TOKEN=\K\S+' /home/ubuntu/.env)
-/home/ubuntu/miniconda3/bin/python ../../reddit-tool/refresh_token.py
 /home/ubuntu/validation-tool/.venv/bin/python sweep.py "$@"
 git add reports && git commit -qm "Sweep reports $(date +%F)
 
