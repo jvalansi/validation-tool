@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from validation_tool import (
     _parse_funding, _assess_competition, _host, _classify_hosts,
     _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
-    _extract_prices, _is_non_vendor,
+    _extract_prices, _is_non_vendor, _apply_claude_competition,
 )
 
 # --- _parse_funding: funding language required -------------------------------
@@ -150,5 +150,27 @@ assert thin["price_observations"] == 1, thin
 solid = _unit_economics(
     [{"monthly_equiv": 5.0, "period": "monthly"}, {"monthly_equiv": 7.0, "period": "monthly"}], "mid")
 assert solid["price_observations"] == 2 and solid["below_acquisition_floor"] is True, solid
+
+# --- one failed probe makes competition unknown, not absent -------------------
+assert _assess_competition({"operators_found": 7, "probes_failed": 1}, {})["level"] == "unknown"
+
+# --- Claude's competition grade replaces the heuristic only when the data backs it --
+def _report():
+    return {"sources": {"incumbents": {"operators": [{"host": "daily.dev", "url": "https://daily.dev/x",
+                                                     "snippet": "Cursor vs Copilot vs Claude Code pricing"}]}},
+            "summary": {"competition": "contested", "verdict": "validate further", "signal_count": 3}}
+r = _report()
+_apply_claude_competition(r, {"competition_level": "dominant",
+                              "competitors": [{"name": "Cursor", "evidence_url": "https://daily.dev/x"}]})
+assert r["summary"]["competition"] == "dominant" and r["summary"]["verdict"].startswith("crowded"), r
+r = _report()  # cited snippet doesn't name the competitor → ignored
+_apply_claude_competition(r, {"competition_level": "dominant",
+                              "competitors": [{"name": "Tabnine", "evidence_url": "https://daily.dev/x"}]})
+assert r["summary"]["competition"] == "contested", r
+r = _report()
+r["summary"]["verdict"] = "unviable — value per customer below the acquisition floor"
+_apply_claude_competition(r, {"competition_level": "open", "competitors": [
+    {"name": "Copilot", "evidence_url": "https://daily.dev/x"}]})
+assert r["summary"]["competition"] == "open" and r["summary"]["verdict"].startswith("unviable"), r
 
 print("all checks passed")

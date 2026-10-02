@@ -255,8 +255,12 @@ def _incumbent_search(query, limit=8):
         try:
             hits = list(DDGS().text(probe, max_results=limit))
         except Exception:
-            failed += 1
-            continue
+            time.sleep(10)  # usually a rate limit; one retry before counting it as failed
+            try:
+                hits = list(DDGS().text(probe, max_results=limit))
+            except Exception:
+                failed += 1
+                continue
         for r in hits:
             url = r.get("href", "")
             title = (r.get("title") or "").strip()
@@ -294,7 +298,8 @@ def _assess_competition(incumbents, product_hunt):
     ops = incumbents.get("operators_found", 0)
     max_funding = incumbents.get("max_funding_usd")
 
-    if incumbents.get("search_failed") or incumbents.get("error"):
+    # Any failed probe, not just all of them: a dropped funding probe reads as "no funded competitor".
+    if incumbents.get("search_failed") or incumbents.get("probes_failed") or incumbents.get("error"):
         negatives.append("incumbent search unavailable — competition unknown, not absent")
         return {"positive": positives, "negative": negatives, "level": "unknown"}
 
@@ -782,6 +787,7 @@ def cmd_report(args):
         if prob is not None:
             claude_analysis["suggested_probability"] = 1.0 if prob >= 0.5 else 0.1 if prob >= 0.05 else 0.01
         report["claude_analysis"] = claude_analysis
+        _apply_claude_competition(report, claude_analysis)
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
@@ -789,6 +795,48 @@ def cmd_report(args):
 # ---------------------------------------------------------------------------
 # Claude revenue/value synthesis
 # ---------------------------------------------------------------------------
+
+COMPETITION_LEVELS = ("dominant", "crowded", "funded", "contested", "open", "none_found")
+
+
+def _source_texts(sources, out=None):
+    """url -> title + snippet for every item in the research data, at any depth."""
+    out = {} if out is None else out
+    if isinstance(sources, dict):
+        url = sources.get("url")
+        if isinstance(url, str):
+            out[url] = " ".join(str(sources.get(k, "")) for k in ("title", "name", "headline", "snippet")).lower()
+        for v in sources.values():
+            _source_texts(v, out)
+    elif isinstance(sources, list):
+        for v in sources:
+            _source_texts(v, out)
+    return out
+
+
+def _apply_claude_competition(report, analysis):
+    """Replace the heuristic competition grade with Claude's, keeping only competitors whose cited
+    snippet names them, and redo the competition branch of the verdict."""
+    level = analysis.get("competition_level")
+    if level not in COMPETITION_LEVELS:
+        return
+    texts = _source_texts(report.get("sources", {}))
+    cited = [c for c in analysis.get("competitors") or []
+             if isinstance(c, dict) and c.get("name") and c["name"].lower() in texts.get(c.get("evidence_url"), "")]
+    analysis["competitors"] = cited
+    if level != "none_found" and not cited:
+        return  # a grade with no competitor the data backs is not evidence
+    s = report["summary"]
+    s["competition_heuristic"], s["competition"] = s["competition"], level
+    if s["verdict"].startswith("unviable"):
+        return
+    if level == "dominant":
+        s["verdict"] = "crowded — a category owner already serves this market"
+    elif level == "crowded":
+        s["verdict"] = "crowded — multiple vendors already selling"
+    else:
+        s["verdict"] = "validate further" if s["signal_count"] >= 2 else "weak signal — reconsider or reframe"
+
 
 def _claude_review(query, report, assume_tech_exists=False):
     """Call Claude via CLI to synthesize the report data into a revenue/value estimate."""
@@ -818,6 +866,8 @@ Revenue signals extracted (the price anchor is an OBSERVED competitor price; cus
 
 Competition and standing (summary):
 {json.dumps(report.get("summary", {}), indent=2)}
+summary.competition is a keyword heuristic: it counts any pricing-page host as a vendor (including review blogs and
+comparison sites) and misses funding when a search fails. Grade competition yourself in "competition_level".
 
 All numeric outputs must be rounded to the nearest power of 10 (e.g. 100, 1000, 10000, 100000, 1000000). Do not use precise figures — order-of-magnitude accuracy is the goal.
 
@@ -832,14 +882,24 @@ Provide your assessment as JSON with these fields:
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "value": total addressable annual revenue in USD, rounded to nearest power of 10 — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
 - "value_reasoning": one sentence explaining the value estimate (reference tam_customers × price_per_customer_annual)
+- "competitors": up to 5 actual vendors selling to these customers, named in the research data above — products or
+  companies, NOT blogs, review or comparison sites, directories or papers. Each: {{"name": str, "evidence_url": the
+  research-data URL whose title or snippet names it, "funding_usd": total raised if you know it, else null}}
+- "competition_level": one of
+    "dominant" — a competitor has raised >= $100M or is a big-tech product
+    "crowded" — 5+ vendors selling, or a funded competitor among several
+    "funded" — a competitor has raised >= $10M
+    "contested" — 2-4 small vendors
+    "open" — 1 vendor
+    "none_found" — no vendor named in the data
 - "suggested_probability": expected fraction of the total value that will actually be captured, using exactly one of these three values:
     0.01 — moonshot: paradigm shift required, or tiny realistic penetration (e.g. <1% of a niche market)
     0.10 — regular challenge: real demand and proven tech, but significant competition or execution risk (realistic penetration ~5-15%)
     0.99 — low-hanging fruit: clear unmet demand, proven solution, little competition (high penetration likely)
   This encodes both probability of success AND realistic market penetration. Choose the closest tier.
   Ceilings by evidence (apply the lowest that matches):
-    summary.competition == "dominant" -> do not exceed 0.01
-    summary.competition in ("funded", "crowded") -> do not exceed 0.10
+    competition_level == "dominant" -> do not exceed 0.01
+    competition_level in ("funded", "crowded") -> do not exceed 0.10
     legal_status == "restricted" -> do not exceed 0.10
     revenue_estimate.below_acquisition_floor is true AND price_observations >= 2 -> do not exceed 0.01
   A funded competitor is evidence the market is real; it caps the upside, it does not zero it. Competition levels "contested" and "open" carry no ceiling.
