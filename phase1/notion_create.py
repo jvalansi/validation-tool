@@ -289,6 +289,9 @@ def main():
         "TAM Tier": {"select": {"name": tam_tier}},
         "\u05e1\u05d8\u05d8\u05d5\u05e1": {"status": {"name": STATUS_TODO}},
     }
+    competition = (report or {}).get("summary", {}).get("competition")
+    if competition:
+        props["Competition"] = {"select": {"name": competition}}
     if args.ai_generated:
         props["AI Generated"] = {"checkbox": True}
     if trends_avg is not None:

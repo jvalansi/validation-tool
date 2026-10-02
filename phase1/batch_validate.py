@@ -362,6 +362,8 @@ def update_notion_table(page_id, new_prob, claude, rev, report):
         elif competition in ("funded", "crowded"):
             signal = {"strong": "moderate", "moderate": "weak", "weak": "weak"}[signal]
         props["Market Signal"] = {"select": {"name": signal}}
+        if competition:
+            props["Competition"] = {"select": {"name": competition}}
 
     notion_patch(f"pages/{page_id}", {"properties": props})
 
