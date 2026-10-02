@@ -5,6 +5,8 @@ through phase1/validation_tool.py. Posts the result to Discord #validation-tool.
 
 Steps per niche are cached (raw.jsonl, extracted.jsonl, taxonomy.json, assigned.json),
 so a killed sweep resumes where it stopped. Delete data/<niche>/ to redo a niche.
+Validation results are kept in validated.json, so each sweep validates the top N clusters
+not validated before.
 
 Usage: python sweep.py [--top N] [--niches a,b,c]
 """
@@ -14,11 +16,23 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VT = os.path.join(HERE, "..")
 PY = sys.executable
 SWEEP = os.path.join(HERE, "reports", "SWEEP.md")
+VALIDATED = os.path.join(HERE, "validated.json")
+
+
+def load_validated():
+    return json.load(open(VALIDATED)) if os.path.exists(VALIDATED) else {}
+
+
+def save_validated(cache):
+    with open(VALIDATED + ".tmp", "w") as f:
+        json.dump(cache, f, indent=1, ensure_ascii=False)
+    os.replace(VALIDATED + ".tmp", VALIDATED)
 
 
 def run(cmd):
@@ -34,7 +48,7 @@ def rank(clusters):
         totals[c["niche"]] = totals.get(c["niche"], 0) + c["items"]
     for c in clusters:
         share = c["items"] / totals[c["niche"]] if totals[c["niche"]] else 0
-        c["score"] = round(100 * share * (1 + c["paying"] / c["items"]) * c["ml_fit"], 1) if c["items"] else 0.0
+        c["score"] = round(100 * share * (1 + c["paying"] / c["items"]) * c["fit"], 1) if c["items"] else 0.0
     return sorted((c for c in clusters if not c.get("excluded") and c["items"] >= 3),
                   key=lambda c: (c["score"], c["paying"]), reverse=True)
 
@@ -70,28 +84,36 @@ def main():
             clusters += json.load(open(path))
     ranked = rank(clusters)
 
+    cache = load_validated()
     results = []
-    for c in ranked[:args.top]:
+    for c in [c for c in ranked if f"{c['niche']}:{c['cid']}" not in cache][:args.top]:
         try:
             v = validate(c["product_idea"])
         except Exception as e:
-            v = {"verdict": f"validation failed: {e}"}
+            results.append((c, {"verdict": f"validation failed: {e}"}))  # not cached, retried next sweep
+            continue
+        v.update(niche=c["niche"], name=c["name"], idea=c["product_idea"], pain=c["description"],
+                 score=c["score"], date=time.strftime("%Y-%m-%d"))
+        cache[f"{c['niche']}:{c['cid']}"] = v
+        save_validated(cache)
         results.append((c, v))
 
     lines = ["# Opportunity sweep", "",
              f"{len(niches)} niches, {len(clusters)} clusters ({len(clusters) - len(ranked)} excluded by profile or under 3 items).",
              "Score = 100 × share of the niche's pains × (1 + paying share) × fit (clusters with ≥3 items); fit and clustering are Claude judgements.", "",
-             f"## Top {len(results)} — validated", ""]
+             f"## {len(results)} newly validated (top-ranked clusters not validated in earlier sweeps)", ""]
     for i, (c, v) in enumerate(results, 1):
         lines += [f"### {i}. {c['product_idea']}  ({c['niche']}, score {c['score']})",
                   f"- Pain: {c['description']}",
-                  f"- Items {c['items']} · paying signals {c['paying']} · fit {c['ml_fit']}",
+                  f"- Items {c['items']} · paying signals {c['paying']} · fit {c['fit']}",
                   f"- Validation: **{v.get('verdict')}** · competition {v.get('competition')} · "
                   f"capture {v.get('probability')} · market ~${v.get('value') or 0:,}/yr",
                   *[f"  - risk: {r}" for r in v.get("risks", [])],
                   *[f"  - {u}" for u in c["evidence"][:3]], ""]
-    lines += ["## Next 20 by score", ""] + [
-        f"- {c['score']} · {c['niche']} · {c['product_idea']}" for c in ranked[args.top:args.top + 20]]
+    done = {id(c) for c, _ in results}
+    rest = [c for c in ranked if f"{c['niche']}:{c['cid']}" not in cache and id(c) not in done]
+    lines += ["## Next 20 not yet validated", ""] + [
+        f"- {c['score']} · {c['niche']} · {c['product_idea']}" for c in rest[:20]]
     os.makedirs(os.path.dirname(SWEEP), exist_ok=True)
     with open(SWEEP + ".tmp", "w") as f:
         f.write("\n".join(lines) + "\n")

@@ -215,6 +215,7 @@ def main():
     parser.add_argument("--name", dest="name_flag", help="Project name (flag form)")
     parser.add_argument("--idea", dest="idea_flag", help="Idea description (flag form)")
     parser.add_argument("--dry-run", action="store_true", help="Print output without writing to Notion")
+    parser.add_argument("--ai-generated", action="store_true", help="Tick the AI Generated column (phase0 ideas)")
     args = parser.parse_args()
 
     name = args.name_flag or args.name
@@ -288,6 +289,8 @@ def main():
         "TAM Tier": {"select": {"name": tam_tier}},
         "\u05e1\u05d8\u05d8\u05d5\u05e1": {"status": {"name": STATUS_TODO}},
     }
+    if args.ai_generated:
+        props["AI Generated"] = {"checkbox": True}
     if trends_avg is not None:
         props["Trends Interest"] = {"number": float(trends_avg)}
     if hn_results is not None:
@@ -301,6 +304,7 @@ def main():
     page_id = page["id"]
     page_url = page.get("url", "")
     print(f"  Created: {page_url}")
+    print(f"PAGE_ID={page_id}")
 
     # 5. Add page body
     blocks = build_blocks(enriched, report)

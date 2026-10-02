@@ -5,7 +5,7 @@ data/<niche>/clusters.json for the cross-niche sweep.
 
   1. extract  — Claude labels each item: is it a recurring pain a product/service could solve?
                 Who has it, how severe, any sign of paying. Cached in data/extracted.jsonl.
-  2. taxonomy — Claude proposes clusters from all pains, with an ML-fit rating each.
+  2. taxonomy — Claude proposes clusters from all pains, with a profile-fit rating each.
   3. assign   — Claude assigns every pain to a cluster.
   4. report   — rank clusters by score() and write report.md.
 
@@ -116,7 +116,7 @@ def taxonomy(pains):
         f"Builder profile: {PROFILE}\n"
         "Return ONLY a JSON array of objects: "
         '{"cid": short_snake_case, "name": str, "description": str, '
-        '"ml_fit": float 0-1 (how well the builder profile can solve it), "fit_reason": str, '
+        '"fit": float 0-1 (how well the builder profile can solve it), "fit_reason": str, '
         '"product_idea": str (one line), '
         f'"excluded": null or one of {list(EXCLUSIONS)} (a hard mismatch with the profile)}}\n\n' + lines
     )
@@ -146,11 +146,11 @@ def assign(pains, clusters):
     return out
 
 
-def score(n, n_pay, ml_fit):
-    """Rank = frequency × (1 + share of items with a paying signal) × ML fit."""
+def score(n, n_pay, fit):
+    """Rank = frequency × (1 + share of items with a paying signal) × fit."""
     if n == 0:
         return 0.0
-    return round(n * (1 + n_pay / n) * ml_fit, 2)
+    return round(n * (1 + n_pay / n) * fit, 2)
 
 
 def report(raw, pains, clusters, assigned):
@@ -159,12 +159,12 @@ def report(raw, pains, clusters, assigned):
     for c in clusters:
         members = [p for p in pains if assigned.get(p["id"]) == c["cid"]]
         pay = [p for p in members if p.get("pay_signal")]
-        s = 0.0 if c.get("excluded") else score(len(members), len(pay), c["ml_fit"])
+        s = 0.0 if c.get("excluded") else score(len(members), len(pay), c["fit"])
         rows.append((s, c, members, pay))
     rows.sort(key=lambda r: r[0], reverse=True)
     write_atomic(CLUSTERS, json.dumps([{
         "niche": NICHE, "score": s, "items": len(m), "paying": len(p),
-        **{k: c.get(k) for k in ("cid", "name", "description", "ml_fit", "fit_reason", "product_idea", "excluded")},
+        **{k: c.get(k) for k in ("cid", "name", "description", "fit", "fit_reason", "product_idea", "excluded")},
         "evidence": [by_id[x["id"]]["url"] for x in m if x["id"] in by_id][:5],
     } for s, c, m, p in rows], indent=1, ensure_ascii=False))
 
@@ -174,7 +174,7 @@ def report(raw, pains, clusters, assigned):
         "",
         f"Items scanned: {len(raw)} ({', '.join(f'{k} {v}' for k, v in src.items())}); "
         f"labelled as pains: {len(pains)}.",
-        "Score = count × (1 + share with paying signal) × ML fit. ML fit and clustering are Claude judgements, not measurements.",
+        "Score = count × (1 + share with paying signal) × fit. Fit and clustering are Claude judgements, not measurements.",
         "",
     ]
     for rank, (s, c, members, pay) in enumerate(rows, 1):
@@ -185,7 +185,7 @@ def report(raw, pains, clusters, assigned):
             f"- {c['description']}",
             f"- Items: {len(members)} · paying signals: {len(pay)} · engagement: {eng} · who: "
             + ", ".join(f"{w} {n}" for w, n in who),
-            f"- Fit {c['ml_fit']}: {c['fit_reason']}" + (f" · **excluded: {c['excluded']}**" if c.get("excluded") else ""),
+            f"- Fit {c['fit']}: {c['fit_reason']}" + (f" · **excluded: {c['excluded']}**" if c.get("excluded") else ""),
             f"- Product idea: {c['product_idea']}",
             "- Evidence:",
         ]

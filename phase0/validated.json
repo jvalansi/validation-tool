@@ -1,0 +1,36 @@
+{
+ "gis-surveying:spreadsheet_map_sync": {
+  "verdict": "validate further",
+  "competition": "contested",
+  "probability": 0.01,
+  "value": 10000000,
+  "risks": [
+   "Esri can close the gap natively (Data Pipelines, scheduled Sheets refresh), and it already owns the search results with 60% vendor share, nearly all esri.com hosts",
+   "Generic no-code map tools (iipmaps, Shareables, get-instamaps) and FME or Power Automate integrations already cover the non-AGOL and enterprise ends",
+   "No observed price point, and the buyers include many nonprofits and universities with small budgets"
+  ],
+  "niche": "gis-surveying",
+  "name": "Spreadsheet-to-map live sync",
+  "idea": "Connect a Google Sheet/Excel file and get an auto-updating hosted web map (or AGOL layer sync) with pop-ups and change history.",
+  "pain": "Teams keep data in Excel/Google Sheets/OneDrive and re-import, re-geocode and re-join it into GIS or AGOL layers by hand; there is no live sync, incremental merge or custom pop-up hosting.",
+  "score": 12.7,
+  "date": "2026-10-02"
+ },
+ "gis-surveying:geometry_cleanup_tools": {
+  "verdict": "validate further",
+  "competition": "contested",
+  "probability": 0.01,
+  "value": 1000000,
+  "risks": [
+   "Free substitutes already cover parts of the bundle (QGIS Topology Checker and Geometry Checker, GRASS v.clean, the built-in Create Grid, free centerline plugins), so willingness to pay is weak",
+   "Search results are dominated by plugins.qgis.org and content sites, and the listed 'incumbents' are free directories, not paid vendors, so there is no proven paid demand and discovery is hard",
+   "Esri ArcGIS users, who are more willing to pay, already have Esri's Redistricting and territory-design tools"
+  ],
+  "niche": "gis-surveying",
+  "name": "Topology & geometry processing toolkit",
+  "idea": "Paid QGIS plugin/web API bundling one-click topology repair, centerlines, oriented grids and balanced territory/district generation.",
+  "pain": "There are no easy batch tools for fixing topology gaps and overlaps, closing line gaps, extracting centerlines, simplifying while keeping shared edges, rotated plot grids, territory balancing, contiguous districting and gap-filling.",
+  "score": 10.2,
+  "date": "2026-10-02"
+ }
+}
