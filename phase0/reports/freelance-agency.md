@@ -1,149 +1,194 @@
 # freelance-agency pain points — ranked
 
-Items scanned: 60 (reddit 60); labelled as pains: 36.
-Score = count × (1 + share with paying signal) × ML fit. ML fit and clustering are Claude judgements, not measurements.
+Items scanned: 594 (reddit 594); labelled as pains: 323.
+Score = count × (1 + share with paying signal) × fit. Fit and clustering are Claude judgements, not measurements.
 
-## 1. Privacy-safe time tracking with proof of work — score 8.0
-- Screenshot time trackers expose confidential client data and feel invasive, but manual hours lose payment protection, can't be proven after the fact, and can't be verified by clients or separated when work moves off-platform.
-- Items: 8 · paying signals: 2 · engagement: 0 · who: freelancer 7, small_business 1
-- Fit 0.8: Local activity capture plus LLM summaries that produce redacted, verifiable work logs is a strong ML fit, sold self-serve on both sides of the relationship.
-- Product idea: Tracker that records work activity locally, redacts sensitive content, and produces tamper-evident work summaries clients can verify.
+## 1. Marketplace bid & job-quality filter — score 42.25
+- Freelancers burn paid Connects and boosts on ghost jobs, lowball listings, non-hiring clients and bot-flooded posts, and have no view of client hire rate, proposal status, win rates or where their funnel breaks.
+- Items: 35 · paying signals: 30 · engagement: 8050 · who: freelancer 35
+- Fit 0.65: A browser extension with proposal analytics is pure software and self-serve, but it depends on scraping marketplace UIs that can change or ban it (ToS risk).
+- Product idea: Browser extension that scores each Upwork job for hire likelihood and budget fit before you spend Connects, and tracks your proposal funnel and win rates.
 - Evidence:
-  - [My freelancer is doing half his time as Manual Time](https://www.reddit.com/r/Upwork/comments/lgu4yc/my_freelancer_is_doing_half_his_time_as_manual/) (reddit:r/Upwork, ) — "12 hours x the freelancer's hourly rate"
-  - [Client wants to pay me outside of Upwork to avoid Upwork fees](https://www.reddit.com/r/Upwork/comments/b2i1fq/client_wants_to_pay_me_outside_of_upwork_to_avoid/) (reddit:r/Upwork, ) — "They want to pay me outside of Upwork to avoid Upwork fees"
-  - [Struggling with billing - milestones vs. hourly vs. BOTH?Government ID? : r/Upwork - RedditHas anyone else’s Upwork RSS feed been going nuts? - Reddit](https://www.reddit.com/r/Upwork/comments/etbc4c/struggling_with_billing_milestones_vs_hourly_vs/) (reddit:r/Upwork, )
-  - [Government ID? : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/etpse4/government_id/) (reddit:r/Upwork, )
-  - [Manual Time Only : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/wkw6yv/manual_time_only/) (reddit:r/Upwork, )
+  - [Freelance on Upwork is dead](https://www.reddit.com/r/Upwork/comments/1um9cn4/freelance_on_upwork_is_dead/) (reddit:r/Upwork, 2026-07-03) — "how much you're willing to pay to get your proposal to the top"
+  - [Finally got my first gig on Upwork](https://www.reddit.com/r/Upwork/comments/1pqfuwt/finally_got_my_first_gig_on_upwork/) (reddit:r/Upwork, 2025-12-19) — "It basically covers what I paid for the connects"
+  - [Upwork has become UN-USABLE. We all are going bankrupt.](https://www.reddit.com/r/Upwork/comments/1ukhfyw/upwork_has_become_unusable_we_all_are_going/) (reddit:r/Upwork, 2026-07-01) — "spent thousands of Connects boosting them"
+  - [Goodbye, Upwork — our friendship was good… but now you just use me](https://www.reddit.com/r/Upwork/comments/1vf6pzr/goodbye_upwork_our_friendship_was_good_but_now/) (reddit:r/Upwork, 2026-08-04) — "you need to spend Connects for the privilege of applying. Sometimes more"
+  - [What happened to Upwork?](https://www.reddit.com/r/Upwork/comments/1rrrchb/what_happened_to_upwork/) (reddit:r/Upwork, 2026-03-12) — "Just wasting connects on fake jobs"
 
-## 2. Payment-gated deliverables and deposits — score 4.55
-- Freelancers carry non-payment risk after delivery (withheld final payments, skipped deposits, unclear retainer terms) and have no neutral way to exchange final files for payment.
-- Items: 5 · paying signals: 2 · engagement: 0 · who: freelancer 5
-- Fit 0.65: Locking deliverables until a Stripe payment clears is software-only and avoids holding funds; true escrow would need money-transmitter licensing.
-- Product idea: Deliverable locker that shows watermarked previews and releases final files automatically when the deposit or balance invoice is paid.
+## 2. Invoice chasing & payment protection — score 37.8
+- Late or missing payments, invoices that were never sent, final payments withheld after handover, small invoices not worth chasing, retainer clients who pay by hand, and no deposit or milestone safeguards.
+- Items: 29 · paying signals: 25 · engagement: 2686 · who: freelancer 25, small_business 4
+- Fit 0.7: Automated reminders, Stripe autopay, deposits and payment-gated delivery links are self-serve; true escrow or debt collection would add money-transmission or legal complexity, so it has to stay out of scope.
+- Product idea: Invoicing that requires a deposit, holds final files until payment clears, runs polite escalating reminders automatically, and moves retainers to autopay.
 - Evidence:
-  - [Would I, the freelancer, pay a tiny bit upfront as an escrow?](https://www.reddit.com/r/freelance/comments/fm4xar/would_i_the_freelancer_pay_a_tiny_bit_upfront_as/) (reddit:r/freelance, ) — "I get paid 50% upfront by the client if there's no escrow, or 100% into an escrow"
-  - [I worked over 8 hours for my client and she refused to pay me](https://www.reddit.com/r/freelance/comments/k8xvpk/i_worked_over_8_hours_for_my_client_and_she/) (reddit:r/freelance, ) — "I spent over 8 hours with the logo"
-  - [Client doesn't want to pay the remainder of the contract ...](https://www.reddit.com/r/freelance/comments/d9l8yr/client_doesnt_want_to_pay_the_remainder_of_the/) (reddit:r/freelance, )
-  - [For monthly retainer work. Do you get paid up front ... - Reddit](https://www.reddit.com/r/freelance/comments/dol082/for_monthly_retainer_work_do_you_get_paid_up/) (reddit:r/freelance, )
-  - [Client says payment will be received after I submit the ...](https://www.reddit.com/r/freelance/comments/f5u731/client_says_payment_will_be_received_after_i/) (reddit:r/freelance, )
+  - [Why do clients demand work immediately like they will die if not delivered urgently, but make the payments 2 months later ? Like our lives don’t depend on it ? So tired of this bullshit](https://www.reddit.com/r/freelance/comments/1wlam42/why_do_clients_demand_work_immediately_like_they/) (reddit:r/freelance, 2026-09-20) — "make the payments 2 months later"
+  - [$32k Upwork chargeback on completed project (approved deliverables, app in production). Need advice](https://www.reddit.com/r/Upwork/comments/1qog4nk/32k_upwork_chargeback_on_completed_project/) (reddit:r/Upwork, 2026-01-27) — "$32k Upwork chargeback on completed project"
+  - [How do you get petty revenge on clients who stiff you?](https://www.reddit.com/r/freelance/comments/1wb8q9o/how_do_you_get_petty_revenge_on_clients_who_stiff/) (reddit:r/freelance, 2026-09-09) — "owes me less than $500... not worth my time and energy to take them to small claims court"
+  - [Lost my first client](https://www.reddit.com/r/freelance/comments/n9qou7/lost_my_first_client/) (reddit:r/freelance, 2021-05-11) — "I had to chase them for almost an additional month to get the 500+ they owned me"
+  - [We built a full 3D website for a client, sent the invoice, and got scammed...](https://www.reddit.com/r/freelance/comments/1va9vtx/we_built_a_full_3d_website_for_a_client_sent_the/) (reddit:r/freelance, 2026-07-29) — "we bought a drone specifically for this... about a month of actual work"
 
-## 3. Marketplace job feed filtering and scam detection — score 4.5
-- Freelancers waste unpaid hours sifting marketplace feeds cluttered with scams, reposting bad clients and low-rate jobs, while good listings draw 50+ proposals.
-- Items: 4 · paying signals: 2 · engagement: 0 · who: freelancer 4
-- Fit 0.75: Classifying scams and job quality is a core ML task delivered as a self-serve extension, though it depends on marketplace ToS and DOM stability.
-- Product idea: Browser extension that scores marketplace jobs for scam risk, client quality and competition, and hides blocked clients.
+## 3. Outbound lead generation & deliverability — score 36.0
+- Freelancers and agencies lack a repeatable acquisition channel: stale lead data, manual list cleaning, domain burn and warmup, expensive per-seat stacks, hard-to-scale personalization, and dry spells once referrals stop.
+- Items: 42 · paying signals: 30 · engagement: 5451 · who: small_business 26, freelancer 16
+- Fit 0.5: The software side is buildable, but the space is crowded (Apollo, Instantly, Clay), deliverability needs ongoing ops work, and data quality is a moving target.
+- Product idea: Niche-targeted lead lists (e.g. stores by ecommerce platform) with verified contacts and AI-personalized first lines, priced per lead instead of per seat.
 - Evidence:
-  - [Upwork sucks : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/16ytcpf/upwork_sucks/) (reddit:r/Upwork, ) — "there was a reasonable time spent searching for jobs-to-earnings ratio"
-  - [My experience after 8 months as a freelancer on Upwork](https://www.reddit.com/r/Upwork/comments/13ws1kt/my_experience_after_8_months_as_a_freelancer_on/) (reddit:r/Upwork, ) — "I started with 30$/h and made around $30k on the platform. Currently, I try to get into 65$+/h projects but I have a really hard time."
-  - [Repeat job postings from the same client : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/y5ch97/repeat_job_postings_from_the_same_client/) (reddit:r/Upwork, )
-  - [Is this a scam? - COMPLETE UPWORK SCAM GUIDE : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/ui5q2i/is_this_a_scam_complete_upwork_scam_guide/) (reddit:r/Upwork, )
+  - [Seems like I'll be leaving Upwork finally](https://www.reddit.com/r/Upwork/comments/1s804n0/seems_like_ill_be_leaving_upwork_finally/) (reddit:r/Upwork, 2026-03-30) — "I keep purchasing connects, keep bidding on projects, all in vain"
+  - [Web dev agencies: are you getting new clients?](https://www.reddit.com/r/agency/comments/1t58tky/web_dev_agencies_are_you_getting_new_clients/) (reddit:r/agency, 2026-05-06) — "For the past 4-5 weeks, I have not been able to get any new projects"
+  - [How are you finding clients right now?](https://www.reddit.com/r/agency/comments/1obqvxd/how_are_you_finding_clients_right_now/) (reddit:r/agency, 2025-10-20) — "I don't have anything in the pipeline right now"
+  - [No new clients for 11 months](https://www.reddit.com/r/agency/comments/1w7jii5/no_new_clients_for_11_months/) (reddit:r/agency, 2026-09-04) — "no new clients for over 11 months"
+  - [Cold Emailing – Too Much Hype. Manual Outreach Got Much Better Results.](https://www.reddit.com/r/agency/comments/1mo1z4e/cold_emailing_too_much_hype_manual_outreach_got/) (reddit:r/agency, 2025-08-12) — "This cost me around $2K to run over a couple of months. I closed 2 clients"
 
-## 4. Lightweight invoice and expense tracking — score 2.5
-- Small freelance businesses track invoices, payments and expenses in homemade spreadsheets and can't tell whether paid accounting software is worth it.
-- Items: 3 · paying signals: 2 · engagement: 0 · who: freelancer 3
-- Fit 0.5: Easy to build and self-serve, but the market is crowded (Wave, FreshBooks, Bonsai) and switching costs are low.
-- Product idea: Spreadsheet-simple invoice-plus-expense tracker that imports existing sheets and auto-categorizes bank transactions.
+## 4. Rate setting & project pricing — score 31.5
+- Freelancers and new agencies guess at rates, underprice against W2 equivalents and peers, can't price usage licensing or bundles, under-estimate scope, and have no benchmarks for raising rates or negotiating.
+- Items: 28 · paying signals: 17 · engagement: 2402 · who: freelancer 24, small_business 3, hobbyist 1
+- Fit 0.7: Calculators and an LLM-assisted estimator are easy to build; credible market benchmarks need a data source (crowdsourced or scraped), which is the hard part.
+- Product idea: Rate and quote calculator that turns target income, overhead and scope into a defensible price, backed by crowdsourced niche rate benchmarks.
 - Evidence:
-  - [Any good spreadsheet templates for book keeping? - Reddit](https://www.reddit.com/r/freelance/comments/tvzhhb/any_good_spreadsheet_templates_for_book_keeping/) (reddit:r/freelance, ) — "Or do you pay an online service?"
-  - [Is there any big advantage to using Quickbooks (or alt ...](https://www.reddit.com/r/freelance/comments/kq14wm/is_there_any_big_advantage_to_using_quickbooks_or/) (reddit:r/freelance, ) — "Quickbooks (I use Kashflow, am sure they're all similar)"
-  - [Great, simple invoice tracking and expense recording for ...](https://www.reddit.com/r/freelance/comments/4twpx1/great_simple_invoice_tracking_and_expense/) (reddit:r/freelance, )
+  - [Client said my rate is too high. Feeling embarrassed and down](https://www.reddit.com/r/freelance/comments/1o8o545/client_said_my_rate_is_too_high_feeling/) (reddit:r/freelance, 2025-10-17) — "I looked up so many posts about figuring out my rate"
+  - [How much are you charging for websites in 2026](https://www.reddit.com/r/agency/comments/1rfrbj3/how_much_are_you_charging_for_websites_in_2026/) (reddit:r/agency, 2026-02-27) — "I had to lower my price as I couldn't afford to loose him"
+  - [raised my rate for the first time in two years, client said yes instantly, now i feel weird about it](https://www.reddit.com/r/freelance/comments/1vojfyi/raised_my_rate_for_the_first_time_in_two_years/) (reddit:r/freelance, 2026-08-14) — "the old number was under the entire time"
+  - [Asian Freelancers Are Destroying the Marketplace](https://www.reddit.com/r/Upwork/comments/1oobxjp/asian_freelancers_are_destroying_the_marketplace/) (reddit:r/Upwork, 2025-11-04) — "Jobs that should pay $20–$35/hour are being done for $5–$10/hour"
+  - [Upwork is cooked: client wants two print-ready packaging files for $10](https://www.reddit.com/r/Upwork/comments/1u12obv/upwork_is_cooked_client_wants_two_printready/) (reddit:r/Upwork, 2026-06-09) — "Can you do it for $10 since we have too many applicants?"
 
-## 5. Automated late-payment follow-up — score 2.4
-- Freelancers chase late invoices by hand, don't know how to word reminders, and see clients use delivered work while invoices sit unpaid for months.
-- Items: 2 · paying signals: 1 · engagement: 0 · who: freelancer 2
-- Fit 0.8: Automated escalating reminder sequences with LLM-written copy fit the profile well: they are self-serve and multi-tenant, and support stays low.
-- Product idea: Invoice dunning tool that sends escalating, tone-calibrated reminders and late-fee notices until the invoice is paid.
+## 5. Scope, change-order & sign-off tracking — score 26.4
+- Vague requirements, unlimited revisions and mid-project changes lead to unpaid scope creep and late complaints because scope, acceptance criteria, change requests and approvals are never formally logged.
+- Items: 19 · paying signals: 14 · engagement: 1936 · who: freelancer 17, small_business 2
+- Fit 0.8: A lightweight SaaS with client-facing approval links and LLM help turning messy briefs and voice notes into specs is easy to build and support.
+- Product idea: Shared scope doc where the client signs off on acceptance criteria, every extra request becomes a priced change order, and AI turns voice notes or vague asks into line items.
 - Evidence:
-  - [Asked a former client to finally pay for my packaging design ...](https://www.reddit.com/r/freelance/comments/1crvx5m/asked_a_former_client_to_finally_pay_for_my/) (reddit:r/freelance, ) — "packaging design work from July 2023 (that they're now using publicly)"
-  - [What is a polite way to say "when are you gonna pay ... - Reddit](https://www.reddit.com/r/freelance/comments/qe2ur6/what_is_a_polite_way_to_say_when_are_you_gonna/) (reddit:r/freelance, )
+  - [I keep missing deadlines — it’s the 5th client now and I feel like I’m ruining everything](https://www.reddit.com/r/freelance/comments/1lf5yyo/i_keep_missing_deadlines_its_the_5th_client_now/) (reddit:r/freelance, 2025-06-19) — "So now I've lost two weeks and the project. No payment."
+  - [Lost $2,300 to scope creep on one project. How do you prevent this?](https://www.reddit.com/r/freelance/comments/1ozc3zq/lost_2300_to_scope_creep_on_one_project_how_do/) (reddit:r/freelance, 2025-11-17) — "That's $2,300 in unpaid work (23 hours × my $100/hr rate)"
+  - [Nightmare Client From Hell - Please Help](https://www.reddit.com/r/freelance/comments/1to9m9h/nightmare_client_from_hell_please_help/) (reddit:r/freelance, 2026-05-26) — "I ask for 60% upfront as a deposit then 40% upon completion"
+  - [If your retainer margin is below 25%, you have a discovery problem](https://www.reddit.com/r/agency/comments/1t7d2ze/if_your_retainer_margin_is_below_25_you_have_a/) (reddit:r/agency, 2026-05-08) — "retainer margin is at 18 to 22 percent... six months later, theyve lost 30 percent of clients"
+  - [Upwork lowballer is delusional](https://www.reddit.com/r/Upwork/comments/1js7emh/upwork_lowballer_is_delusional/) (reddit:r/Upwork, 2025-04-05) — "I made the animation and it took 30-40 hours"
 
-## 6. Simple agency ops: PM-to-invoice sync — score 2.1
-- Small agencies find CRM/PM tools bloated and re-type billable details from project management tools into accounting software by hand.
-- Items: 2 · paying signals: 1 · engagement: 0 · who: small_business 2
-- Fit 0.7: An integration connector is self-serve, multi-tenant and low-support once built; the main risk is breakage when APIs change.
-- Product idea: Connector that turns completed tasks and tracked time in Asana/ClickUp/Trello into draft invoices in QuickBooks/Xero.
+## 6. Scam client & job-offer vetting — score 24.0
+- Freelancers can't tell real clients, recruiters, agencies and job invites from scammers: advance-fee and overpayment schemes, fake agencies, off-platform lures, bogus tax-form requests, and project files that carry malware.
+- Items: 22 · paying signals: 10 · engagement: 2841 · who: freelancer 21, student 1
+- Fit 0.75: Self-serve risk scoring from public signals (domain age, company records, known scam patterns, LLM text classification) works multi-tenant with no human review; the malware sandbox part is harder but can lean on existing scanners.
+- Product idea: Paste a job post, email or file and get an instant scam-risk score with the red flags explained, plus a browser extension that flags suspicious invites.
 - Evidence:
-  - [Seeking the Best CRM and Project Management Tools ... - Reddit](https://www.reddit.com/r/agency/comments/1bbikp8/seeking_the_best_crm_and_project_management_tools/) (reddit:r/agency, ) — "From Salesforce to Zoho CRM from Trello to Asana"
-  - [Project Management Software : r/agency - Reddit](https://www.reddit.com/r/agency/comments/y18up6/project_management_software/) (reddit:r/agency, )
+  - [My Client is asking me to make the payment of 150 USD upfront so they can release the payment. (I feel like it's an elaborate scam )](https://www.reddit.com/r/freelance/comments/1pj2y4s/my_client_is_asking_me_to_make_the_payment_of_150/) (reddit:r/freelance, 2025-12-10) — "I worked a gig for 3,000 USD... asked to make the payment of 150 USD"
+  - [Genius scam. Dream project, $20-40/h, but inside the attachment there is .vbs that downloads and executes .bat file. Be aware](https://www.reddit.com/r/Upwork/comments/1wa4113/genius_scam_dream_project_2040h_but_inside_the/) (reddit:r/Upwork, 2026-09-07) — "someone wasted connects on it and sent proposals."
+  - [How can you tell the difference between someone who wants to hire you and a scammer?](https://www.reddit.com/r/freelance/comments/1sg51mf/how_can_you_tell_the_difference_between_someone/) (reddit:r/freelance, 2026-04-08) — "working with someone for a certain period, like a week, just to check if they will pay or not is a waste of time and effort"
+  - [I’m a complete beginner and just got scammed out of over $1,000 trying to start freelancing](https://www.reddit.com/r/freelance/comments/1tg0bl2/im_a_complete_beginner_and_just_got_scammed_out/) (reddit:r/freelance, 2026-05-17) — "Over one thousand dollars gone"
+  - [Why its best to get out of freelancer.com (NOW!)](https://www.reddit.com/r/freelance/comments/2mhmje/why_its_best_to_get_out_of_freelancercom_now/) (reddit:r/freelance, 2014-11-16) — "why I am suggesting killing a steady stream of revenue"
 
-## 7. Agency outbound prospecting and personalization — score 1.65
-- Agencies struggle to choose lead databases and outreach tools, and cold email only gets replies when personalized by hand, while deliverability needs paid inbox warming.
-- Items: 2 · paying signals: 1 · engagement: 0 · who: small_business 2
-- Fit 0.55: LLM personalization at scale is a strong fit, but the space is saturated (Clay, Instantly, Lemlist) and deliverability issues create support load.
-- Product idea: Research-and-personalize engine that writes one-to-one cold email openers from each prospect's public footprint.
+## 7. Proposal, quote & contract workflow — score 19.5
+- Writing proposals and quotes is slow, prospects use them as free blueprints or stall on signing and deposits, follow-ups are ad hoc, and beginners lack contract templates and remote e-signing.
+- Items: 17 · paying signals: 9 · engagement: 2533 · who: freelancer 12, small_business 5
+- Fit 0.75: Generating a proposal from call notes, with e-sign plus deposit capture, is well suited to an AI-built SaaS; reviewing contract terms edges into legal advice and must stay template-only.
+- Product idea: Turn call notes into a branded proposal with tiered pricing, e-signature, a required deposit and auto-follow-ups, with the detailed plan revealed only after signing.
 - Evidence:
-  - [Starting an agency. But need advise : r/agency - Reddit](https://www.reddit.com/r/agency/comments/1c8caly/starting_an_agency_but_need_advise/) (reddit:r/agency, ) — "just sign up for an inbox warming up service. There are a bunch of them around"
-  - [Which is the best tool for outreach? : r/agency - Reddit](https://www.reddit.com/r/agency/comments/1btdx82/which_is_the_best_tool_for_outreach/) (reddit:r/agency, )
+  - [Client ghosted me twice… then used my whole proposal to “build the app himself with ChatGPT”](https://www.reddit.com/r/freelance/comments/1p65rry/client_ghosted_me_twice_then_used_my_whole/) (reddit:r/freelance, 2025-11-25) — "I spent hours writing a full proposal... MVP price was ~$17K."
+  - [Client wants to switch from daily billing to hourly billing after receiving the invoice](https://www.reddit.com/r/freelance/comments/1rirozj/client_wants_to_switch_from_daily_billing_to/) (reddit:r/freelance, 2026-03-02) — "I make myself available all day, all week, to manage her projects"
+  - [Why does every simple job on upwork turn into a three hour unpaid interview](https://www.reddit.com/r/Upwork/comments/1ozjumk/why_does_every_simple_job_on_upwork_turn_into_a/) (reddit:r/Upwork, 2025-11-17) — "every simple job on upwork turn into a three hour unpaid interview"
+  - [How should i handle a client who keeps responding to everything but doesn't sign my contract agreement or pay an advance?](https://www.reddit.com/r/freelance/comments/1uteu9k/how_should_i_handle_a_client_who_keeps_responding/) (reddit:r/freelance, 2026-07-11) — "Been coordinating, going on site visits etc since almost 2 weeks now"
+  - [Automated client proposal PDFs from meeting notes using Claude Code + Puppeteer [No promotion]](https://www.reddit.com/r/agency/comments/1rxp8wl/automated_client_proposal_pdfs_from_meeting_notes/) (reddit:r/agency, 2026-03-19) — "spend an hour formatting a proposal in Google Docs, export to PDF, send it out. Repeat for every lead."
 
-## 8. Rate setting and justification — score 1.4
-- Solo freelancers don't know what rate to charge and struggle to defend it to clients without the credibility of a larger firm.
-- Items: 2 · paying signals: 0 · engagement: 0 · who: freelancer 2
-- Fit 0.7: Self-serve calculator plus market benchmark data is pure software; the moat is data quality, and competing free calculators already exist.
-- Product idea: Rate calculator that combines target income, utilization and market benchmarks into a client-facing rate justification sheet.
+## 8. Marketplace dependence & direct-client channel — score 17.85
+- Freelancers who depend on one marketplace face rising fees, opaque rankings, unappealable bans, reputation shocks and payout freezes, with no portable reputation and no low-fee or premium alternative for finding clients.
+- Items: 28 · paying signals: 23 · engagement: 4526 · who: freelancer 24, small_business 3, developer 1
+- Fit 0.35: A portable verified-review profile is buildable, but a replacement marketplace is two-sided and needs heavy liquidity building and trust-and-safety work; payout KYC freezes have no software fix.
+- Product idea: Portable verified-reputation profile that imports marketplace history and collects direct-client reviews, linkable from any pitch.
 - Evidence:
-  - [Sick of the hustle, considering getting a stable job, no more ...](https://www.reddit.com/r/freelance/comments/1bszxj4/sick_of_the_hustle_considering_getting_a_stable/) (reddit:r/freelance, )
-  - [Freelancer rate calculator (online or spreadsheet) : r/freelance](https://www.reddit.com/r/freelance/comments/164m2x/freelancer_rate_calculator_online_or_spreadsheet/) (reddit:r/freelance, )
+  - [Upwork no longer makes sense for freelancers with long term clients](https://www.reddit.com/r/Upwork/comments/1wbjvb3/upwork_no_longer_makes_sense_for_freelancers_with/) (reddit:r/Upwork, 2026-09-09) — "Upwork decided that 5% is not enough... and doubled my fee, even tho, I continued to work for the same client"
+  - [Upwork is slowly killing both freelancers and clients – and pretending everything is fine](https://www.reddit.com/r/Upwork/comments/1qh1f7i/upwork_is_slowly_killing_both_freelancers_and/) (reddit:r/Upwork, 2026-01-19) — "I earn $6k → Upwork takes ~$600 → plus connects → plus withdrawal fee → plus taxes"
+  - [After 7 Years and $500K Earned, Upwork Banned Me Without Warning or Appeal](https://www.reddit.com/r/Upwork/comments/1omnnyq/after_7_years_and_500k_earned_upwork_banned_me/) (reddit:r/Upwork, 2025-11-02) — "earning over $500,000 through the platform... I even had Connects I paid for and couldn't use or recover"
+  - [Upwork is working great](https://www.reddit.com/r/Upwork/comments/1oo7xjo/upwork_is_working_great/) (reddit:r/Upwork, 2025-11-04) — "You have to pay to buy connects, to make your profile visible... You have to pay to withdraw your own money"
+  - [Upwork is squeezing us dry again: $2.99 fee for previously FREE U.S. Bank withdrawals. When does it stop?](https://www.reddit.com/r/Upwork/comments/1vf73qf/upwork_is_squeezing_us_dry_again_299_fee_for/) (reddit:r/Upwork, 2026-08-04) — "$2.99 flat fee on "Direct to U.S. Bank" withdrawals... forced everyone onto a flat 10% commission rate"
 
-## 9. Project scoping and client screening — score 1.4
-- Freelancers lose money to scope creep and risky clients, so they build their own spreadsheets to scope projects and screen clients before signing.
-- Items: 1 · paying signals: 1 · engagement: 0 · who: freelancer 1
-- Fit 0.7: An LLM-driven scoping questionnaire and risk scorecard is self-serve software with flat support needs.
-- Product idea: Intake form that turns a client brief into a scoped estimate with red-flag scoring and suggested contract terms.
+## 9. Client portal, onboarding & progress visibility — score 15.0
+- Agencies juggle clients across email and spreadsheets, set up each new client by hand across tools, stall waiting on client inputs and approvals, and manually report progress and retainer results.
+- Items: 13 · paying signals: 7 · engagement: 1335 · who: small_business 9, freelancer 4
+- Fit 0.75: A multi-tenant portal (requests, asset collection, approvals, status page, automated onboarding) is standard SaaS, though competitors exist (SuperOkay, Copilot, Clientjoy).
+- Product idea: White-label client portal that auto-provisions folders, tasks and channels for new clients, collects assets, chases approvals and shows live milestone status.
 - Evidence:
-  - [I just lost a client and I feel devastated : r/freelance - Reddit](https://www.reddit.com/r/freelance/comments/11qzt35/i_just_lost_a_client_and_i_feel_devastated/) (reddit:r/freelance, ) — "spend probably 5-12 hours on creating an automated excel spreadsheet"
+  - [How are people using AI for internal agency tools?](https://www.reddit.com/r/agency/comments/1r96j76/how_are_people_using_ai_for_internal_agency_tools/) (reddit:r/agency, 2026-02-19) — "I've tried various commercial tools to do this, but they're either super-expensive and complicated to set up"
+  - [Our biggest bottleneck isn't the work, it's waiting for clients to do their part. Anyone else?](https://www.reddit.com/r/freelance/comments/1sci8yg/our_biggest_bottleneck_isnt_the_work_its_waiting/) (reddit:r/freelance, 2026-04-04) — "We send a client a script. Two weeks go by. Nothing."
+  - [Has anyone got any PM software suggestions?](https://www.reddit.com/r/agency/comments/1ly7pnp/has_anyone_got_any_pm_software_suggestions/) (reddit:r/agency, 2025-07-12) — "currently manage my 20-30 ongoing clients via Google / Excel spreadsheets and it's kinda cringe... it seems cheap so thats why im interested"
+  - [Steal my $600 "Client Onboarding Automation" Playbook (ClickUp + GDrive + Slack)](https://www.reddit.com/r/agency/comments/1oxws88/steal_my_600_client_onboarding_automation/) (reddit:r/agency, 2025-11-15) — "got paid $600"
+  - [Any Client Side PM tools?](https://www.reddit.com/r/agency/comments/1lbcdef/any_client_side_pm_tools/) (reddit:r/agency, 2025-06-14) — "save time in explaining to-do task"
 
-## 10. Freelance income forecasting — score 0.75
-- Freelancers with volatile month-to-month or marketplace income build homemade spreadsheets to forecast revenue and work out how many new clients they need.
-- Items: 1 · paying signals: 0 · engagement: 0 · who: freelancer 1
-- Fit 0.75: Forecasting from invoice/contract data is a natural ML fit and fully self-serve, but it needs integrations to avoid manual entry.
-- Product idea: Pipeline and retainer-aware income forecaster that tells freelancers how many new clients they need to hit a monthly target.
+## 10. Verifiable time tracking & proof of work — score 12.0
+- Freelancers want a minimal tracker and evidence of work for disputes when they log hours manually or off-desktop, while clients distrust activity metrics and screenshot trackers that are easy to fake.
+- Items: 12 · paying signals: 8 · engagement: 1182 · who: freelancer 9, small_business 3
+- Fit 0.6: A simple tracker plus a tamper-evident work log is easy to build, but marketplace dispute systems only accept their own tracked time, which limits the payoff.
+- Product idea: No-account time tracker that attaches commits, file changes and messages to each session and exports a tamper-evident work report for clients.
 - Evidence:
-  - [Any month-to-month freelancers use a spreadsheet for income ...](https://www.reddit.com/r/freelance/comments/1c07p9a/any_monthtomonth_freelancers_use_a_spreadsheet/) (reddit:r/freelance, )
+  - [I’m a client and I’ve been working with a scammer](https://www.reddit.com/r/Upwork/comments/lkeb22/im_a_client_and_ive_been_working_with_a_scammer/) (reddit:r/Upwork, 2021-02-15) — "billed me for 60 hours of manual work"
+  - [Just got scammed out of $600+ because client just simply refused to pay.](https://www.reddit.com/r/Upwork/comments/1b29rzr/just_got_scammed_out_of_600_because_client_just/) (reddit:r/Upwork, 2024-02-28) — "scammed out of $600+"
+  - [Am I rat fucked? ](https://www.reddit.com/r/Upwork/comments/1hxsn6p/am_i_rat_fucked/) (reddit:r/Upwork, 2025-01-10) — "$1200 ... did indeed get ratfucked on full amount"
+  - [Good Open Source Tools to Keep Track of Your Time?](https://www.reddit.com/r/freelance/comments/1qwb6y5/good_open_source_tools_to_keep_track_of_your_time/) (reddit:r/freelance, 2026-02-05) — "I'd put that into my own spreadsheet to keep track of my time"
+  - [If you're going to use an auto clicker, don't leave a photo of it in your work diary!!!!](https://www.reddit.com/r/Upwork/comments/hj0kix/if_youre_going_to_use_an_auto_clicker_dont_leave/) (reddit:r/Upwork, 2020-07-01) — "we've spent well into six figures on over 100 jobs"
 
-## 11. Ad test metric tracking for lead-gen agencies — score 0.65
-- Lead-gen agencies track CPM, CTR and CPL for ad tests by hand and aren't sure when to trust the platform's automation instead.
-- Items: 1 · paying signals: 0 · engagement: 0 · who: small_business 1
-- Fit 0.65: API-based dashboards with statistical test calls are good ML-engineer work, but the ad-platform APIs add maintenance load and competitors exist.
-- Product idea: Multi-client ad test tracker that pulls Meta/Google metrics and flags statistically significant winners automatically.
+## 11. Agency SOPs, context & repetitive-ops automation — score 11.55
+- Growing agencies lack documented SOPs, repeatedly paste brand voice and context into AI tools, and lose hours to follow-ups, reporting, data shuffling and bloated spreadsheet workflows.
+- Items: 12 · paying signals: 9 · engagement: 1202 · who: small_business 11, employee 1
+- Fit 0.55: An AI workspace that stores client context and SOPs is buildable, but the needs are diffuse and compete with general tools (Notion AI, Zapier, ChatGPT Projects).
+- Product idea: Per-client AI workspace that stores brand voice, SOPs and context once and runs templated routine tasks (reports, follow-ups, drafts) against it.
 - Evidence:
-  - [LEAD GEN | Do you get better results manually testing or Do ...](https://www.reddit.com/r/agency/comments/191j11r/lead_gen_do_you_get_better_results_manually/) (reddit:r/agency, )
+  - [Is it really possible to create an agency that can run without you?](https://www.reddit.com/r/agency/comments/1thqczi/is_it_really_possible_to_create_an_agency_that/) (reddit:r/agency, 2026-05-19) — "I already created a 100+ page SOP document covering how I approach everything"
+  - [I need a bit of help and I'm stuck... Made it to 6.1k/month in 3.5 months of operating business.](https://www.reddit.com/r/agency/comments/1q1j2i5/i_need_a_bit_of_help_and_im_stuck_made_it_to/) (reddit:r/agency, 2026-01-01) — "I'm building out a Notion workspace with SOPs, client info, and how we do things"
+  - [3 months ago I was panicking at $6.1k/month. Just collected $15k this month. Quick update.](https://www.reddit.com/r/agency/comments/1s5nq4b/3_months_ago_i_was_panicking_at_61kmonth_just/) (reddit:r/agency, 2026-03-28) — "I barely documented anything and now I'm paying for it"
+  - [Been bumping into automation/AI lately and wanna know if it’s actually worth it](https://www.reddit.com/r/agency/comments/1q450xv/been_bumping_into_automationai_lately_and_wanna/) (reddit:r/agency, 2026-01-04) — "how much time goes into methodical stuff: follow-ups, reporting, moving info between tools, reminders, internal handoffs"
+  - [How I actually use AI to run my agency (without copy-pasting things 50 times a day)](https://www.reddit.com/r/agency/comments/1rrt6xf/how_i_actually_use_ai_to_run_my_agency_without/) (reddit:r/agency, 2026-03-12) — "copy-pasting things 50 times a day"
 
-## 12. Competitive intelligence for agencies — score 0.6
-- Agencies lack competitor-spy tools like the ones available in ecommerce for tracking rival agencies' clients, pricing, ads and positioning.
-- Items: 1 · paying signals: 0 · engagement: 0 · who: small_business 1
-- Fit 0.6: Scraping plus LLM summarization is buildable and self-serve, but the data sources are thin and fragile.
-- Product idea: Monitor that tracks rival agencies' sites, case studies, ads and job posts and sends a weekly change digest.
+## 12. Retainer profitability & client health — score 11.2
+- Agencies don't know which retainers lose money, track prepaid hour balances and time logs by hand, and lose clients without early signals from falling engagement, late payments or friction.
+- Items: 9 · paying signals: 7 · engagement: 709 · who: small_business 8, employee 1
+- Fit 0.7: Pulling data from time trackers, email and invoices into per-client margin and churn-risk scores is integration-heavy but fully self-serve.
+- Product idea: Dashboard that joins time, billing and communication data into per-client margin, retainer hour burn and a churn-risk score.
 - Evidence:
-  - [spying on competitor agencies : r/agency - Reddit](https://www.reddit.com/r/agency/comments/16q7u9j/spying_on_competitor_agencies/) (reddit:r/agency, )
+  - [You Can't Scale if You Don't Know Your Internal Hourly Labor Rate](https://www.reddit.com/r/agency/comments/1qgn1up/you_cant_scale_if_you_dont_know_your_internal/) (reddit:r/agency, 2026-01-18) — "If you're charging $2,000/mo for SEO services and spending 40 hours per month per client"
+  - [have you ever lost a retainer client without seeing it coming?](https://www.reddit.com/r/agency/comments/1tq0t22/have_you_ever_lost_a_retainer_client_without/) (reddit:r/agency, 2026-05-28) — "Did you lose a specific dollar amount?"
+  - [Do you have any tricks to predict churning clients before it happens? Here's what worked for me](https://www.reddit.com/r/agency/comments/1p9ku8u/do_you_have_any_tricks_to_predict_churning/) (reddit:r/agency, 2025-11-29) — "losing about 5 clients a year at $60K each"
+  - [January Update: What Changed When We Raised Prices (Health Scores, Churn, Hiring, and Identity)](https://www.reddit.com/r/agency/comments/1qrfn6y/january_update_what_changed_when_we_raised_prices/) (reddit:r/agency, 2026-01-30) — "We started scoring every client on a 0-25 health score"
+  - [My agency's churn rate is really high](https://www.reddit.com/r/agency/comments/1vzu30k/my_agencys_churn_rate_is_really_high/) (reddit:r/agency, 2026-08-27) — "we closed 42 clients... a lot of clients leave after the initial contract"
 
-## 13. Marketplace reputation fragility — score 0.6
-- A single bad client review can wreck a marketplace freelancer's reputation score and income, and freelancers have little recourse.
-- Items: 1 · paying signals: 1 · engagement: 0 · who: freelancer 1
-- Fit 0.3: The platform controls the root cause, so software can only warn about risky clients before the contract starts.
-- Product idea: Pre-contract client risk check that predicts review risk from the client's history on the platform.
+## 13. Irregular-income finances & bookkeeping — score 8.0
+- Freelancers and new agency owners run budgeting, receipts, quarterly estimated taxes, multi-client payout reconciliation and net-after-fees math in homemade spreadsheets.
+- Items: 11 · paying signals: 5 · engagement: 795 · who: freelancer 10, small_business 1
+- Fit 0.5: Bank sync and budgeting are buildable, but the category is crowded and tax estimates edge toward regulated advice.
+- Product idea: Bank-synced income smoother that sets aside tax and buffer from each payout, reconciles payouts to clients and invoices, and shows a safe monthly salary.
 - Evidence:
-  - [Why I hate / love Upwork : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/16mcpth/why_i_hate_love_upwork/) (reddit:r/Upwork, ) — "lately I'm at $9k / month on average but it varies so much, it can be $2k one month and $14k the ..."
+  - [LPT: You are not supposed to have 40 hours/week of billable work each week](https://www.reddit.com/r/freelance/comments/1pgllc1/lpt_you_are_not_supposed_to_have_40_hoursweek_of/) (reddit:r/freelance, 2025-12-07) — "tax bureaucracy as a freelancer is a ton of work compared to a regular employee"
+  - [Is it normal for all of us freelancers to have high-season and low-season income cycles?](https://www.reddit.com/r/freelance/comments/1vxsyl2/is_it_normal_for_all_of_us_freelancers_to_have/) (reddit:r/freelance, 2026-08-25) — "Some months we earn double or triple, while other months we only make an average amount"
+  - [How do you guys budget?](https://www.reddit.com/r/freelance/comments/eime8j/how_do_you_guys_budget/) (reddit:r/freelance, 2020-01-01) — "In the past I've tried You Need a Budget... I'm currently using an app called Daily Budget, but it's a bit too simplistic for my needs"
+  - [How do you keep your freelance finances in order? Here's what's been working for me so far.](https://www.reddit.com/r/freelance/comments/1osnpex/how_do_you_keep_your_freelance_finances_in_order/) (reddit:r/freelance, 2025-11-09) — "I started with Google Sheets, but later tried apps like Wave and FreshBooks"
+  - [(US) I created a document that helps you estimate your current year's taxes.](https://www.reddit.com/r/freelance/comments/4ut4sv/us_i_created_a_document_that_helps_you_estimate/) (reddit:r/freelance, 2016-07-27) — "I showed the document to our accountant"
 
-## 14. Readable multi-reviewer document review — score 0.6
-- Track Changes becomes unreadable when several people edit and comment, which slows editors and proofreaders down.
-- Items: 1 · paying signals: 0 · engagement: 0 · who: freelancer 1
-- Fit 0.6: A DOCX change-consolidation tool is software-only, but it's a niche audience and DOCX parsing edge cases generate support.
-- Product idea: Upload a heavily marked-up DOCX and get a clean, per-reviewer grouped change list with accept/reject in bulk.
+## 14. Client-side applicant & vendor screening — score 7.15
+- Clients hiring freelancers are flooded with AI-generated, templated or fake proposals and off-platform spam, and non-technical buyers can't judge vendor quality or verify billed hours.
+- Items: 8 · paying signals: 5 · engagement: 769 · who: small_business 6, freelancer 2
+- Fit 0.55: LLM-based ranking of applicants is easy to build, but buyers are scattered across platforms and hard to reach without a marketplace integration.
+- Product idea: Paste or forward applicant proposals to get them ranked by genuine fit, with AI-templated and copy-paste responses flagged.
 - Evidence:
-  - [For editors and proofreaders: do you hate Track Changes, or ...](https://www.reddit.com/r/Upwork/comments/txubtm/for_editors_and_proofreaders_do_you_hate_track/) (reddit:r/Upwork, )
+  - [Some of the proposals I receive are bananas](https://www.reddit.com/r/Upwork/comments/1sbtz9j/some_of_the_proposals_i_receive_are_bananas/) (reddit:r/Upwork, 2026-04-03) — "so I don't have to waste time reviewing them"
+  - [Dishonest freelancer blaming me for bad feedback and saying I ruined her life](https://www.reddit.com/r/Upwork/comments/1m0cdhu/dishonest_freelancer_blaming_me_for_bad_feedback/) (reddit:r/Upwork, 2025-07-15) — "Her hourly rates were in the medium-high range"
+  - [Clients, if you are so naive when it comes to AI, ChatGPT, NLP etc you should suffer!](https://www.reddit.com/r/Upwork/comments/12w7lu6/clients_if_you_are_so_naive_when_it_comes_to_ai/) (reddit:r/Upwork, 2023-04-23) — "hired this fresh out of college kid for 4 times the price they are paying me"
+  - [Client Side Hot Takes](https://www.reddit.com/r/Upwork/comments/1s3y4fb/client_side_hot_takes/) (reddit:r/Upwork, 2026-03-26) — "about 100k in spend"
+  - [Experience from a first time client on Upwork](https://www.reddit.com/r/Upwork/comments/s35q4k/experience_from_a_first_time_client_on_upwork/) (reddit:r/Upwork, 2022-01-13) — "received 142 proposals. Shortlisted 8"
 
-## 15. Client contact leakage from job posts — score 0.6
-- Clients who post jobs get unsolicited pitches at private emails that freelancers dug up, and they don't know how their details leaked.
-- Items: 1 · paying signals: 1 · engagement: 0 · who: small_business 1
-- Fit 0.3: Alias emails could trace leaks, but the pain is infrequent, there is little willingness to pay, and it overlaps with existing email-alias products.
-- Product idea: Per-posting email aliases that reveal which job post leaked a client's address and can be revoked.
+## 15. Multi-client web, listings & ad monitoring — score 4.2
+- Agencies managing many clients lack one place to watch site uptime, Google Business Profile listings, ad spend and performance, and what AI assistants say about each client brand.
+- Items: 4 · paying signals: 2 · engagement: 283 · who: small_business 4
+- Fit 0.7: API-driven monitoring and reporting is self-serve and recurring, with flat support; the AI-answer monitoring angle is newer and less crowded.
+- Product idea: One dashboard per agency that monitors each client's site health, listings consistency, ad pacing and ChatGPT/AI-answer mentions, with automated weekly client reports.
 - Evidence:
-  - [How to get the client's email from the job post on Upwork ...](https://www.reddit.com/r/Upwork/comments/1c58wr6/how_to_get_the_clients_email_from_the_job_post_on/) (reddit:r/Upwork, ) — "even ready to pay for this information"
+  - [Former client came back eight months after we wrapped asking me to "fix" what ChatGPT says about them, for free](https://www.reddit.com/r/freelance/comments/1wsfwt0/former_client_came_back_eight_months_after_we/) (reddit:r/freelance, 2026-09-28) — "customer asked ChatGPT for a serum... got two competitors recommended"
+  - [How we doubled our business in 2.5 years: from $71k to $166k MRR](https://www.reddit.com/r/agency/comments/1mtjnk0/how_we_doubled_our_business_in_25_years_from_71k/) (reddit:r/agency, 2025-08-18) — "Managing Google Business Profiles... was a nightmare: manual updates, mistakes, lack of consistency, hundreds of wasted hours"
+  - [General website monitoring](https://www.reddit.com/r/agency/comments/1anlemy/general_website_monitoring/) (reddit:r/agency, 2024-02-10)
+  - [How do you track multiple Digital Ads](https://www.reddit.com/r/agency/comments/qs9wep/how_do_you_track_multiple_digital_ads/) (reddit:r/agency, 2021-11-12)
 
-## 16. International freelancer payouts — score 0.0
-- International freelancers have limited payout options and missing integrations for withdrawing and holding marketplace earnings.
-- Items: 1 · paying signals: 0 · engagement: 0 · who: freelancer 1
-- Fit 0.15: Holding and moving funds requires money-transmission licensing and banking partnerships. · **excluded: regulated**
-- Product idea: Multi-currency payout account linked to freelance marketplaces.
+## 16. Agency operator mentorship & training — score 0.0
+- New agency founders want hands-on ops training, credible mentorship, comp-structure templates and help valuing or selling their business, instead of guru courses.
+- Items: 4 · paying signals: 3 · engagement: 73 · who: small_business 3, freelancer 1
+- Fit 0.15: Value comes from human expertise and credibility; it is per-client advisory work, and valuation touches financial advice. · **excluded: service_heavy**
+- Product idea: Paid community with vetted operator mentors and agency ops templates.
 - Evidence:
-  - [Is it safe to keep more than 10k on Payoneer? : r/Upwork - Reddit](https://www.reddit.com/r/Upwork/comments/maarbf/is_it_safe_to_keep_more_than_10k_on_payoneer/) (reddit:r/Upwork, )
+  - [Exiting/Selling Design Agency - Options?](https://www.reddit.com/r/agency/comments/1qyl00i/exitingselling_design_agency_options/) (reddit:r/agency, 2026-02-07) — "Total monthly revenue ranges from $28K - $33K"
+  - [Advice for an absolute beginner in the digital marketing/agency space?](https://www.reddit.com/r/agency/comments/1dc321n/advice_for_an_absolute_beginner_in_the_digital/) (reddit:r/agency, 2024-06-09) — "took up a Google Digital Marketing & E-Commerce Specialization on Coursera"
+  - [I need a mentor](https://www.reddit.com/r/agency/comments/1abv98z/i_need_a_mentor/) (reddit:r/agency, 2024-01-26) — "Would pay or % of the revenue"
+  - [Bonus Structures? Small Agency - Primarily web design/dev and branding looking for advice on bonus structure.](https://www.reddit.com/r/agency/comments/v49muk/bonus_structures_small_agency_primarily_web/) (reddit:r/agency, 2022-06-03)

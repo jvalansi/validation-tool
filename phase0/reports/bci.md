@@ -1,184 +1,171 @@
 # bci pain points — ranked
 
-Items scanned: 1356 (github 713, reddit 354, discourse 289); labelled as pains: 701.
-Score = count × (1 + share with paying signal) × ML fit. ML fit and clustering are Claude judgements, not measurements.
+Items scanned: 1228 (github 712, reddit 227, discourse 289); labelled as pains: 423.
+Score = count × (1 + share with paying signal) × fit. Fit and clustering are Claude judgements, not measurements.
 
-## 1. Installation, build and dependency breakage — score 68.2
-- Building from source (CMake/Qt/submodules), missing prebuilt binaries, pinned-dependency conflicts, MATLAB toolbox/path/plugin-manager failures, paid-toolbox dependencies and upgrade churn (NumPy 2, matplotlib) break environments and reproducibility.
-- Items: 104 · paying signals: 20 · engagement: 984 · who: academic_lab 48, developer 20, student 19
-- Fit 0.55: Curated, version-locked hosted or containerized environments are software the builder can automate, but they compete with free conda/Docker and the ecosystem churns constantly.
-- Product idea: Hosted, version-pinned neuro-analysis environments (MNE/EEGLAB-alt/spike sorting) that launch in one click with known-good dependency sets.
+## 1. EEG file format import/conversion with annotations intact — score 60.0
+- EDF+/BDF, EGI MFF, Neuroscan, Nihon Kohden, BCI2000, OpenBCI/Muse CSV and SD-card exports fail to import, lose or shift annotations and events, garble units and scaling, or run out of memory. Moving data between EEGLAB, MNE and FieldTrip drops metadata, and JS/pandas/R readers are missing.
+- Items: 56 · paying signals: 19 · engagement: 503 · who: student 19, employee 14, unknown 11
+- Fit 0.8: A self-serve converter with deterministic logic, testable against sample files. Support stays flat once the format parsers are solid, and it can be sold per seat or by usage.
+- Product idea: Web/CLI universal EEG converter that validates events, units and channel labels before and after conversion and flags any data that changed silently.
 - Evidence:
-  - [RuntimeException (Waited 5000ms for... processing.opengl.PSurfaceJOGL)](https://github.com/OpenBCI/OpenBCI_GUI/issues/577) (github:OpenBCI/OpenBCI_GUI, 2019-08-21) — "I scrapped everything and followed the ... guide to a T multiple times"
-  - [ICLabel issue when using BrainBeats ](https://github.com/sccn/eeglab/issues/707) (github:sccn/eeglab, 2023-12-06) — "I've solved a lot of previous error messages by installing plug ins, but I am new to EEGLAB and at a loss how to fix this one"
-  - [wrong number of arguments error while using GUI](https://github.com/sccn/eeglab/issues/36) (github:sccn/eeglab, 2019-08-07) — "I temporarily fixed the issue last week by uninstalling MATLAB on both machines and reinstalling the newest version. Then it began occurring again"
-  - [Expected dtype object, got 'numpy.dtype[float64]'](https://mne.discourse.group/t/expected-dtype-object-got-numpy-dtype-float64/3151) (discourse:mne, 2021-05-18) — "I used read_raw_bids in the last few days. But it did not work today"
-  - [error in function std_precomp()](https://github.com/sccn/eeglab/issues/739) (github:sccn/eeglab, 2024-03-04) — "EEGLAB worked well last year"
+  - [EEGLab EDF+ events misplaced and wrongly named](https://github.com/sccn/eeglab/issues/267) (github:sccn/eeglab, 2021-03-10) — "any advice would be greatly appreciated"
+  - [We open-sourced our 7-channel dry-electrode EEG toolchain — not just code, but the full pipeline from hardware interface to Python analysis](https://www.reddit.com/r/BCI/comments/1u3nvxi/we_opensourced_our_7channel_dryelectrode_eeg/) (reddit:r/BCI, 2026-06-12) — "We got tired of spending two weeks on infrastructure before spending one day on the actual experiment."
+  - [Is there a way to speed up loading EDF files?](https://mne.discourse.group/t/is-there-a-way-to-speed-up-loading-edf-files/8013) (discourse:mne.discourse.group, 2023-12-14) — "Loading these files using mne.io.read_raw takes about 5 minutes, or more. I just tried one that took 11 minutes to open."
+  - [Issue loading EDF/EDF+ files ](https://github.com/sccn/eeglab/issues/255) (github:sccn/eeglab, 2021-02-14) — "I tried loading the ".event" files from file> "Import event info" but it didn't work out for me."
+  - [Problem with create_windows_from_events working on an personal dataset](https://github.com/braindecode/braindecode/issues/135) (github:braindecode/braindecode, 2020-07-06) — "I added a copy of bnci.py script at moabb datsets an the example of trial wise decoding so I can get my datasets processed"
 
-## 2. Multi-device timestamp sync and LSL/XDF alignment — score 55.9
-- Aligning EEG with eye trackers, physio sensors, video, VR and stimulus markers across machines is hard. Users hit LSL discovery failures, jittery or jumping timestamps, relative clocks, trigger delays, missing connectors, no browser/cloud relay, and no way to validate sync quality.
-- Items: 73 · paying signals: 13 · engagement: 477 · who: academic_lab 48, developer 11, student 6
-- Fit 0.65: Offline XDF sync repair, dejittering and a sync-quality report are pure software with a clear value proposition, while live connectors touch hardware.
-- Product idea: XDF/multistream sync analyzer that detects clock jumps and drift, dejitters, aligns streams and outputs a sync-quality report plus corrected files.
+## 2. Multi-stream timestamp sync, jitter and drift repair — score 42.0
+- In multimodal and multi-computer recordings (LSL/XDF, eye tracking, VR, video, triggers), timestamps can be irregular, jump, drift or use different clock conventions. Samples get lost and stimulus markers misalign. Researchers detect and fix this by hand offline and have no tools to measure latency or jitter.
+- Items: 44 · paying signals: 12 · engagement: 425 · who: student 15, employee 14, unknown 8
+- Fit 0.75: A pure software, file-in/report-out product. It is self-serve, the pain is recurring and well defined, and it needs no hardware or per-client work.
+- Product idea: Upload an XDF/multi-stream recording to get a timing-integrity report (jitter, gaps, jumps, offsets) plus an auto-repaired, aligned export.
 - Evidence:
-  - [Very specific LSL sync issues](https://github.com/sccn/labstreaminglayer/issues/13) (github:sccn/labstreaminglayer, 2019-01-27) — "I recorded 20 subjects worth of EEG data"
-  - [Markers sent from computer with "`n" (n=1..9) create important noise on the 16 channels](https://github.com/OpenBCI/OpenBCI_GUI/issues/297) (github:OpenBCI/OpenBCI_GUI, 2017-12-13) — "sending Markers makes a huge noise on ALL electrodes at marker onset"
-  - [OpenBCI x Emotibit xdf file import error](https://github.com/sccn/eeglab/issues/826) (github:sccn/eeglab, 2024-11-13) — "Since i'm not dependent on using eeglab for this purpose, is there any other way of using Emotibit data with other data in an xdf file?"
-  - [LSL manual timestamping interferes with LSL clock_offset correction](https://github.com/OpenBCI/OpenBCI_GUI/issues/775) (github:OpenBCI/OpenBCI_GUI, 2020-05-21) — "I'm one of the LSL maintainers. I'm trying to help a user with a problem."
-  - [Add Support to Polar H10](https://github.com/brainflow-dev/brainflow/issues/670) (github:brainflow-dev/brainflow, 2023-08-30) — "My team is currently working on a project with Muse, EmotiBit, and Polar H10"
+  - [Not getting Trigger data using wifi shield connected to Cyton and daisy combination](https://github.com/OpenBCI/OpenBCI_GUI/issues/272) (github:OpenBCI/OpenBCI_GUI, 2017-10-24) — "Any help you can provide in this regard is much appreciated"
+  - [Very specific LSL sync issues](https://github.com/sccn/labstreaminglayer/issues/13) (github:sccn/labstreaminglayer, 2019-01-27) — "I recorded 20 subjects worth of EEG data while they watched videos."
+  - [Markers sent from computer with "`n" (n=1..9) create important noise on the 16 channels](https://github.com/OpenBCI/OpenBCI_GUI/issues/297) (github:OpenBCI/OpenBCI_GUI, 2017-12-13) — "sending Markers makes a huge noise on ALL electrodes at marker onset. Any solution for this?"
+  - [LSL manual timestamping interferes with LSL clock_offset correction](https://github.com/OpenBCI/OpenBCI_GUI/issues/775) (github:OpenBCI/OpenBCI_GUI, 2020-05-21) — "They are unable to synchronize OpenBCI streams with those from different sources when loading xdf files saved in LabRecorder"
+  - [Is Neurosity Crown streaming at wrong sampling interval? I am clocking 4.0 ms (1000 ms / 250 Hz) instead of 3.90625 ms (1000 ms / 256 Hz).](https://github.com/brainflow-dev/brainflow/issues/341) (github:brainflow-dev/brainflow, 2021-09-04) — "There is substantial va[riation]"
 
-## 3. Statistics, source localization and methods expertise gap — score 55.2
-- Users struggle with group STUDY designs, repeated-measures and cluster statistics, beamformer and forward-model setup, coordinate frames, connectivity and PAC choices, and spectral units, and they rely on forums for expert judgment.
-- Items: 73 · paying signals: 19 · engagement: 723 · who: academic_lab 61, student 12
-- Fit 0.6: An LLM agent that knows MNE/FieldTrip can generate and check analysis code, but correctness is hard to guarantee and the audience is niche.
-- Product idea: Domain-tuned AI analysis copilot that writes, runs and sanity-checks MNE pipelines and statistical designs on the user's data.
-- Evidence:
-  - [ENH: encoding models](https://github.com/mne-tools/mne-python/issues/2796) (github:mne-tools/mne-python, 2016-01-19) — "Most of what I've been working on for my thesis has been so-called "encoding" models"
-  - [How to realign the CTF MEG runs to a common head position using maxwell_filter?](https://mne.discourse.group/t/how-to-realign-the-ctf-meg-runs-to-a-common-head-position-using-maxwell-filter/4727) (discourse:mne, 2022-04-18) — "concatenate 12 different MEG runs"
-  - [std_rmalldatafields() line 65](https://github.com/sccn/eeglab/issues/470) (github:sccn/eeglab, 2022-05-08) — "I did a trial with the first 3 subjects and it worked perfectly, but when I am adding the 18 subjects I have this error."
-  - [std_preclust error: subscripted assignment dimension mismatch](https://github.com/sccn/eeglab/issues/138) (github:sccn/eeglab, 2020-03-05) — "I keep getting a bug where in STUDY.cluster.sets I get NAN in the same sets, and I manually fix this matrix"
-  - [Loading issue from Paul](https://github.com/sccn/eeglab/issues/362) (github:sccn/eeglab, 2021-08-06) — "I tried letting it run about 20 min (way longer than ever needed before for only 32 subjects)"
-
-## 4. Automated preprocessing and artifact QC — score 53.25
-- Researchers don't know the right preprocessing order (filtering, ICA, interpolation, AutoReject). Automated bad-channel and artifact detection is unreliable, ICA review is manual, events desync after cropping, and batch QC reports have to be hand-scripted.
-- Items: 55 · paying signals: 16 · engagement: 508 · who: academic_lab 38, student 11, clinician 4
-- Fit 0.75: An opinionated, ML-assisted pipeline with automatic QC reports is batch software that scales without per-customer work.
-- Product idea: Upload-to-report EEG preprocessing service with a validated default pipeline, ML artifact/ICA classification and reproducible QC reports.
+## 3. Automated EEG preprocessing and data-quality reports — score 36.4
+- Artifact rejection, bad-channel detection and ICA classification are unreliable and need manual inspection. Best practice on pipeline step order is unclear, thresholds are guesswork, line-noise removal fails, and labs rebuild the same preprocessing for every dataset and want an automatic usability check.
+- Items: 37 · paying signals: 15 · engagement: 394 · who: student 17, employee 13, unknown 5
+- Fit 0.7: Hosted batch processing over open libraries (MNE, autoreject, ICLabel) with a self-serve report. Scoped to research use, it avoids clinical claims.
+- Product idea: Upload raw EEG to get a standardized QC report (bad channels, artifacts, usable minutes) and a traceable, cleaned dataset with the pipeline config.
 - Evidence:
   - [parallel processing with silence_periods](https://github.com/SpikeInterface/spikeinterface/issues/4038) (github:SpikeInterface/spikeinterface, 2025-07-07) — "written and applied a function to detect these periods"
   - [Thinking about making an open-source SDK for EEG/BCI analysis. Looking for thoughts from BCI/neural data scientists, researchers, or ML engineers.](https://www.reddit.com/r/BCI/comments/1sgct4x/thinking_about_making_an_opensource_sdk_for/) (reddit:r/BCI, 2026-04-09) — "3 weeks to make a b-spline interpolation for bad channels, 2 weeks to detect drowsiness from delta waves, 2 weeks for noise + artifact removal"
-  - [Automatic EEG quality check & ICA for blink removal in 19-channel dry EEG](https://mne.discourse.group/t/automatic-eeg-quality-check-ica-for-blink-removal-in-19-channel-dry-eeg/11722) (discourse:mne, 2026-03-03) — "I am not an EEG expert, Visually inspecting every subject's data is difficult"
-  - [annotating bad segments, then cropping signal, annotations don't get shifted?](https://mne.discourse.group/t/annotating-bad-segments-then-cropping-signal-annotations-dont-get-shifted/11221) (discourse:mne, 2025-05-23) — "Luckily, my colleague compared the pre/post cropping annotations and noted that they didn`t get shifted."
-  - [`eegplot()` extremly slow when plotting later epochs](https://github.com/sccn/eeglab/issues/108) (github:sccn/eeglab, 2020-01-06) — "more than 20 seconds to plot 20 trials - which is honestly unbearable"
+  - [Automatic EEG quality check & ICA for blink removal in 19-channel dry EEG](https://mne.discourse.group/t/automatic-eeg-quality-check-ica-for-blink-removal-in-19-channel-dry-eeg/11722) (discourse:mne.discourse.group, 2026-03-03) — "I am not an EEG expert, Visually inspecting every subject's data is difficult, And it is hard to apply consistent criteria across all participants."
+  - [Utility for testing EEG data-cleaning pipelines?](https://github.com/NeuroTechX/moabb/issues/193) (github:NeuroTechX/moabb, 2021-06-01) — "It would be highly useful for us to have a tool that benchmarks how well a given filtering method or noisy channel detection method improves a dataset's SNR"
+  - [Preprocessing with IC_Label and AutoReject: An Overeliance on Automation?](https://mne.discourse.group/t/preprocessing-with-ic-label-and-autoreject-an-overeliance-on-automation/11700) (discourse:mne.discourse.group, 2026-02-19) — "incorporating MNE's general ICA method reintroduced a manual inspection step into the pipeline"
 
-## 5. File format import and cross-tool conversion — score 50.25
-- EDF+/BDF/BrainVision/MFF/CNT/Nihon Kohden and consumer CSV files fail to import or silently lose annotations, events, units and channel locations. Conversion between EEGLAB, MNE and FieldTrip is lossy, and there's no JS/browser reader.
-- Items: 57 · paying signals: 10 · engagement: 590 · who: academic_lab 31, student 16, developer 4
-- Fit 0.75: Parsing, validating and converting formats is deterministic software that is easy to test with sample files and suits a self-serve web or API product.
-- Product idea: Web/API converter and validator for EEG formats that preserves events, units and montages, with a diff report of anything lost.
+## 4. Methods, statistics and source-localization guidance — score 36.3
+- Researchers lack the expertise to set up repeated-measures and permutation designs, source reconstruction parameters, coregistration, spectral units, time-frequency parameters and connectivity metrics. They also lack ways to validate that results are physiologically plausible.
+- Items: 49 · paying signals: 17 · engagement: 563 · who: student 23, employee 16, unknown 6
+- Fit 0.55: An AI agent over MNE (for example an MCP server) fits the builder's skills and scales. Accuracy liability and the depth of the expertise needed limit how much users will trust it.
+- Product idea: MNE-Python AI copilot (MCP server and chat) that builds, runs and explains stats and source pipelines with sanity-check plots.
 - Evidence:
-  - [Is there a way to speed up loading EDF files?](https://mne.discourse.group/t/is-there-a-way-to-speed-up-loading-edf-files/8013) (discourse:mne, 2023-12-14) — "Loading these files using mne.io.read_raw takes about 5 minutes, or more. I just tried one that took 11 minutes to open."
-  - [Data stream freezes when saving in the BDF+ file type](https://github.com/OpenBCI/OpenBCI_GUI/issues/266) (github:OpenBCI/OpenBCI_GUI, 2017-10-16) — "I want to use the BDF+ file type so I do not have to convert the data in EDFbrowser to BDF for import into EEGLAB"
-  - [MFF files imports not working](https://github.com/sccn/eeglab/issues/797) (github:sccn/eeglab, 2024-08-15) — "I have tried different version of Matlab, EEGlab, mffimport plugin. I have also increased the JAVA memory allowance."
-  - [MFF bug with old EGI files](https://github.com/sccn/eeglab/issues/263) (github:sccn/eeglab, 2021-03-03) — "EGI data recorded over 10 years ago"
-  - [3.2.0 - Interface freezing when converting from SD format](https://github.com/OpenBCI/OpenBCI_GUI/issues/302) (github:OpenBCI/OpenBCI_GUI, 2017-12-26) — "After 1 hour I give up and end the program, reboot, and tried again."
+  - [ENH: encoding models](https://github.com/mne-tools/mne-python/issues/2796) (github:mne-tools/mne-python, 2016-01-19) — "Most of what I've been working on for my thesis has been so-called "encoding" models"
+  - [Alpha/Beta ratio (PSD) for single epochs EEG for specific electrodes](https://mne.discourse.group/t/alpha-beta-ratio-psd-for-single-epochs-eeg-for-specific-electrodes/4162) (discourse:mne.discourse.group, 2021-12-17) — "I spent hours trying (and reading rutorials) and now feel stuck and desperate"
+  - [Consistency in power spectra computed in STUDY by std_spec?](https://github.com/sccn/eeglab/issues/364) (github:sccn/eeglab, 2021-08-07) — "calculating psd is extremly long compared to when I compute it with pwelch directly in Matlab"
+  - [statcond - bootstrap - paired](https://github.com/sccn/eeglab/issues/872) (github:sccn/eeglab, 2025-06-12) — "I spent four days examining this"
+  - [using 'psd' or 'fft' in std_spec creates 60dB difference](https://github.com/sccn/eeglab/issues/172) (github:sccn/eeglab, 2020-06-14) — "A friend of mine at another university also observed this discrepancy"
 
-## 6. NWB/BIDS conversion, validation and metadata — score 35.0
-- Converting lab data to NWB/BIDS is error-prone. Users report confusing extensions, false validator errors, awkward metadata editing, schema migrations, slow cloud streaming of large HDF5, event IDs altered during conversion, and manual de-identification.
-- Items: 38 · paying signals: 12 · engagement: 491 · who: academic_lab 31, developer 4, student 3
-- Fit 0.7: Schema-driven conversion, validation and de-identification can be automated with agents and sold self-serve to labs with data-sharing mandates.
-- Product idea: Guided NWB/BIDS converter with plain-English validation, metadata editing, de-identification and cloud-optimized output.
+## 5. Toolchain install, build and version reproducibility — score 31.5
+- Building LSL and SDKs from source, missing prebuilt binaries (macOS, ARM, Android), MATLAB plugin breakage, hidden paid-toolbox dependencies, pinned ML libraries, and toolbox upgrades or machine differences that silently change results.
+- Items: 46 · paying signals: 17 · engagement: 294 · who: employee 16, student 10, developer 9
+- Fit 0.5: Prebuilt binaries and containers can be built by agents, but keeping up with upstream churn is a constant maintenance load. Users expect this to be free, so willingness to pay is low.
+- Product idea: Versioned, prebuilt EEG/LSL environment images with a reproducibility check that diffs pipeline outputs across versions.
+- Evidence:
+  - [ICLabel issue when using BrainBeats ](https://github.com/sccn/eeglab/issues/707) (github:sccn/eeglab, 2023-12-06) — "I've solved a lot of previous error messages by installing plug ins, but I am new to EEGLAB and at a loss how to fix this one."
+  - [A detailed tutorial of windows configuration environment is suggested](https://github.com/brainflow-dev/brainflow/issues/425) (github:brainflow-dev/brainflow, 2022-03-18) — "I tried for a long time without success"
+  - [some issues using cmake with visual studio for lsl app development](https://github.com/sccn/labstreaminglayer/issues/29) (github:sccn/labstreaminglayer, 2019-07-09) — "I had to do a few things by hand because CMake got it wrong."
+  - [Failed to install build.py file](https://github.com/brainflow-dev/brainflow/issues/708) (github:brainflow-dev/brainflow, 2024-03-07) — "Tried it multiple times but the same error still occurs"
+  - [Support for Mac M1 and M2 processors, ARM64](https://github.com/brainflow-dev/brainflow/issues/628) (github:brainflow-dev/brainflow, 2023-05-15) — "You are my only hope"
+
+## 6. Consumer EEG device connection & streaming reliability — score 23.8
+- Getting consumer and low-cost EEG boards to connect and keep streaming over BLE, dongle or WiFi fails across operating systems. Typical problems are silent disconnects, stalled streams, dropped packets, opaque port and error codes, no way to tell whether real signal is arriving, unsupported headset revisions and single-OS vendor SDKs.
+- Items: 52 · paying signals: 16 · engagement: 521 · who: hobbyist 16, employee 13, unknown 10
+- Fit 0.35: A software diagnostic layer is possible, but the root causes are firmware, radio and OS driver issues. Every new device revision adds support work, and the free BrainFlow/LSL tools already compete.
+- Product idea: Cross-platform 'EEG connection doctor' app that probes a headset, explains failures in plain language and confirms that real signal is arriving.
+- Evidence:
+  - [BUG: data streaming with wifi shield: keeps stopping after 1-2minute, have to restart](https://github.com/OpenBCI/OpenBCI_GUI/issues/263) (github:OpenBCI/OpenBCI_GUI, 2017-10-14) — "keeps stopping after 1-2minute, have to restart"
+  - [testing 4.1.2 with wi-fi shield](https://github.com/OpenBCI/OpenBCI_GUI/issues/555) (github:OpenBCI/OpenBCI_GUI, 2019-07-05) — "I need to start the system 3 times, before it starts working"
+  - [AAVAA board: native BLE does not connect to device on MacOS](https://github.com/brainflow-dev/brainflow/issues/667) (github:brainflow-dev/brainflow, 2023-08-17) — "fork (https://github.com/AAVAA-Inc/AAVAAflow/tree/aavaa-board-addition)"
+  - [Muse S Athena on Windows 11: Failed to notify characteristic 273e0014 using MUSE_S_ATHENA_BOARD](https://github.com/brainflow-dev/brainflow/issues/835) (github:brainflow-dev/brainflow, 2026-05-19) — "Bluetooth adapter: TP-Link UB500 (Bluetooth 5.4) * Intel Bluetooth disabled"
+  - [Buffer becomes empty after a while, and stays empty ](https://github.com/brainflow-dev/brainflow/issues/38) (github:brainflow-dev/brainflow, 2020-05-06) — "my program is meant to work on a real-time system, so basically the streaming continues forever"
+
+## 7. BIDS/NWB conversion, metadata editing and validation — score 23.25
+- Converting lab data into BIDS or NWB is strict and confusing. Files fail validation, metadata fields end up blank, extensions are hard to use, post-hoc metadata edits are unsupported, large files get slow or blow up memory, and de-identification is error-prone.
+- Items: 21 · paying signals: 10 · engagement: 270 · who: employee 13, developer 4, student 3
+- Fit 0.75: Wizard-style SaaS on top of open validators. Demand is driven by funding and journal sharing mandates, and it needs no sales calls.
+- Product idea: Guided BIDS/NWB builder with metadata forms, live validation, de-identification and chunked large-file conversion.
 - Evidence:
   - [[Feature]: Add `read_nwb` to simplify reading nwbfiles ](https://github.com/NeurodataWithoutBorders/pynwb/issues/1974) (github:NeurodataWithoutBorders/pynwb, 2024-10-23) — "This is a comment that I have gotten from various users: reading and nwbfile is not as easy as it could be."
-  - [Error: Compensation grade of ICA (3) and Raw (0) do not match](https://mne.discourse.group/t/error-compensation-grade-of-ica-3-and-raw-0-do-not-match/11731) (discourse:mne, 2026-03-06) — "allow me to replicate (I admit, almost blindly) my reference pipeline via the config file"
+  - [Error: Compensation grade of ICA (3) and Raw (0) do not match](https://mne.discourse.group/t/error-compensation-grade-of-ica-3-and-raw-0-do-not-match/11731) (discourse:mne.discourse.group, 2026-03-06) — "I proceeded searching for the best matching configuration options that could allow me to replicate (I admit, almost blindly) my reference pipeline"
   - [Need to store video](https://github.com/NeurodataWithoutBorders/pynwb/issues/1647) (github:NeurodataWithoutBorders/pynwb, 2023-02-16) — "For one recording session, we have around 300 short videos"
-  - [conversion_factor per channel](https://github.com/NeurodataWithoutBorders/pynwb/issues/1064) (github:NeurodataWithoutBorders/pynwb, 2019-09-13) — "Neuropixel data is very big, so this is really not an ideal solution."
+  - [conversion_factor per channel](https://github.com/NeurodataWithoutBorders/pynwb/issues/1064) (github:NeurodataWithoutBorders/pynwb, 2019-09-13) — "Neuropixel data is very big, so this is really not an ideal solution"
   - [[Documentation]: Streaming NWB files - recommend using remfile as the preferred method](https://github.com/NeurodataWithoutBorders/pynwb/issues/1791) (github:NeurodataWithoutBorders/pynwb, 2023-11-24) — "I created remfile about 3-4 months ago to address the slowness in lazy reading of remote NWB files"
 
-## 7. Public dataset access and decoder benchmarking — score 31.5
-- Public EEG datasets are scattered and hosted on fragile mirrors, and their loaders have silent label/epoch bugs and inconsistent metadata. Benchmarking lacks standard protocols, caching and a compute-backed leaderboard, and it's hard to know whether models transfer to consumer headsets.
-- Items: 39 · paying signals: 6 · engagement: 534 · who: academic_lab 22, student 8, developer 4
-- Fit 0.7: Mirrored, validated dataset catalogs and hosted benchmark runs are ML-engineering work that fits the builder, though compute costs scale with use.
-- Product idea: Harmonized, validated EEG dataset hub with partial downloads and a hosted leaderboard that runs submitted decoders under standard CV protocols.
+## 8. Lightweight EEG viewing, annotation and figures — score 16.1
+- EDF viewers are costly, heavy or hard to install, and large files load slowly. Sleep-label correction lacks batch editing, epoch scrolling is slow, 3D rendering fails on headless servers, and publication-quality ERP, topomap and montage figures take custom code.
+- Items: 17 · paying signals: 6 · engagement: 149 · who: unknown 5, employee 4, developer 4
+- Fit 0.7: A browser-based viewer and figure tool is self-serve and needs no installs. Agents can build it, and it fits freemium pricing.
+- Product idea: Browser EDF/BDF viewer and annotator with fast large-file paging, batch label editing and one-click publication figures.
 - Evidence:
-  - [Please Join Our Thought-To-Text Research!](https://www.reddit.com/r/BCI/comments/1kmq5vm/please_join_our_thoughttotext_research/) (reddit:r/BCI, 2025-05-14) — "we're paying up to $500"
-  - [Would you want to make money selling your brain data?](https://www.reddit.com/r/BCI/comments/1p13oqj/would_you_want_to_make_money_selling_your_brain/) (reddit:r/BCI, 2025-11-19) — "BCI companies get access to diverse datasets to accelerate their development"
-  - [Problem with create_windows_from_events working on an personal dataset](https://github.com/braindecode/braindecode/issues/135) (github:braindecode/braindecode, 2020-07-06) — "I modified a bit the library ... I added a copy of bnci.py script at moabb datasets"
-  - [Allow passing fixed transformers to evaluations](https://github.com/NeuroTechX/moabb/issues/367) (github:NeuroTechX/moabb, 2023-05-05) — "The expensive part of the evaluation is the feature extraction"
+  - [Data Logging start / stop](https://github.com/OpenBCI/OpenBCI_GUI/issues/400) (github:OpenBCI/OpenBCI_GUI, 2018-11-09) — "Files of several hours recording are not easy to handle in playback ( take very long to open etc)"
+  - [`eegplot()` extremly slow when plotting later epochs](https://github.com/sccn/eeglab/issues/108) (github:sccn/eeglab, 2020-01-06) — "more than 20 seconds to plot 20 trials - which is honestly unbearable"
+  - [Feature: Cyton Impedance Check Headplot](https://github.com/OpenBCI/OpenBCI_GUI/issues/648) (github:OpenBCI/OpenBCI_GUI, 2019-11-14) — "Takes too long to check impedance on all channels"
+  - [STUDY visualisation is slow](https://github.com/sccn/eeglab/issues/290) (github:sccn/eeglab, 2021-05-06) — "Previously ... each time it took 1-5 minutes to plot ... With the switch to single-trial it takes forever ... daterp's from my study collectively weigh about 20.7 Gb."
+  - [Is there a way to select and edit annotations in raw.plot() at the same time? If not, would that be an upcoming feature in a future update?(Holding shift and selecting multiple annotations)](https://mne.discourse.group/t/is-there-a-way-to-select-and-edit-annotations-in-raw-plot-at-the-same-time-if-not-would-that-be-an-upcoming-feature-in-a-future-update-holding-shift-and-selecting-multiple-annotations/11559) (discourse:mne.discourse.group, 2025-10-30) — "I feel that would save a tremendous amount of time"
+
+## 9. Public EEG dataset access and BCI benchmarking — score 13.2
+- Public datasets are scattered, downloads time out, metadata and preprocessing state are inconsistent, epoch timing is easy to get wrong, and there is no standard evaluation protocol or maintained leaderboard. Models are also hard to transfer to consumer hardware.
+- Items: 20 · paying signals: 4 · engagement: 249 · who: developer 11, student 7, unknown 2
+- Fit 0.55: A software catalog, mirror and leaderboard suits agents. Monetization is weak because users are academic and expect free data, and storage costs grow with the catalog.
+- Product idea: Hosted mirror of public EEG/BCI datasets with harmonized metadata, partial-session streaming and a standardized benchmark leaderboard.
+- Evidence:
+  - [[No Code] Discover new datasets](https://github.com/NeuroTechX/moabb/issues/1) (github:NeuroTechX/moabb, 2017-06-03) — "We need people browsing the web to discover interesting datasets"
   - [New CrossSubjecEvaluation that supports transfer learning methods](https://github.com/NeuroTechX/moabb/issues/1077) (github:NeuroTechX/moabb, 2026-06-11) — "I myself am working on a transfer learning cross subject method and all this is motivated by real needs."
+  - [problems with datasets](https://github.com/NeuroTechX/moabb/issues/523) (github:NeuroTechX/moabb, 2023-11-09) — "kindly rectify the problem or place a new dataset which is compatabile with the code kindly ASAP"
+  - [Low Accuracy in EEG Emotion Recognition](https://mne.discourse.group/t/low-accuracy-in-eeg-emotion-recognition/11554) (discourse:mne.discourse.group, 2025-10-28) — "Only 24 electrodes are common to all subjects, and using them alone gives very poor results"
+  - [I am building a BCI Robotic Hand Simulation](https://www.reddit.com/r/BCI/comments/1ug7j9s/i_am_building_a_bci_robotic_hand_simulation/) (reddit:r/BCI, 2026-06-26)
 
-## 8. Silent data loss and recording integrity — score 30.6
-- Recordings silently drop samples, zero auxiliary channels, mis-scale units, corrupt SD-card or BDF/EDF exports, save to unknown locations, or can't be replayed. Long sleep recordings have no segmentation, and impedance/signal-quality checks are untrustworthy.
-- Items: 42 · paying signals: 9 · engagement: 630 · who: academic_lab 21, unknown 9, hobbyist 6
-- Fit 0.6: A file-level integrity checker (gaps, rate drift, zeroed channels, scaling) is pure software, works on uploaded files and is self-serve.
-- Product idea: Upload-and-verify recording QA that flags dropped samples, rate mismatches, dead aux channels and format corruption, with a repaired export.
+## 10. Browser/cloud real-time biosignal streaming and pipelines — score 9.6
+- There is no browser-native way to acquire or stream biosignals, no low-latency relay to web or cloud apps, and no device emulator for development. Real-time dataflow nodes are hard to debug, and there is no lightweight processing for embedded closed-loop projects.
+- Items: 13 · paying signals: 3 · engagement: 102 · who: developer 6, hobbyist 4, unknown 2
+- Fit 0.6: A developer-facing SDK plus hosted relay scales well. The market is small, and device-level edge cases leak in.
+- Product idea: Hosted WebSocket/WebRTC relay plus a JS SDK that forwards LSL/BrainFlow streams to web apps, with a simulated-headset mode.
 - Evidence:
-  - [Not getting Trigger data using wifi shield connected to Cyton and daisy combination](https://github.com/OpenBCI/OpenBCI_GUI/issues/272) (github:OpenBCI/OpenBCI_GUI, 2017-10-24) — "Any help you can provide in this regard is much appreciated"
-  - [SD Card writing is not working ](https://github.com/OpenBCI/OpenBCI_GUI/issues/278) (github:OpenBCI/OpenBCI_GUI, 2017-11-01) — "Tried: 2 different SD cards, Reformatting SD cards (with the SD Association Formatter), Wifi and BLE"
-  - [Unable to convert large files from SD card: Out of Memory Error](https://github.com/OpenBCI/OpenBCI_GUI/issues/355) (github:OpenBCI/OpenBCI_GUI, 2018-07-08) — "I'm trying to open a large file I recorded on the SD card during a 8 hours of sleep"
-  - [Add support to prevent long recordings](https://github.com/OpenBCI/OpenBCI_GUI/issues/461) (github:OpenBCI/OpenBCI_GUI, 2019-03-19) — "it is laborious and erroneous to start and stop recordings every 20-30 minutes"
-  - [Problem finding saved recordings on linux](https://github.com/OpenBCI/OpenBCI_GUI/issues/639) (github:OpenBCI/OpenBCI_GUI, 2019-11-08) — "Any clues would be highly appreciated!"
+  - [Don't know if I should use MNE for this project](https://mne.discourse.group/t/dont-know-if-i-should-use-mne-for-this-project/11824) (discourse:mne.discourse.group, 2026-04-30) — "This project will run on a Raspberry Pi 4, but I heard MNE can be quite heavy"
+  - [libLSL for WASM](https://github.com/sccn/labstreaminglayer/issues/34) (github:sccn/labstreaminglayer, 2019-08-04) — "bring LSL into our web technologies project ( www.biosignal.network )"
+  - [Best practices for reusable branches](https://github.com/timeflux/timeflux/issues/56) (github:timeflux/timeflux, 2020-04-21) — "it is not easy for someone who is not expert in timeflux to know the right nodes and how best to combine them"
+  - [GUI hangs when trying LSL and when played by Processing IDE, hub does not work](https://github.com/OpenBCI/OpenBCI_GUI/issues/316) (github:OpenBCI/OpenBCI_GUI, 2018-03-16)
+  - [OSC data stream not working](https://github.com/OpenBCI/OpenBCI_GUI/issues/463) (github:OpenBCI/OpenBCI_GUI, 2019-03-24)
 
-## 9. Device connection and SDK cross-platform failures — score 22.2
-- BLE/WiFi/serial/dongle connections to consumer and research EEG boards fail, hang or silently stall across Windows/macOS/Linux/Raspberry Pi. Errors are opaque, there is no auto-discovery, bindings (Java/.NET/Node/Electron/iOS) are inconsistent, and firmware or OS updates break drivers.
-- Items: 60 · paying signals: 14 · engagement: 591 · who: hobbyist 24, academic_lab 13, developer 11
-- Fit 0.3: Software can fix it, but the work is tied to physical devices, OS Bluetooth stacks and vendor firmware, so testing needs hardware and support load grows with each device model.
-- Product idea: Cross-platform connection doctor that walks through a device/OS diagnostic checklist and maps opaque SDK errors to fixes.
+## 11. BCI education, lab discovery and career paths — score 7.6
+- There are few structured BCI curricula, neuroscientists lack domain-specific Python training, nobody maintains a directory of labs, conferences or remote mentors, and literature is scattered across sources.
+- Items: 13 · paying signals: 6 · engagement: 371 · who: student 11, employee 2
+- Fit 0.4: A course or directory is low-support software, but students pay little and content has to be curated continuously.
+- Product idea: Searchable BCI lab and program directory plus a public-dataset project curriculum for neuroscientists learning Python.
 - Evidence:
-  - [testing 4.1.2 with wi-fi shield](https://github.com/OpenBCI/OpenBCI_GUI/issues/555) (github:OpenBCI/OpenBCI_GUI, 2019-07-05) — "I need to start the system 3 times, before it starts working"
-  - [AAVAA board: native BLE does not connect to device on MacOS](https://github.com/brainflow-dev/brainflow/issues/667) (github:brainflow-dev/brainflow, 2023-08-17) — "AAVAA-Inc maintaining a fork (AAVAAflow) to add their board"
-  - [Muse S Athena on Windows 11: Failed to notify characteristic 273e0014 using MUSE_S_ATHENA_BOARD](https://github.com/brainflow-dev/brainflow/issues/835) (github:brainflow-dev/brainflow, 2026-05-19) — "Bluetooth adapter: TP-Link UB500 (Bluetooth 5.4) / Intel Bluetooth disabled"
-  - [GUI freezes at start on Mac OS Sierra 10.12.3](https://github.com/OpenBCI/OpenBCI_GUI/issues/118) (github:OpenBCI/OpenBCI_GUI, 2017-02-02) — "should I downgrade my OS or is there a quick fix?"
-  - [Muse S Athena Support (MS-03)](https://github.com/brainflow-dev/brainflow/issues/776) (github:brainflow-dev/brainflow, 2025-07-02) — "we have been using the muse 2 for research until the athena dropped, and it has no support yet"
-
-## 10. 3D visualization, montages and publication figures — score 20.15
-- The VTK/pyvista 3D backends break, especially on headless or HPC machines. Montage and electrode templates are confusing or conflicting, channel adjacency is unvalidated, and publication figures (ERP CIs, difference topomaps, ROI maps) need custom code.
-- Items: 30 · paying signals: 1 · engagement: 384 · who: academic_lab 19, student 5, developer 3
-- Fit 0.65: Browser-rendered visualization and a curated montage library are pure software, but willingness to pay is modest.
-- Product idea: Web-based figure studio for EEG/MEG (topomaps, 3D sources, montage library) that works without a local graphics stack.
-- Evidence:
-  - [STUDY visualisation is slow](https://github.com/sccn/eeglab/issues/290) (github:sccn/eeglab, 2021-05-06) — "Previously it was trivial, each time it took 1-5 minutes... With the switch to single-trial it takes forever... daterp's from my study collectively weigh about 20.7 Gb"
-  - [Create canonical template channel locations](https://github.com/mne-tools/mne-python/issues/7472) (github:mne-tools/mne-python, 2020-03-18)
-  - [Scaling - Sensitivity (uV/mm)](https://mne.discourse.group/t/scaling-sensitivity-uv-mm/5079) (discourse:mne, 2022-06-15)
-  - [How to solve "can not import name 'Brain' from 'Surfer'](https://mne.discourse.group/t/how-to-solve-can-not-import-name-brain-from-surfer/4390) (discourse:mne, 2022-02-09)
-  - [GUI and display [not working as intended]](https://mne.discourse.group/t/gui-and-display-not-working-as-intended/4325) (discourse:mne, 2022-01-27)
-
-## 11. Structured BCI/neural-data learning paths — score 18.7
-- Newcomers from biology, medicine or data science lack a project-based roadmap covering the neuroscience, signal processing, coding, math and hardware choices, and many lack mentorship or labs.
-- Items: 23 · paying signals: 11 · engagement: 516 · who: student 14, hobbyist 5, academic_lab 3
-- Fit 0.55: Self-serve interactive courses with hosted notebooks and public datasets scale well, but the market is crowded and mentorship pulls toward service work.
-- Product idea: Project-based interactive BCI curriculum with hosted notebooks on public datasets and auto-graded checkpoints.
-- Evidence:
-  - [Switching from Finance to Computational Neuroscience — Looking for Learning Partners or Beginner Projects](https://www.reddit.com/r/compmathneuro/comments/1k7qzkx/switching_from_finance_to_computational/) (reddit:r/compmathneuro, 2025-04-25) — "I'm just not sure how to speed up the process of figuring out if this is something I'd enjoy doing long term."
+  - [Neuroengineer-built BCI & neurotech research database (open-access, primary sources only)](https://www.reddit.com/r/BCI/comments/1s3j0n6/neuroengineerbuilt_bci_neurotech_research/) (reddit:r/BCI, 2026-03-25) — "I got tired of re-finding the same papers and press releases scattered across a dozen sources"
   - [Learning Python and maths for computational neuroscience as a beginner](https://www.reddit.com/r/compmathneuro/comments/1vo3myu/learning_python_and_maths_for_computational/) (reddit:r/compmathneuro, 2026-08-14) — "I have about a year to prepare before starting my PhD"
   - [How do I get into BCI](https://www.reddit.com/r/BCI/comments/1q30oe5/how_do_i_get_into_bci/) (reddit:r/BCI, 2026-01-03) — "I dont rly have money for the hardware"
-  - [Online courses on Computational Neuroscience](https://www.reddit.com/r/compmathneuro/comments/wq65ih/online_courses_on_computational_neuroscience/) (reddit:r/compmathneuro, 2022-08-16) — "I've started the Coursera course, but i don't have math knowledge to keep up with it."
-  - [Self-studying CompNeuro from a CS/AI background in a developing country - Am I doing this right?](https://www.reddit.com/r/compmathneuro/comments/1nty5ry/selfstudying_compneuro_from_a_csai_background_in/) (reddit:r/compmathneuro, 2025-09-29) — "limited computing resources... limited funding"
+  - [Is the Neuromatch Computational Neuroscience Course worth it?](https://www.reddit.com/r/compmathneuro/comments/1pccnc9/is_the_neuromatch_computational_neuroscience/) (reddit:r/compmathneuro, 2025-12-02) — "I'm not sure if the time commitment and money spent is worth it"
+  - [tips for interactive teaching using google colab](https://mne.discourse.group/t/tips-for-interactive-teaching-using-google-colab/7934) (discourse:mne.discourse.group, 2023-12-01) — "that would really help me save time"
 
-## 12. Real-time BCI and neurofeedback pipeline building — score 18.0
-- Closed-loop BCI and neurofeedback apps require stitching acquisition, artifact handling, decoding and feedback by hand. Real-time frameworks are hard to debug and install, there's no browser-native streaming, and game-engine integration, lightweight edge processing and device simulators are missing.
-- Items: 30 · paying signals: 6 · engagement: 215 · who: developer 16, hobbyist 7, student 3
-- Fit 0.5: A software SDK or low-code builder is feasible, but real-time reliability depends on the device layer, and the hobbyist market has low willingness to pay.
-- Product idea: Browser-based low-code real-time BCI builder with a device simulator, reusable feature recipes and exports to Unity/OSC.
+## 12. Spike sorting environments and compute — score 7.2
+- GPU spike sorters need matching CUDA, MATLAB and compiler versions. Upgrades break cached results, curation exports break between versions, Apple Silicon can't run CUDA-only sorters, and large probe recordings take days of compute.
+- Items: 12 · paying signals: 4 · engagement: 445 · who: employee 8, student 2, unknown 1
+- Fit 0.45: Managed cloud sorting is self-serve SaaS, but GPU costs scale with usage, the datasets are huge, and debugging per-lab probe configurations drives up support.
+- Product idea: Upload-and-sort cloud service running pinned SpikeInterface sorter containers with curation-ready exports.
 - Evidence:
-  - [My current project (Looking for advice!)](https://www.reddit.com/r/BCI/comments/1wgdf58/my_current_project_looking_for_advice/) (reddit:r/BCI, 2026-09-14) — "was there a cheaper option than the 250 dollars kit ... Also is there a place I can hire someone to help me for this?"
-  - [MNE-RT: an open-source real-time neurofeedback/BCI framework](https://mne.discourse.group/t/mne-rt-an-open-source-real-time-neurofeedback-bci-framework/11898) (discourse:mne, 2026-07-19) — "It covers the entire closed-loop pipeline in a single, researcher-friendly API"
-  - [BCI for a 3 year old?](https://www.reddit.com/r/OpenBCI/comments/1dgs683/bci_for_a_3_year_old/) (reddit:r/OpenBCI, 2024-06-15) — "I'm looking for some guidance in setting up a BCI controller for a laptop to help my daughter with a degenerative disease speak."
-  - [LSL and Simulink](https://github.com/sccn/labstreaminglayer/issues/11) (github:sccn/labstreaminglayer, 2019-01-17) — "I only found a thing called SimBSI but its unstable and crashes all the time."
-  - [FNIRS preprocessing based on Lab Streaming Layer](https://mne.discourse.group/t/fnirs-preprocessing-based-on-lab-streaming-layer/11669) (discourse:mne, 2026-01-21) — "we currently must save data in the .lufr format, then convert it to SNIRF through a MATLAB conversion script ... This multi-step conversion process is cumbersome"
+  - [Sorting takes extremely long when sorting a four shank probe by property](https://github.com/SpikeInterface/spikeinterface/issues/2625) (github:SpikeInterface/spikeinterface, 2024-03-26) — "it takes 8 hours to sort one of the four shanks and an estimated 160 hours to recompute the spike templates"
+  - [Saving of ChannelSliceRecordings inefficient/basically unusable](https://github.com/SpikeInterface/spikeinterface/issues/2328) (github:SpikeInterface/spikeinterface, 2023-12-13) — "I then tried to increase the number of cores (up to 72) and the amount of RAM available (up to 1TB), but none of it helped."
+  - [Navigating SpikeInterface Documentation](https://github.com/SpikeInterface/spikeinterface/issues/3656) (github:SpikeInterface/spikeinterface, 2025-01-29) — "I needed a tutorial and multiple attempts to just install anaconda, jupyter notebook, and SpikeInterface... questions that I have collected over the past weeks"
+  - [Single-Unit Decoding: Relative Change or Absolute Change?](https://www.reddit.com/r/BCI/comments/1dt21sh/singleunit_decoding_relative_change_or_absolute/) (reddit:r/BCI, 2024-07-01) — "will undergo the laborious task of sorting to enrich the analysis"
+  - [New version of spikeinterface](https://github.com/SpikeInterface/spikeinterface/issues/165) (github:SpikeInterface/spikeinterface, 2021-05-24)
 
-## 13. Spike sorting compute and pipeline fragility — score 12.1
-- Neuropixels/HD-MEA sorting is compute-bound, and users hit CUDA/MATLAB version hell, flaky containerized sorters, broken Phy export, file readers that break across versions, and no path on Apple Silicon.
-- Items: 15 · paying signals: 7 · engagement: 465 · who: academic_lab 13, developer 1, student 1
-- Fit 0.55: Hosted GPU sorting is multi-tenant software, but GPU costs, very large data transfers and per-lab debugging push support hours up.
-- Product idea: Cloud spike-sorting service: upload or point to data, pick a sorter, get curated-ready Phy/NWB outputs.
-- Evidence:
-  - [Sorting takes extremely long when sorting a four shank probe by property](https://github.com/SpikeInterface/spikeinterface/issues/2625) (github:SpikeInterface/spikeinterface, 2024-03-26) — "it takes 8 hours to sort one of the four shanks and an estimated 160 hours to recompute the spike templates... NVIDIA RTX 4080, 64 GB RAM"
-  - [Kilosort error:  sgemm in CUBLAS failed](https://github.com/SpikeInterface/spikeinterface/issues/702) (github:SpikeInterface/spikeinterface, 2022-06-13) — "Matlab R2018a, CUDA 9.0, Visual Studio 2015, NVIDIA RTX A5000"
-  - [Unable to open kilosort4 results with phy](https://github.com/SpikeInterface/spikeinterface/issues/2710) (github:SpikeInterface/spikeinterface, 2024-04-11) — "None of above was works"
-  - [Improper Probe Configuration when loading OpenEphys](https://github.com/SpikeInterface/spikeinterface/issues/4394) (github:SpikeInterface/spikeinterface, 2026-02-16) — "So far I thought everything was looking good, but when inspecting the units in phy I noticed..."
-  - [using read_intan with timestamp gaps](https://github.com/SpikeInterface/spikeinterface/issues/3375) (github:SpikeInterface/spikeinterface, 2024-09-06) — "I have already sorted them with Kilosort... Since the update, I have been unable to load these two recordings."
-
-## 14. Headset selection and capability comparison — score 10.8
-- Buyers can't compare consumer EEG headsets on signal quality, raw-data access, SDK quality and feasibility for their goal (motor control, meditation, accessibility) before spending hundreds of dollars.
-- Items: 16 · paying signals: 8 · engagement: 323 · who: hobbyist 8, student 3, developer 2
-- Fit 0.45: A comparison database is easy to build, but it is content- and affiliate-driven with thin monetization and needs ongoing research on hardware.
-- Product idea: Structured EEG headset comparison and feasibility checker built from SDK tests and public benchmark data.
-- Evidence:
-  - [The best EEG headset for programming](https://www.reddit.com/r/BCI/comments/p3mz41/the_best_eeg_headset_for_programming/) (reddit:r/BCI, 2021-08-13) — "They are all expensive so I'd hate to buy one and find out it's actually not that good for programming purposes"
-  - [is there anyway for a consumer to buy a Dreem 3 headband?](https://www.reddit.com/r/BCI/comments/179tx44/is_there_anyway_for_a_consumer_to_buy_a_dreem_3/) (reddit:r/BCI, 2023-10-17) — "i would pay for it"
-  - [How well does the Neurosity Crown actually work?](https://www.reddit.com/r/BCI/comments/12h0vu7/how_well_does_the_neurosity_crown_actually_work/) (reddit:r/BCI, 2023-04-10) — "I was hoping to purchase the device to help a family member with MS"
-  - [Best commercial BCI for research/fun](https://www.reddit.com/r/BCI/comments/1kaa4s3/best_commercial_bci_for_researchfun/) (reddit:r/BCI, 2025-04-28) — "let you download/extract the raw data (without additional subscriptions)"
-  - [Roadmap for a CS student looking to make BCI projects](https://www.reddit.com/r/BCI/comments/1hkxq1y/roadmap_for_a_cs_student_looking_to_make_bci/) (reddit:r/BCI, 2024-12-23) — "don't want to drop hundreds of dollars on something that may not be a right fit"
-
-## 15. Affordable, high-quality EEG hardware — score 0.0
-- Research-grade EEG boards, caps and electrodes are too expensive, DIY builds have signal-integrity and safety problems, raw data is locked, and there are no rental or try-before-you-buy options.
-- Items: 14 · paying signals: 13 · engagement: 423 · who: hobbyist 8, startup 2, developer 2
-- Fit 0.1: The core need is physical hardware and logistics. · **excluded: hardware**
-- Product idea: Low-cost open EEG board or headset rental program.
+## 13. Affordable EEG hardware and buying decisions — score 0.0
+- Research-grade boards and caps are expensive, DIY builds have poor signal integrity and safety concerns, clones are unverified, and buyers can't compare headsets on usability, signal quality and cost.
+- Items: 15 · paying signals: 12 · engagement: 378 · who: hobbyist 12, student 2, unknown 1
+- Fit 0.1: The core need is cheaper or better physical hardware. A comparison guide alone is thin and hard to monetize. · **excluded: hardware**
+- Product idea: Affordable gel-free multi-channel EEG headset with open raw-data access.
 - Evidence:
   - [I designed an Open Source, 8-channel EEG board (ESP32-S3 + ADS1299). Works with LSL Brainflow and forked OpenBCI GUI](https://www.reddit.com/r/BCI/comments/1polj4b/i_designed_an_open_source_8channel_eeg_board/) (reddit:r/BCI, 2025-12-17) — "Research gear was wildly unaffordable... For those who don't want to deal with BGA soldering or sourcing components, I do have assembled units available"
-  - [Starting a BCI company with (almost) no money](https://www.reddit.com/r/BCI/comments/1lrgdgr/starting_a_bci_company_with_almost_no_money/) (reddit:r/BCI, 2025-07-04) — "Starting a BCI company with (almost) no money"
-  - [The worst case happened: Interaxon does no longer offer the Muse SDK!!!](https://github.com/sccn/labstreaminglayer/issues/30) (github:sccn/labstreaminglayer, 2019-07-18) — "we first have to write a Matlab interface for it"
-  - [Emotiv epoc flex custom / universal electrode holders](https://www.reddit.com/r/BCI/comments/1h4a9zd/emotiv_epoc_flex_custom_universal_electrode/) (reddit:r/BCI, 2024-12-01) — "Emotiv wanted hundreds for the things.  $80 and some 3D prints and we can now use universal electrodes."
-  - [Is it possible to build BCI Electrode Cap from scratch?](https://www.reddit.com/r/BCI/comments/1vy8a2i/is_it_possible_to_build_bci_electrode_cap_from/) (reddit:r/BCI, 2026-08-25) — "I wanted to buy this type of caps but they are too expensive"
+  - [is there anyway for a consumer to buy a Dreem 3 headband?](https://www.reddit.com/r/BCI/comments/179tx44/is_there_anyway_for_a_consumer_to_buy_a_dreem_3/) (reddit:r/BCI, 2023-10-17) — "i would pay for it..."
+  - [Is it possible to build BCI Electrode Cap from scratch?](https://www.reddit.com/r/BCI/comments/1vy8a2i/is_it_possible_to_build_bci_electrode_cap_from/) (reddit:r/BCI, 2026-08-25) — "they are too expensive so I thought that making one from scratch would help me save money"
+  - [Rate my first BCI project please](https://www.reddit.com/r/BCI/comments/1tuu5hy/rate_my_first_bci_project_please/) (reddit:r/BCI, 2026-06-02) — "I am too broke for eeg headset yet."
+  - [Is this video on how to make an EEG safe and accurate?](https://www.reddit.com/r/BCI/comments/1uy3pqr/is_this_video_on_how_to_make_an_eeg_safe_and/) (reddit:r/BCI, 2026-07-16) — "I wanted to make sure this would work before I actually bought everything"
+
+## 14. Clinical EEG reading and expert interpretation — score 0.0
+- Groups can't find epileptologists to read EDF recordings outside hospital systems. Caregivers want a deeper interpretation of patient EEG, and ambiguous artifact annotations need independent expert review.
+- Items: 4 · paying signals: 4 · engagement: 12 · who: employee 2, developer 1, hobbyist 1
+- Fit 0.1: Needs licensed human experts per case and touches medical interpretation, so it is both service work and regulated. · **excluded: regulated**
+- Product idea: Marketplace connecting research groups with credentialed EEG readers for per-recording review.
+- Evidence:
+  - [Unknown pattern in MEG data](https://mne.discourse.group/t/unknown-pattern-in-meg-data/11803) (discourse:mne.discourse.group, 2026-04-11) — "We are observing a high-amplitude pattern in our MEG data across multiple subjects (pediatric ASD cohort)"
+  - [Volunteer second opinion on three ambiguous artifact intervals in high-density EEG](https://mne.discourse.group/t/volunteer-second-opinion-on-three-ambiguous-artifact-intervals-in-high-density-eeg/11939) (discourse:mne.discourse.group, 2026-08-15) — "The review should take about 15–20 minutes"
+  - [Seeking Epileptologist for Independent Review of OpenNeuro EEG Recordings](https://mne.discourse.group/t/seeking-epileptologist-for-independent-review-of-openneuro-eeg-recordings/11875) (discourse:mne.discourse.group, 2026-06-30) — "The review would be compensated."
+  - [Seeking guidance on EEG analysis for SCN2A mutation clinical case (Beginner with programming)](https://mne.discourse.group/t/seeking-guidance-on-eeg-analysis-for-scn2a-mutation-clinical-case-beginner-with-programming/11882) (discourse:mne.discourse.group, 2026-07-10) — "the clinical EEG reports we receive are quite superficial and do not provide the level of detailed insights we need"

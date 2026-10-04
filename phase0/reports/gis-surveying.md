@@ -1,6 +1,6 @@
 # gis-surveying pain points — ranked
 
-Items scanned: 884 (reddit 884); labelled as pains: 306.
+Items scanned: 884 (reddit 884); labelled as pains: 308.
 Score = count × (1 + share with paying signal) × fit. Fit and clustering are Claude judgements, not measurements.
 
 ## 1. Spreadsheet-to-map live sync — score 32.3
