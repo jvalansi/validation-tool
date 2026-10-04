@@ -194,6 +194,7 @@ def enforce_caps(today=None):
                                    "updateMask": "status"}], token)
             c["status"] = "paused"
         c["spent_usd"] = cost
+        c["clicks"] = clicks
         lines.append(f"{c['project']}: ${cost:.2f} of ${c['cap_usd']:.0f}, {clicks} clicks — {c['status']}")
     _save_state(state)
     return lines

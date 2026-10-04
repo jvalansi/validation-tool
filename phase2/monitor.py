@@ -193,9 +193,22 @@ def run_monitor(dry_run=False):
         pace = total / day if day > 0 else 0
         projected = int(pace * total_days)
 
+        from .decision import MIN_CLICKS, MAX_COST_PER_SIGNUP, ad_stats
+        clicks, spend = ad_stats(project)
+
         # Recommendation
         if day >= total_days:
             rec = "⏰ Campaign ended."
+        elif clicks is not None:
+            cps = spend / total if total else None
+            if clicks < MIN_CLICKS:
+                rec = f"⏳ {clicks}/{MIN_CLICKS} clicks — too few to judge"
+            elif cps is not None and cps <= 20:
+                rec = "✅ Strong signal — continue"
+            elif cps is not None and cps <= MAX_COST_PER_SIGNUP:
+                rec = "⚠️ Moderate signal — monitor closely"
+            else:
+                rec = f"🔴 Over ${MAX_COST_PER_SIGNUP}/signup — consider killing"
         elif projected >= 10:
             rec = "✅ Strong signal — continue"
         elif projected >= 5:
@@ -207,6 +220,9 @@ def run_monitor(dry_run=False):
             f"*{project} — Day {day}/{total_days}*",
             f"Signups: {total} total  |  Pace: {pace:.1f}/day  |  Projected: {projected}",
         ]
+        if clicks is not None:
+            lines.append(f"Ad clicks: {clicks}  |  Spend: ${spend:.2f}"
+                         + (f"  |  ${spend / total:.2f}/signup" if total else ""))
         if spend_counts:
             lines.append("Spend intent: " + "  |  ".join(f"{v}: {k}" for k, v in sorted(spend_counts.items(), key=lambda x: -x[1])))
         lines.append(f"Landing page: {pages_url}")

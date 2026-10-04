@@ -6,7 +6,7 @@ Phase 1 measures passive signal — are people talking about this problem? Phase
 
 **Budget:** $50–100 per project ($10–15/day for 5–7 days).
 
-**Kill signal:** <5 signups after $100 spend → kill. 3+ pre-orders at $99 → build.
+**Kill signal:** >$50 per signup after ≥100 ad clicks → kill. Fewer than 100 clicks → extend, never kill. 3+ pre-orders at $99 → build.
 
 ---
 
@@ -54,8 +54,8 @@ Daily Discord report to `#validation-tool` via cron at 8:47 AM:
 |---|---|---|
 | CTR | >2% | <0.5% |
 | CPC | <$3 | >$10 |
-| Signups | >1/day | 0 after day 3 |
-| Spend per signup | <$20 | >$50 |
+| Clicks | ≥100 before judging | — |
+| Spend per signup | <$20 | >$50 (only after ≥100 clicks) |
 
 ### 4. Outreach (Day 5 — auto-triggered)
 
@@ -69,8 +69,12 @@ Claude generates personalised outreach drafts per signup, posted to Discord `#va
 | Result | Verdict | Notion status |
 |---|---|---|
 | ≥3 signups at/above price | build | `building` |
-| ≥5 signups, <3 strong | validate more | `validating` |
-| <5 signups | kill | `killed` |
+| <100 ad clicks | extend | `validating` |
+| ≤$50 per signup | validate more | `validating` |
+| >$50 per signup, or 0 signups | kill | `killed` |
+
+Without ad data (organic traffic only) it falls back to ≥5 signups → validate more, else kill.
+Rationale: at $3 CPC, day 3 is ~15 clicks; at a 5% signup rate that gives 0 signups about half the time.
 
 Move to the next project in ROI order from the Notion Projects table.
 
