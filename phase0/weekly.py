@@ -5,7 +5,8 @@ Weekly idea pipeline, run from run.sh by cron:
   1. Claude proposes new niches (subreddits checked to exist) → niches/<name>.json
   2. sweep.py mines every niche and phase-1 validates the top clusters not validated before
   3. The best passing ideas ("validate further", by market value × capture) not yet in Notion
-     are added with notion_create.py --ai-generated
+     are added with notion_create.py --ai-generated, with a Claude-estimated Fun Score
+     (Fun Estimated ticked) learned from the user's own scores
   4. The highest-ROI Notion ideas with no "Phase 2 Tested" date (and not status ❌) are
      launched through phase 2, then stamped with today's date
 
@@ -29,6 +30,7 @@ PY = sys.executable
 PHASE2_PY = "/home/ubuntu/miniconda3/bin/python"  # same interpreter as the phase-2 monitor cron
 NOTION_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
 STATUS_DROPPED = "❌"
+JOURNAL = "/home/ubuntu/journal/journal-summary.md"
 
 sys.path.insert(0, VT)
 from phase2.notify import post  # noqa: E402
@@ -80,6 +82,36 @@ def propose_niches(n):
     return added
 
 
+def estimate_fun(ideas):
+    """{page_id: fun} for [(page_id, name, description)], from the user's own Fun Scores.
+    Tested 2026-10-02 against held-out scores: rank correlation 0.44, so it orders ideas
+    reasonably but misses individual scores by ~0.09; ROI's 2/(2-fun) keeps that to ~8%."""
+    scored, cur = [], None
+    while True:
+        d = notion(f"databases/{NOTION_DB}/query", {"page_size": 100, **({"start_cursor": cur} if cur else {}),
+                   "filter": {"and": [{"property": "Fun Score", "number": {"is_not_empty": True}},
+                                      {"property": "Fun Estimated", "checkbox": {"equals": False}}]}}, method="POST")
+        for p in d["results"]:
+            pr = p["properties"]
+            scored.append(f"- {''.join(t['plain_text'] for t in pr['Project']['title'])}: "
+                          f"{''.join(t['plain_text'] for t in pr['Description']['rich_text'])[:300]} → {pr['Fun Score']['number']}")
+        if not d["has_more"]:
+            break
+        cur = d["next_cursor"]
+    journal = open(JOURNAL).read() if os.path.exists(JOURNAL) else ""
+    prompt = (
+        "Predict the Fun Score the person below would give each new project idea, on their own 0-1 scale.\n"
+        "They score two things and weigh them equally: (1) how fun or interesting it is while doing it, and "
+        "(2) how educational or beneficial it is afterwards (skills learned, personal use, value to them). "
+        "An idea outside their interests can still score well on (2). Rate both parts, then average them.\n"
+        f"About the person (summary of their journal):\n{journal}\n\nTheir own fun scores:\n" + "\n".join(scored) +
+        "\n\nNew ideas:\n" + "\n".join(f"- id {i}: {n}: {desc}" for i, n, desc in ideas) +
+        '\n\nReturn ONLY a JSON object {"<id>": averaged score, ...}, using the same scale and spread they use.'
+    )
+    out = claude_json(prompt)
+    return {i: min(max(float(out[i]), 0.0), 1.0) for i, _, _ in ideas if i in out}
+
+
 def add_to_notion(k, dry_run):
     cache = load_validated()
     passing = sorted((key for key, v in cache.items()
@@ -102,6 +134,17 @@ def add_to_notion(k, dry_run):
         v["page_id"] = m.group(1)
         save_validated(cache)
         added.append(v["name"])
+    new = [(cache[key]["page_id"], cache[key]["name"], cache[key]["idea"])
+           for key in passing[:k] if cache[key].get("page_id") and not cache[key].get("fun")]
+    if new:
+        try:
+            for page_id, fun in estimate_fun(new).items():
+                notion(f"pages/{page_id}", {"properties": {"Fun Score": {"number": round(fun, 2)},
+                                                           "Fun Estimated": {"checkbox": True}}}, method="PATCH")
+                next(cache[key] for key in passing[:k] if cache[key].get("page_id") == page_id)["fun"] = fun
+            save_validated(cache)
+        except Exception as e:
+            print(f"fun estimate failed: {e}", file=sys.stderr)  # pages stay unscored (ROI ×1) for the user
     return added
 
 
