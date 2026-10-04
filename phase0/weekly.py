@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 """
-Weekly idea pipeline, run from run.sh by cron:
+Weekly idea pipeline, run from run.sh by cron in two steps so the user can approve spend.
+
+Sunday (default):
 
   1. Claude proposes new niches (subreddits checked to exist) → niches/<name>.json
   2. sweep.py mines every niche and phase-1 validates the top clusters not validated before
   3. The best passing ideas ("validate further", by market value × capture) not yet in Notion
      are added with notion_create.py --ai-generated, with a Claude-estimated Fun Score
      (Fun Estimated ticked) learned from the user's own scores
-  4. The highest-ROI Notion ideas with no "Phase 2 Tested" date (and not status ❌) are
-     launched through phase 2, then stamped with today's date
+  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌)
+     for phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
 
-Usage: python weekly.py [--new-niches 2] [--top 10] [--add 2] [--launch 2] [--skip-sweep] [--dry-run]
+Monday (--launch):
+  5. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
+
+Usage: python weekly.py [--new-niches 2] [--top 10] [--add 2] [--propose 2] [--skip-sweep] [--dry-run]
+       python weekly.py --launch [--dry-run]
 """
 
 import argparse
@@ -148,21 +154,38 @@ def add_to_notion(k, dry_run):
     return added
 
 
-def launch_phase2(k, dry_run):
+UNTESTED = [{"property": "Phase 2 Tested", "date": {"is_empty": True}},
+            {"property": "סטטוס", "status": {"does_not_equal": STATUS_DROPPED}}]
+
+
+def page_name(p):
+    return "".join(t["plain_text"] for t in p["properties"]["Project"]["title"])
+
+
+def propose_phase2(k):
     pages = notion(f"databases/{NOTION_DB}/query", {
-        "filter": {"and": [
-            {"property": "Phase 2 Tested", "date": {"is_empty": True}},
-            {"property": "סטטוס", "status": {"does_not_equal": STATUS_DROPPED}},
+        "filter": {"and": UNTESTED + [
+            {"property": "Phase 2 Approved", "checkbox": {"equals": False}},
             {"property": "ROI", "formula": {"number": {"is_not_empty": True}}},
+            {"or": [{"property": "Market Signal", "select": {"equals": "moderate"}},
+                    {"property": "Market Signal", "select": {"equals": "strong"}}]},
         ]},
         "sorts": [{"property": "ROI", "direction": "descending"}],
         "page_size": k,
     }, method="POST")["results"]
+    return [f"{page_name(p)} (ROI {round(p['properties']['ROI']['formula'].get('number') or 0, 1)}) {p['url']}"
+            for p in pages]
+
+
+def launch_approved(dry_run):
+    pages = notion(f"databases/{NOTION_DB}/query", {
+        "filter": {"and": UNTESTED + [{"property": "Phase 2 Approved", "checkbox": {"equals": True}}]},
+    }, method="POST")["results"]
     launched = []
     for p in pages:
-        name = "".join(t["plain_text"] for t in p["properties"]["Project"]["title"])
+        name = page_name(p)
         if dry_run:
-            launched.append(f"{name} (dry run, ROI {p['properties']['ROI']['formula'].get('number')})")
+            launched.append(f"{name} (dry run)")
             continue
         out = subprocess.run([PHASE2_PY, "-m", "phase2.cli", p["id"]], capture_output=True, text=True,
                              timeout=3600, cwd=VT, env=os.environ)
@@ -177,24 +200,32 @@ def launch_phase2(k, dry_run):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--launch", action="store_true", help="Monday step: launch approved ideas only")
     ap.add_argument("--new-niches", type=int, default=2)
     ap.add_argument("--top", type=int, default=10, help="clusters to phase-1 validate per sweep")
     ap.add_argument("--add", type=int, default=2, help="passing ideas to add to Notion")
-    ap.add_argument("--launch", type=int, default=2, help="untested Notion ideas to launch in phase 2")
+    ap.add_argument("--propose", type=int, default=2, help="untested Notion ideas to propose for phase 2")
     ap.add_argument("--skip-sweep", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="no Notion writes, no phase-2 launches")
     args = ap.parse_args()
+    say = print if args.dry_run else post
+
+    if args.launch:
+        launched = launch_approved(args.dry_run)
+        say(f"**Phase 2 launched:** {', '.join(launched) or 'nothing approved'}")
+        return
 
     niches = [] if args.skip_sweep else propose_niches(args.new_niches)
     if not args.skip_sweep:
         subprocess.run([PY, "sweep.py", "--top", str(args.top)], cwd=HERE)
     added = add_to_notion(args.add, args.dry_run)
-    launched = launch_phase2(args.launch, args.dry_run)
+    proposed = propose_phase2(args.propose)
 
-    (print if args.dry_run else post)("**Weekly idea pipeline**\n"
-         f"- New niches: {', '.join(niches) or 'none'}\n"
-         f"- Added to Notion (AI Generated): {', '.join(added) or 'none passed phase 1'}\n"
-         f"- Phase 2 launched: {', '.join(launched) or 'none'}")
+    say("**Weekly idea pipeline**\n"
+        f"- New niches: {', '.join(niches) or 'none'}\n"
+        f"- Added to Notion (AI Generated): {', '.join(added) or 'none passed phase 1'}\n"
+        "- Proposed for phase 2 (~$100 of ads each). Tick **Phase 2 Approved** in Notion by Monday 06:00 UTC "
+        "to launch:\n" + "\n".join(f"  - {p}" for p in proposed or ["none qualify"]))
 
 
 if __name__ == "__main__":
