@@ -284,6 +284,7 @@ def main():
         "Work Weeks": {"number": ww_rounded},
         "Price/Customer/yr ($)": {"number": price_rounded},
         "TAM Customers": {"number": tam_rounded},
+        "TAM Sourced": {"checkbox": bool(claude_analysis.get("tam_sourced"))},
         "Probability": {"number": probability},
         "Market Signal": {"select": {"name": market_signal}},
         "TAM Tier": {"select": {"name": tam_tier}},

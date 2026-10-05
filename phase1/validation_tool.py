@@ -435,6 +435,46 @@ def _regulatory_search(query, limit=10):
 _FORUM_HOSTS = ("reddit.com", "quora.com", "stackexchange.com", "news.ycombinator.com", "stackoverflow.com")
 
 
+def _market_size_search(customer_group, limit=8, max_pages=4):
+    """Snippets that may state how many of these customers exist, so the TAM can be cited instead
+    of guessed. Searching the product query finds products, so this takes the customer group."""
+    from ddgs import DDGS
+
+    import time
+    hits, failed = [], 0
+    probes = [f"how many {customer_group} are there", f"number of {customer_group} statistics"]
+    for i, probe in enumerate(probes):
+        if i:
+            time.sleep(2)  # DDG rate-limits bursts
+        try:
+            results = list(DDGS().text(probe, max_results=limit))
+        except Exception:
+            failed += 1
+            continue
+        hits += [{"title": (r.get("title") or "")[:120], "url": r.get("href", ""), "snippet": (r.get("body") or "")[:300]}
+                 for r in results if r.get("href") and r.get("href") not in {h["url"] for h in hits}]
+    # Snippets usually ask "how many ..." without the answer, so read the counts off the top pages.
+    for h in hits[:max_pages]:
+        h["snippet"] += " … " + " … ".join(_count_sentences(h["url"]))
+    return {"results": hits, "search_failed": failed == len(probes)}
+
+
+_COUNT_RE = re.compile(r"\d[\d,.]*\s*(?:million|billion|thousand|[mbk]\b)|\b\d{1,3}(?:,\d{3})+\b", re.IGNORECASE)
+
+
+def _count_sentences(url, limit=6):
+    """Sentences on the page that state a count (e.g. "13.9 million", "250,000")."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (validation-tool)"})
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            html = resp.read(600_000).decode("utf-8", "ignore")
+    except Exception:
+        return []
+    text = re.sub(r"(?s)<(script|style)[^>]*>.*?</\1>", " ", html)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+    return [m.group(0).strip()[:250] for m in re.finditer(r"[^.!?]{0,200}" + _COUNT_RE.pattern + r"[^.!?]{0,100}", text, re.IGNORECASE)][:limit]
+
+
 def _classify_hosts(hosts, incumbent_hosts=()):
     """Bucket result hosts. Pure function so the read is testable offline."""
     buckets = {"vendor": 0, "government": 0, "forum": 0, "content": 0}
@@ -788,6 +828,7 @@ def cmd_report(args):
             claude_analysis["suggested_probability"] = 1.0 if prob >= 0.5 else 0.1 if prob >= 0.05 else 0.01
         report["claude_analysis"] = claude_analysis
         _apply_claude_competition(report, claude_analysis)
+        _source_tam(report, claude_analysis)
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
@@ -838,15 +879,51 @@ def _apply_claude_competition(report, analysis):
         s["verdict"] = "validate further" if s["signal_count"] >= 2 else "weak signal — reconsider or reframe"
 
 
+def _source_tam(report, analysis):
+    """Search for a count of analysis["customer_group"] and have Claude cite one. A verified count replaces
+    the guessed tam_customers (and value); otherwise the TAM stays a guess and tam_sourced is False."""
+    analysis["tam_sourced"] = False
+    group = analysis.get("customer_group")
+    if not group:
+        return
+    try:
+        report["sources"]["market_size"] = ms = _market_size_search(group)
+    except Exception as e:
+        report["sources"]["market_size"] = {"error": str(e)}
+        return
+    if not ms["results"]:
+        return
+    cite = _claude_json(f"""Below are search results. Find the one that states how many {group} exist (a count of
+people or businesses, not revenue, not a different population, not a percentage).
+
+{json.dumps(ms["results"], indent=1, ensure_ascii=False)}
+
+Return only JSON: {{"tam_source": that result's url or null, "tam_source_quote": the count exactly as written in its
+title or snippet (e.g. "13.9 million") or null, "count": the count as a plain integer or null}}""") or {}
+    analysis.update({k: cite.get(k) for k in ("tam_source", "tam_source_quote")})
+    _apply_tam_source(report, analysis)
+    count = cite.get("count")
+    if analysis["tam_sourced"] and isinstance(count, (int, float)) and count > 0:
+        import math
+        analysis["tam_customers"] = int(10 ** round(math.log10(count)))
+        price = analysis.get("price_per_customer_annual")
+        if isinstance(price, (int, float)) and price > 0:
+            analysis["value"] = int(10 ** round(math.log10(analysis["tam_customers"] * price)))
+
+
+def _apply_tam_source(report, analysis):
+    """Keep tam_source only if its snippet contains the quoted count; tam_sourced flags the rest as assumed."""
+    texts = _source_texts(report.get("sources", {}))
+    url, quote = analysis.get("tam_source"), analysis.get("tam_source_quote")
+    squash = lambda t: re.sub(r"\s+", "", str(t).lower())  # DDG snippets drop spaces around bolded terms
+    ok = bool(url and quote and any(c.isdigit() for c in str(quote)) and squash(quote) in squash(texts.get(url, "")))
+    if not ok:
+        analysis["tam_source"] = analysis["tam_source_quote"] = None
+    analysis["tam_sourced"] = ok
+
+
 def _claude_review(query, report, assume_tech_exists=False):
-    """Call Claude via CLI to synthesize the report data into a revenue/value estimate."""
-    import subprocess
-    import shutil
-
-    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
-    if not os.path.exists(claude_path) and os.environ.get("VALIDATION_LLM") != "api":
-        return None
-
+    """Call Claude to synthesize the report data into a revenue/value estimate."""
     tech_context = (
         "IMPORTANT ASSUMPTION: Treat the technology as fully working and available. "
         "Do NOT factor in technical feasibility or R&D risk — those are captured separately in the probability of success. "
@@ -874,6 +951,7 @@ All numeric outputs must be rounded to the nearest power of 10 (e.g. 100, 1000, 
 Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "tam_customers": estimated number of potential customers, rounded to nearest power of 10
+- "customer_group": the paying customers in 2-5 words, as a searchable noun phrase (e.g. "retail forex traders")
 - "price_per_customer_annual": estimated annual revenue per customer in USD, rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
 - "legal_status": one of "clear" | "restricted" | "unknown" — whether licensing or standing rules limit who may sell this, based on the regulatory source
@@ -906,9 +984,19 @@ Provide your assessment as JSON with these fields:
 - "probability_reasoning": one sentence explaining the probability choice, including the expected penetration rate
 
 Return only valid JSON, no markdown."""
+    return _claude_json(prompt)
+
+
+def _claude_json(prompt):
+    """JSON from Claude: the Anthropic API for the paid web app (VALIDATION_LLM=api), else the Claude Code CLI."""
+    import subprocess
+    import shutil
 
     if os.environ.get("VALIDATION_LLM") == "api":
         return _claude_api_json(prompt)
+    claude_path = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
+    if not os.path.exists(claude_path):
+        return None
 
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
     try:

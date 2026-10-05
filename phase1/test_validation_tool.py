@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from validation_tool import (
     _parse_funding, _assess_competition, _host, _classify_hosts,
     _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
-    _extract_prices, _is_non_vendor, _apply_claude_competition,
+    _extract_prices, _is_non_vendor, _apply_claude_competition, _apply_tam_source,
 )
 
 # --- _parse_funding: funding language required -------------------------------
@@ -172,5 +172,18 @@ r["summary"]["verdict"] = "unviable — value per customer below the acquisition
 _apply_claude_competition(r, {"competition_level": "open", "competitors": [
     {"name": "Copilot", "evidence_url": "https://daily.dev/x"}]})
 assert r["summary"]["competition"] == "open" and r["summary"]["verdict"].startswith("unviable"), r
+
+# --- _apply_tam_source: a TAM counts as sourced only if its snippet has the quoted count ---
+src = {"sources": {"market_size": {"results": [{"title": "Forex stats", "url": "https://x.com/fx",
+                                                "snippet": "There are about 13.9 million retail forex traders worldwide"}]}}}
+a = {"tam_source": "https://x.com/fx", "tam_source_quote": "13.9 million"}
+_apply_tam_source(src, a)
+assert a["tam_sourced"] and a["tam_source"] == "https://x.com/fx", a
+for bad in ({"tam_source": "https://x.com/fx", "tam_source_quote": "50 million"},   # not in the snippet
+            {"tam_source": "https://other.com", "tam_source_quote": "13.9 million"},  # not in the research data
+            {"tam_source": "https://x.com/fx", "tam_source_quote": "million"},       # no number
+            {"tam_source": None, "tam_source_quote": None}):
+    _apply_tam_source(src, bad)
+    assert not bad["tam_sourced"] and bad["tam_source"] is None, bad
 
 print("all checks passed")
