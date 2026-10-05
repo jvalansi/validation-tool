@@ -680,8 +680,8 @@ def cmd_report(args):
     trends_queries = [explicit_trends_query or search_query]
     if pain_query and pain_query != trends_queries[0]:
         trends_queries.append(pain_query)
-    trends_result = None
-    for tq in trends_queries:
+    trends_result = {"skipped": True} if getattr(args, "skip_trends", False) else None
+    for tq in ([] if trends_result else trends_queries):
         try:
             interest = _fetch_trends(tq)
             if not interest.empty:
@@ -1137,6 +1137,8 @@ def main():
     p_report.add_argument("--assume-tech-exists", action="store_true",
                           help="Assume technology works — assess market demand only, not technical feasibility")
     p_report.add_argument("--pain-query", help="Pain/desire search query to use instead of product query (used with --assume-tech-exists)")
+    p_report.add_argument("--skip-trends", action="store_true",
+                          help="Skip Google Trends (it rate-limits batch runs); trends-based fields are then meaningless")
     p_report.add_argument("--trends-query", help="Specific short query to use for Google Trends (overrides default query)")
 
     args = parser.parse_args()

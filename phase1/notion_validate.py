@@ -94,7 +94,7 @@ def append_validation_section(page_id, report, new_prob, claude):
 
     gt_line = (
         f"📈 Google Trends: {gt['average_interest']}/100 avg, trend {gt.get('trend_direction', 'unknown')}"
-        if "average_interest" in gt else "📈 Google Trends: no data"
+        if "average_interest" in gt else "📈 Google Trends: skipped" if gt.get("skipped") else "📈 Google Trends: no data"
     )
     hn_line = f"🟡 Hacker News: {hn.get('total_results', 0)} results"
     if hn.get("top_posts"):
@@ -185,13 +185,13 @@ def append_validation_section(page_id, report, new_prob, claude):
         resp.read()
 
 
-def run_validation(query, pain_query=None, trends_query=None):
-    cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query]
+def run_validation(query, pain_query=None, trends_query=None, skip_trends=False):
+    cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query] + (["--skip-trends"] if skip_trends else [])
     if pain_query:
         cmd += ["--pain-query", pain_query, "--assume-tech-exists"]
     if trends_query:
         cmd += ["--trends-query", trends_query]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)  # 3 Claude calls + page fetches
     if result.returncode != 0:
         print(f"Validation error: {result.stderr[:200]}", file=sys.stderr)
         return None
@@ -202,6 +202,8 @@ def main():
     parser = argparse.ArgumentParser(description="Validate a Notion project and write results back")
     parser.add_argument("page_id", help="Notion page ID")
     parser.add_argument("--dry-run", action="store_true", help="Print results without writing to Notion")
+    parser.add_argument("--skip-trends", action="store_true",
+                        help="Skip Google Trends and leave Trends Interest, TAM Tier and Market Signal as they are")
     args = parser.parse_args()
 
     if not NOTION_TOKEN:
@@ -228,7 +230,7 @@ def main():
 
     # Run validation
     print("\nRunning validation...")
-    report = run_validation(validation_query, pain_query or None, trends_query or None)
+    report = run_validation(validation_query, pain_query or None, trends_query or None, args.skip_trends)
     if not report:
         sys.exit(1)
 
@@ -278,13 +280,14 @@ def main():
 
     # Write numeric/select fields to table
     table_props = {}
-    if tam_tier in ("mass", "mid", "niche"):
+    if tam_tier in ("mass", "mid", "niche") and not args.skip_trends:  # tier comes from Trends
         table_props["TAM Tier"] = {"select": {"name": tam_tier}}
     if suggested_value is not None:
         table_props["Value ($)"] = {"number": suggested_value}
     if suggested_probability is not None:
         table_props["Probability"] = {"number": float(suggested_probability)}
-    table_props["Market Signal"] = {"select": {"name": market_signal}}
+    if not args.skip_trends:  # without Trends the signal count is missing its search-volume signals
+        table_props["Market Signal"] = {"select": {"name": market_signal}}
     competition = report.get("summary", {}).get("competition")
     if competition:
         table_props["Competition"] = {"select": {"name": competition}}
