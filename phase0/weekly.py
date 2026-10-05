@@ -9,9 +9,8 @@ Sunday (default):
   3. The best passing ideas ("validate further", by market value × capture) not yet in Notion
      are added with notion_create.py --ai-generated, with a Claude-estimated Fun Score
      (Fun Estimated ticked) learned from the user's own scores
-  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌,
-     not Deep Tech: nothing to buy yet, so a landing page measures curiosity, not demand) for
-     phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
+  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌ or 🔄)
+     for phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
 
 Monday (--launch):
   5. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
@@ -37,6 +36,7 @@ PY = sys.executable
 PHASE2_PY = "/home/ubuntu/miniconda3/bin/python"  # same interpreter as the phase-2 monitor cron
 NOTION_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
 STATUS_DROPPED = "❌"
+STATUS_BUILDING = "🔄"  # already past a landing page, worked on outside this tool
 JOURNAL = "/home/ubuntu/journal/journal-summary.md"
 
 sys.path.insert(0, VT)
@@ -157,7 +157,7 @@ def add_to_notion(k, dry_run):
 
 UNTESTED = [{"property": "Phase 2 Tested", "date": {"is_empty": True}},
             {"property": "סטטוס", "status": {"does_not_equal": STATUS_DROPPED}},
-            {"property": "Deep Tech", "checkbox": {"equals": False}}]
+            {"property": "סטטוס", "status": {"does_not_equal": STATUS_BUILDING}}]
 
 
 def page_name(p):
