@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from validation_tool import (
     _parse_funding, _assess_competition, _host, _classify_hosts,
     _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
-    _extract_prices, _is_non_vendor, _apply_claude_competition, _apply_tam_source,
+    _extract_prices, _is_non_vendor, _apply_claude_competition, _apply_tam_source, _apply_price_source,
 )
 
 # --- _parse_funding: funding language required -------------------------------
@@ -185,5 +185,21 @@ for bad in ({"tam_source": "https://x.com/fx", "tam_source_quote": "50 million"}
             {"tam_source": None, "tam_source_quote": None}):
     _apply_tam_source(src, bad)
     assert not bad["tam_sourced"] and bad["tam_source"] is None, bad
+
+# --- _apply_price_source: quote must be on the cited page and within 10x of the annual price ---
+rep = {"sources": {}, "revenue_estimate": {"competitor_prices_found": [
+    {"raw": "$20/mo", "url": "https://v.com/pricing", "snippet": "Pro plan $20/month per seat"}]}}
+a = {"price_source": "https://v.com/pricing", "price_source_quote": "$20/month", "price_per_customer_annual": 1000}
+_apply_price_source(rep, a)
+assert a["price_sourced"], a  # $240/yr vs $1000: per-seat, within 10x
+rep["revenue_estimate"]["competitor_prices_found"][0]["snippet"] = "Meter costs $25 per screen per month"
+a = {"price_source": "https://v.com/pricing", "price_source_quote": "$25 per screen per month", "price_per_customer_annual": 1000}
+_apply_price_source(rep, a)
+assert a["price_sourced"], a  # the period comes after the unit
+for bad in ({"price_source": "https://v.com/pricing", "price_source_quote": "$20/month", "price_per_customer_annual": 10000},
+            {"price_source": "https://v.com/pricing", "price_source_quote": "$99/month", "price_per_customer_annual": 1000},
+            {"price_source": None, "price_source_quote": None, "price_per_customer_annual": 1000}):
+    _apply_price_source(rep, bad)
+    assert not bad["price_sourced"] and bad["price_source"] is None, bad
 
 print("all checks passed")

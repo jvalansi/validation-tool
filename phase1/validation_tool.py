@@ -462,6 +462,12 @@ def _market_size_search(customer_group, limit=8, max_pages=4):
 _COUNT_RE = re.compile(r"\d[\d,.]*\s*(?:million|billion|thousand|[mbk]\b)|\b\d{1,3}(?:,\d{3})+\b", re.IGNORECASE)
 
 
+def _page_text(html):
+    """Visible text: script and style contents (e.g. Next.js JSON full of "$24") are not prices or counts."""
+    text = re.sub(r"(?s)<(script|style)[^>]*>.*?</\1>", " ", html)
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+
+
 def _count_sentences(url, limit=6):
     """Sentences on the page that state a count (e.g. "13.9 million", "250,000")."""
     try:
@@ -470,8 +476,7 @@ def _count_sentences(url, limit=6):
             html = resp.read(600_000).decode("utf-8", "ignore")
     except Exception:
         return []
-    text = re.sub(r"(?s)<(script|style)[^>]*>.*?</\1>", " ", html)
-    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+    text = _page_text(html)
     return [m.group(0).strip()[:250] for m in re.finditer(r"[^.!?]{0,200}" + _COUNT_RE.pattern + r"[^.!?]{0,100}", text, re.IGNORECASE)][:limit]
 
 
@@ -528,9 +533,11 @@ def _fetch_pricing_prices(operators, max_pages=3):
                 html = resp.read(400_000).decode("utf-8", "ignore")
         except Exception:
             continue
-        text = re.sub(r"<[^>]+>", " ", html)
+        text = _page_text(html)
         for p in _extract_prices([text])[:5]:
-            found.append({**p, "source": op.get("host") or _host(url)})
+            i = text.find(p["raw"])
+            found.append({**p, "source": op.get("host") or _host(url), "url": url,
+                          "snippet": text[max(0, i - 80):i + 80] if i >= 0 else p["raw"]})
     return found
 
 
@@ -828,6 +835,7 @@ def cmd_report(args):
             claude_analysis["suggested_probability"] = 1.0 if prob >= 0.5 else 0.1 if prob >= 0.05 else 0.01
         report["claude_analysis"] = claude_analysis
         _apply_claude_competition(report, claude_analysis)
+        _source_price(args.query, report, claude_analysis)
         _source_tam(report, claude_analysis)
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
@@ -909,6 +917,45 @@ title or snippet (e.g. "13.9 million") or null, "count": the count as a plain in
         price = analysis.get("price_per_customer_annual")
         if isinstance(price, (int, float)) and price > 0:
             analysis["value"] = int(10 ** round(math.log10(analysis["tam_customers"] * price)))
+
+
+def _source_price(query, report, analysis):
+    """Have Claude cite a comparable vendor price from the research data; _apply_price_source verifies it.
+    The main review prices from memory as often as from the data, so citing is a separate, narrow ask."""
+    analysis["price_sourced"] = False
+    texts = _source_texts([report.get("sources", {}), report.get("revenue_estimate", {})])
+    priced = {u: t[max(0, t.find("$") - 150):t.find("$") + 250] for u, t in texts.items() if "$" in t}
+    if not priced or not analysis.get("price_per_customer_annual"):
+        return
+    cite = _claude_json(f"""Product idea: {query}. Paying customers: {analysis.get("customer_group") or "unknown"}.
+Below are research excerpts by URL. Find one that states a price a vendor charges these customers for a comparable
+product (not an ad rate, salary, API token rate or market statistic).
+
+{json.dumps(dict(list(priced.items())[:20]), indent=1, ensure_ascii=False)}
+
+Return only JSON: {{"price_source": that URL or null, "price_source_quote": the price exactly as written in its
+excerpt (e.g. "$49/month") or null}}""") or {}
+    analysis.update({k: cite.get(k) for k in ("price_source", "price_source_quote")})
+    _apply_price_source(report, analysis)
+
+
+def _apply_price_source(report, analysis):
+    """price_sourced: the cited quote is in the cited page and price_per_customer_annual is within 10x of it
+    annualized (seats or tiers can legitimately differ, an invented $10,000/yr against a $20/mo quote cannot)."""
+    texts = _source_texts([report.get("sources", {}), report.get("revenue_estimate", {})])
+    url, quote, price = analysis.get("price_source"), analysis.get("price_source_quote"), analysis.get("price_per_customer_annual")
+    squash = lambda t: re.sub(r"\s+", "", str(t).lower())
+    parsed = _extract_prices([str(quote or "")])
+    ok = bool(url and quote and parsed and isinstance(price, (int, float)) and price > 0
+              and squash(quote) in squash(texts.get(url, "")))
+    if ok:
+        q, words = parsed[0], str(quote).lower()
+        monthly = q["period"] in ("monthly", "annual") or re.search(r"month|/\s*mo\b", words)  # "$25 per screen per month"
+        annual = q["monthly_equiv"] * 12 if monthly else q["monthly_equiv"]
+        ok = 0.1 <= price / annual <= 10
+    if not ok:
+        analysis["price_source"] = analysis["price_source_quote"] = None
+    analysis["price_sourced"] = ok
 
 
 def _apply_tam_source(report, analysis):

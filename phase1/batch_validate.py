@@ -294,6 +294,9 @@ def append_validation_section(page_id, report, new_prob, old_prob, claude):
         src = claude.get("tam_source")
         blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{claude.get('tam_customers') or 0:,} customers " + (
             f"(source: \"{claude.get('tam_source_quote')}\" {src})" if src else "(assumed: no count found in search results)")}}]}})
+        psrc = claude.get("price_source")
+        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💵 Price: ~${claude.get('price_per_customer_annual') or 0}/yr per customer " + (
+            f"(source: \"{claude.get('price_source_quote')}\" {psrc})" if psrc else "(assumed: no comparable vendor price found)")}}]}})
         if pricing:
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})
 
@@ -323,6 +326,7 @@ def update_notion_table(page_id, new_prob, claude, rev, report):
         if tam_customers is not None:
             props["TAM Customers"] = {"number": int(tam_customers)}
         props["TAM Sourced"] = {"checkbox": bool(claude.get("tam_sourced"))}
+        props["Price Sourced"] = {"checkbox": bool(claude.get("price_sourced"))}
         price_annual = claude.get("price_per_customer_annual")
         if price_annual is not None:
             props["Price/Customer/yr ($)"] = {"number": float(price_annual)}
