@@ -9,8 +9,9 @@ Sunday (default):
   3. The best passing ideas ("validate further", by market value × capture) not yet in Notion
      are added with notion_create.py --ai-generated, with a Claude-estimated Fun Score
      (Fun Estimated ticked) learned from the user's own scores
-  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌)
-     for phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
+  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌,
+     not Deep Tech: nothing to buy yet, so a landing page measures curiosity, not demand) for
+     phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
 
 Monday (--launch):
   5. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
@@ -155,7 +156,8 @@ def add_to_notion(k, dry_run):
 
 
 UNTESTED = [{"property": "Phase 2 Tested", "date": {"is_empty": True}},
-            {"property": "סטטוס", "status": {"does_not_equal": STATUS_DROPPED}}]
+            {"property": "סטטוס", "status": {"does_not_equal": STATUS_DROPPED}},
+            {"property": "Deep Tech", "checkbox": {"equals": False}}]
 
 
 def page_name(p):
