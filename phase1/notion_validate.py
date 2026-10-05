@@ -280,6 +280,9 @@ def main():
     if suggested_probability is not None:
         table_props["Probability"] = {"number": float(suggested_probability)}
     table_props["Market Signal"] = {"select": {"name": market_signal}}
+    competition = report.get("summary", {}).get("competition")
+    if competition:
+        table_props["Competition"] = {"select": {"name": competition}}
     if trends_avg is not None:
         table_props["Trends Interest"] = {"number": float(trends_avg)}
     if hn_results is not None:
