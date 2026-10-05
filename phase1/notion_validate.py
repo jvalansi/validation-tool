@@ -13,6 +13,7 @@ import os
 import subprocess
 import sys
 import urllib.request
+from datetime import date
 
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
@@ -116,7 +117,7 @@ def append_validation_section(page_id, report, new_prob, claude):
     signals = report.get("summary", {}).get("positive_signals", [])
 
     blocks = [
-        {"heading_2": {"rich_text": [{"text": {"content": "Validation (Mar 2026)"}}]}},
+        {"heading_2": {"rich_text": [{"text": {"content": f"Validation ({date.today():%b %Y})"}}]}},
         {"heading_3": {"rich_text": [{"text": {"content": "Signals"}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": gt_line}}]}},
         {"bulleted_list_item": {"rich_text": [{"text": {"content": hn_line}}]}},
