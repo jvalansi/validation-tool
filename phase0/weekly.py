@@ -9,8 +9,9 @@ Sunday (default):
   3. The best passing ideas ("validate further", by market value × capture) not yet in Notion
      are added with notion_create.py --ai-generated, with a Claude-estimated Fun Score
      (Fun Estimated ticked) learned from the user's own scores
-  4. Proposes the highest-ROI untested ideas with Market Signal moderate or strong (not status ❌)
-     for phase 2, posting them to Discord; the user ticks "Phase 2 Approved" in Notion
+  4. Proposes the highest-ROI untested ideas (ROI ≥ MIN_ROI, not status ❌) for phase 2, posting
+     them to Discord; the user ticks "Phase 2 Approved" in Notion. Market Signal isn't used: phase 2
+     is what measures demand, and the signal double-counts competition already in ROI
 
 Monday (--launch):
   5. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
@@ -36,6 +37,7 @@ PY = sys.executable
 PHASE2_PY = "/home/ubuntu/miniconda3/bin/python"  # same interpreter as the phase-2 monitor cron
 NOTION_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
 STATUS_DROPPED = "❌"
+MIN_ROI = 1  # Notion ROI < 1: expected value is below the cost of the work weeks
 JOURNAL = "/home/ubuntu/journal/journal-summary.md"
 
 sys.path.insert(0, VT)
@@ -166,9 +168,7 @@ def propose_phase2(k):
     pages = notion(f"databases/{NOTION_DB}/query", {
         "filter": {"and": UNTESTED + [
             {"property": "Phase 2 Approved", "checkbox": {"equals": False}},
-            {"property": "ROI", "formula": {"number": {"is_not_empty": True}}},
-            {"or": [{"property": "Market Signal", "select": {"equals": "moderate"}},
-                    {"property": "Market Signal", "select": {"equals": "strong"}}]},
+            {"property": "ROI", "formula": {"number": {"greater_than_or_equal_to": MIN_ROI}}},
         ]},
         "sorts": [{"property": "ROI", "direction": "descending"}],
         "page_size": k,
