@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -31,15 +32,19 @@ def _web_search(query, max_results=10):
     """[{title, href, body}] from the Brave Search API when BRAVE_API_KEY is set, else ddgs.
     ddgs reads results pages of a randomly shuffled engine per call (ddgs/ddgs.py), most of which
     block this server, so the same query returns different results run to run."""
+    from ddgs import DDGS
     key = os.environ.get("BRAVE_API_KEY")
     if not key:
-        from ddgs import DDGS
         return list(DDGS().text(query, max_results=max_results))
     params = urllib.parse.urlencode({"q": query, "count": min(max_results, 20)})
     req = urllib.request.Request(f"{BRAVE_SEARCH_URL}?{params}", headers={
         "X-Subscription-Token": key, "Accept": "application/json"})
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        results = json.loads(resp.read()).get("web", {}).get("results", [])
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            results = json.loads(resp.read()).get("web", {}).get("results", [])
+    except urllib.error.HTTPError as e:  # 402 = prepaid credit used up, 429 = rate limit
+        sys.stderr.write(f"[search] Brave HTTP {e.code}, falling back to ddgs: {e.read()[:200]!r}\n")
+        return list(DDGS().text(query, max_results=max_results))
     strip = lambda t: re.sub(r"<[^>]+>", "", t or "")  # Brave bolds matches with <strong>
     return [{"title": strip(r.get("title")), "href": r.get("url", ""), "body": strip(r.get("description"))}
             for r in results][:max_results]
