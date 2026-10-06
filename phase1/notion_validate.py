@@ -156,7 +156,8 @@ def append_validation_section(page_id, report, new_prob, claude):
         if tam_customers is not None:
             src = claude.get("tam_source")
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{tam_customers:,} customers " + (
-                f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else "(assumed: no count found in search results)")}}]}})
+                f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else
+                f"(assumed: Claude's guess of {claude.get('tam_guess') or tam_customers:,} ÷ 10, since guesses ran a median 25× above sourced counts)")}}]}})
         if price_annual is not None:
             psrc = claude.get("price_source")
             one_time = claude.get("price_one_time")
@@ -186,6 +187,19 @@ def append_validation_section(page_id, report, new_prob, claude):
     )
     with urllib.request.urlopen(req, timeout=15) as resp:
         resp.read()
+
+
+def reuse_prior_tam(claude, props):
+    """Whether a count is found varies run to run, so a run that finds none keeps the last sourced
+    TAM (population x share stored on the page) instead of falling back to Claude's guess."""
+    pop = (props.get("TAM Population") or {}).get("number")
+    share = (props.get("TAM Share") or {}).get("number")
+    if claude.get("tam_sourced") or not pop or not share:
+        return
+    claude.update(tam_sourced=True, tam_reused=True, tam_population=pop, tam_customers=int(float(f"{pop * share:.2g}")),
+                  tam_share=f"{share:.1%}".replace(".0%", "%"), tam_source=(props.get("TAM Source") or {}).get("url"),
+                  tam_source_quote=get_text(props.get("TAM Source Quote", {})), customer_group=get_text(props.get("Customer Group", {})),
+                  tam_share_reason="kept from an earlier run")
 
 
 def run_validation(query, pain_query=None, trends_query=None, skip_trends=False, require_brave=False):
@@ -245,6 +259,7 @@ def main():
 
     # Extract fields
     claude = report.get("claude_analysis", {})
+    reuse_prior_tam(claude, props)
     rev = report.get("revenue_estimate", {})
     sources = report.get("sources", {})
 
@@ -311,6 +326,14 @@ def main():
     if tam_customers is not None:
         table_props["TAM Customers"] = {"number": int(tam_customers)}
     table_props["TAM Sourced"] = {"checkbox": bool(claude.get("tam_sourced"))}
+    if claude.get("tam_sourced") and not claude.get("tam_reused"):
+        table_props.update({
+            "TAM Population": {"number": claude["tam_population"]},
+            "TAM Share": {"number": float(claude["tam_share"].rstrip("%")) / 100},
+            "TAM Source": {"url": claude.get("tam_source")},
+            "TAM Source Quote": {"rich_text": [{"text": {"content": str(claude.get("tam_source_quote") or "")[:200]}}]},
+            "Customer Group": {"rich_text": [{"text": {"content": str(claude.get("customer_group") or "")[:200]}}]},
+        })
     table_props["Price Sourced"] = {"checkbox": bool(claude.get("price_sourced"))}
     if price_annual is not None:
         table_props["Price/Customer/yr ($)"] = {"number": float(price_annual)}

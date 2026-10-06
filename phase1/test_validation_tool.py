@@ -229,4 +229,24 @@ a = {"price_type": "recurring", "price_per_customer_annual": 1_000}
 _annualize_one_time(a)
 assert a["price_per_customer_annual"] == 1_000 and "price_one_time" not in a, a
 
+# unsourced TAM is Claude's guess / 10; sourced TAM is left alone
+a = {"tam_customers": 10_000_000}
+vt._discount_unsourced_tam(a)
+assert a["tam_customers"] == 1_000_000 and a["tam_guess"] == 10_000_000, a
+a = {"tam_customers": 45_000, "tam_sourced": True}
+vt._discount_unsourced_tam(a)
+assert a["tam_customers"] == 45_000 and "tam_guess" not in a, a
+
+# a run that finds no count keeps the population x share stored on the page
+sys.path.insert(0, os.path.dirname(__file__))
+from notion_validate import reuse_prior_tam
+props = {"TAM Population": {"number": 450_000}, "TAM Share": {"number": 0.1}, "TAM Source": {"url": "https://x"},
+         "TAM Source Quote": {"rich_text": [{"plain_text": "450,000"}]}, "Customer Group": {"rich_text": [{"plain_text": "day traders"}]}}
+c = {"tam_customers": 1_000_000}
+reuse_prior_tam(c, props)
+assert c["tam_customers"] == 45_000 and c["tam_sourced"] and c["tam_share"] == "10%" and c["customer_group"] == "day traders", c
+c = {"tam_customers": 8_500, "tam_sourced": True}
+reuse_prior_tam(c, props)
+assert c["tam_customers"] == 8_500 and "tam_reused" not in c, c
+
 print("all checks passed")

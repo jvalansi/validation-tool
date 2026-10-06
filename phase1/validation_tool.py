@@ -864,6 +864,7 @@ def cmd_report(args):
         _apply_claude_competition(report, claude_analysis)
         _source_price(args.query, report, claude_analysis)
         _source_tam(report, claude_analysis)
+        _discount_unsourced_tam(claude_analysis)
         _annualize_one_time(claude_analysis)
 
     if getattr(args, "require_brave", False) and (_brave_refused or not os.environ.get("BRAVE_API_KEY")):
@@ -982,6 +983,19 @@ Return only JSON: {{"price_source": that URL or null, "price_source_quote": the 
 excerpt (e.g. "$49/month") or null}}""") or {}
     analysis.update({k: cite.get(k) for k in ("price_source", "price_source_quote")})
     _apply_price_source(report, analysis)
+
+
+TAM_GUESS_DISCOUNT = 10  # 2026-10-06: on 16 ideas with a sourced TAM, Claude's guess was a median 25x higher
+                         # (14x excluding 2 sourced counts of the wrong population); 10 is the cautious end
+
+
+def _discount_unsourced_tam(analysis):
+    """An unsourced TAM is Claude's guess divided by TAM_GUESS_DISCOUNT; tam_guess keeps the guess."""
+    tam = analysis.get("tam_customers")
+    if analysis.get("tam_sourced") or not isinstance(tam, (int, float)) or tam <= 0:
+        return
+    analysis["tam_guess"] = tam
+    analysis["tam_customers"] = max(1, int(tam / TAM_GUESS_DISCOUNT))
 
 
 def _annualize_one_time(analysis):
