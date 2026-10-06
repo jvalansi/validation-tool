@@ -21,6 +21,31 @@ import urllib.parse
 import urllib.request
 
 # ---------------------------------------------------------------------------
+# Web search
+# ---------------------------------------------------------------------------
+
+BRAVE_SEARCH_URL = "https://api.search.brave.com/res/v1/web/search"
+
+
+def _web_search(query, max_results=10):
+    """[{title, href, body}] from the Brave Search API when BRAVE_API_KEY is set, else ddgs.
+    ddgs reads results pages of a randomly shuffled engine per call (ddgs/ddgs.py), most of which
+    block this server, so the same query returns different results run to run."""
+    key = os.environ.get("BRAVE_API_KEY")
+    if not key:
+        from ddgs import DDGS
+        return list(DDGS().text(query, max_results=max_results))
+    params = urllib.parse.urlencode({"q": query, "count": min(max_results, 20)})
+    req = urllib.request.Request(f"{BRAVE_SEARCH_URL}?{params}", headers={
+        "X-Subscription-Token": key, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        results = json.loads(resp.read()).get("web", {}).get("results", [])
+    strip = lambda t: re.sub(r"<[^>]+>", "", t or "")  # Brave bolds matches with <strong>
+    return [{"title": strip(r.get("title")), "href": r.get("url", ""), "body": strip(r.get("description"))}
+            for r in results][:max_results]
+
+
+# ---------------------------------------------------------------------------
 # Hacker News (Algolia API — no auth needed)
 # ---------------------------------------------------------------------------
 
@@ -111,7 +136,6 @@ def cmd_trends(args):
 # ---------------------------------------------------------------------------
 
 def _reddit_search(query, subreddits=None, limit=10):
-    from ddgs import DDGS
     if subreddits:
         subs = [s.strip() for s in subreddits.split(",")]
         sub_filter = " OR ".join("r/" + s.lstrip("r/") for s in subs)
@@ -120,7 +144,7 @@ def _reddit_search(query, subreddits=None, limit=10):
         ddg_query = f"site:reddit.com {query}"
 
     results = []
-    for r in DDGS().text(ddg_query, max_results=limit):
+    for r in _web_search(ddg_query, max_results=limit):
         results.append({
             "title": r["title"],
             "url": r["href"],
@@ -139,10 +163,9 @@ def cmd_reddit(args):
 # ---------------------------------------------------------------------------
 
 def _ph_search(query, limit=10):
-    from ddgs import DDGS
     ddg_query = f"site:producthunt.com/products {query}"
     results = []
-    for r in DDGS().text(ddg_query, max_results=limit):
+    for r in _web_search(ddg_query, max_results=limit):
         # Filter out non-product pages (alternatives, makers, profiles)
         url = r["href"]
         if any(x in url for x in ["/alternatives", "/makers", "/@", "/discussion"]):
@@ -238,7 +261,6 @@ def _incumbent_search(query, limit=8):
     dominates the market never shows up there. These probes target pricing pages
     and funding news instead.
     """
-    from ddgs import DDGS
 
     import time
     tokens = _query_tokens(query)
@@ -253,11 +275,11 @@ def _incumbent_search(query, limit=8):
         if i:
             time.sleep(2)  # see _regulatory_search: a rate-limited 0 must not read as "no competitors"
         try:
-            hits = list(DDGS().text(probe, max_results=limit))
+            hits = _web_search(probe, max_results=limit)
         except Exception:
             time.sleep(10)  # usually a rate limit; one retry before counting it as failed
             try:
-                hits = list(DDGS().text(probe, max_results=limit))
+                hits = _web_search(probe, max_results=limit)
             except Exception:
                 failed += 1
                 continue
@@ -380,7 +402,6 @@ def _regulatory_search(query, limit=10):
     while California does not regulate agents at all — same idea, different
     legal product shape per state.
     """
-    from ddgs import DDGS
 
     import time
     tokens = _query_tokens(query)
@@ -394,7 +415,7 @@ def _regulatory_search(query, limit=10):
         if i:
             time.sleep(2)  # DDG rate-limits bursts; a silent 0 would read as "clear"
         try:
-            results = list(DDGS().text(probe, max_results=limit))
+            results = _web_search(probe, max_results=limit)
         except Exception:
             failed += 1
             continue
@@ -438,7 +459,6 @@ _FORUM_HOSTS = ("reddit.com", "quora.com", "stackexchange.com", "news.ycombinato
 def _market_size_search(customer_group, limit=8, max_pages=4):
     """Snippets that may state how many of these customers exist, so the TAM can be cited instead
     of guessed. Searching the product query finds products, so this takes the customer group."""
-    from ddgs import DDGS
 
     import time
     hits, failed = [], 0
@@ -447,7 +467,7 @@ def _market_size_search(customer_group, limit=8, max_pages=4):
         if i:
             time.sleep(2)  # DDG rate-limits bursts
         try:
-            results = list(DDGS().text(probe, max_results=limit))
+            results = _web_search(probe, max_results=limit)
         except Exception:
             failed += 1
             continue
@@ -509,9 +529,8 @@ def _classify_hosts(hosts, incumbent_hosts=()):
 
 
 def _serp_ownership(query, incumbent_hosts=(), limit=10):
-    from ddgs import DDGS
     try:
-        results = list(DDGS().text(query, max_results=limit))
+        results = _web_search(query, max_results=limit)
     except Exception as e:
         return {"error": str(e)}
     hosts = [_host(r.get("href", "")) for r in results]
