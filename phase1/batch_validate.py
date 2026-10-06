@@ -295,7 +295,10 @@ def append_validation_section(page_id, report, new_prob, old_prob, claude):
         blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{claude.get('tam_customers') or 0:,} customers " + (
             f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else "(assumed: no count found in search results)")}}]}})
         psrc = claude.get("price_source")
-        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💵 Price: ~${claude.get('price_per_customer_annual') or 0}/yr per customer " + (
+        one_time = claude.get("price_one_time")
+        blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": (
+            f"💵 Price: ~${one_time:,.0f} one-time, counted as ${claude.get('price_per_customer_annual'):,.0f}/yr " if one_time
+            else f"💵 Price: ~${claude.get('price_per_customer_annual') or 0}/yr per customer ") + (
             f"(source: \"{claude.get('price_source_quote')}\" {psrc})" if psrc else "(assumed: no comparable vendor price found)")}}]}})
         if pricing:
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})

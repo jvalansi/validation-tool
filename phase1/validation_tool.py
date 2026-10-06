@@ -861,6 +861,7 @@ def cmd_report(args):
         _apply_claude_competition(report, claude_analysis)
         _source_price(args.query, report, claude_analysis)
         _source_tam(report, claude_analysis)
+        _annualize_one_time(claude_analysis)
 
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
@@ -977,6 +978,15 @@ excerpt (e.g. "$49/month") or null}}""") or {}
     _apply_price_source(report, analysis)
 
 
+def _annualize_one_time(analysis):
+    """Notion's Value multiplies price/yr by 10 years, so a one-time sale (hardware) is stored as a tenth of its
+    price; price_one_time keeps the real figure. Runs after the price citation, which compares the real price."""
+    price = analysis.get("price_per_customer_annual")
+    if analysis.get("price_type") == "one_time" and isinstance(price, (int, float)) and price > 0:
+        analysis["price_one_time"] = price
+        analysis["price_per_customer_annual"] = price / 10
+
+
 def _apply_price_source(report, analysis):
     """price_sourced: the cited quote is in the cited page and price_per_customer_annual is within 10x of it
     annualized (seats or tiers can legitimately differ, an invented $10,000/yr against a $20/mo quote cannot)."""
@@ -1037,7 +1047,8 @@ Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "tam_customers": estimated number of potential customers, rounded to nearest power of 10
 - "customer_group": the paying customers in 2-5 words, as a searchable noun phrase (e.g. "retail forex traders")
-- "price_per_customer_annual": estimated annual revenue per customer in USD, rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
+- "price_type": "one_time" if customers pay once (hardware, a one-off purchase), else "recurring"
+- "price_per_customer_annual": estimated annual revenue per customer in USD (for "one_time", the one-time price), rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
 - "legal_status": one of "clear" | "restricted" | "unknown" — whether licensing or standing rules limit who may sell this, based on the regulatory source
 - "legal_reasoning": one sentence citing the specific restriction found, or stating that none surfaced

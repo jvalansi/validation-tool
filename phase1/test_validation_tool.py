@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from validation_tool import (
     _parse_funding, _assess_competition, _host, _classify_hosts,
     _unit_economics, MIN_EV_PER_CUSTOMER_USD, _query_tokens, _restriction_match,
-    _extract_prices, _is_non_vendor, _apply_claude_competition, _apply_tam_source, _apply_price_source,
+    _extract_prices, _is_non_vendor, _apply_claude_competition, _apply_tam_source, _apply_price_source, _annualize_one_time,
 )
 
 # --- _parse_funding: funding language required -------------------------------
@@ -220,5 +220,13 @@ assert not a["tam_sourced"] and a["tam_customers"] == 10**6, a  # no valid share
 # --- _extract_prices: thousands separators ---
 ps = _extract_prices(["Swim spas cost $25,000 to $70,000; a tether is $49/month"])
 assert [p["monthly_equiv"] for p in ps] == [25000, 70000, 49], ps
+
+# --- _annualize_one_time: a one-time sale counts once in the x10-years Value ---
+a = {"price_type": "one_time", "price_per_customer_annual": 10_000}
+_annualize_one_time(a)
+assert a["price_per_customer_annual"] == 1_000 and a["price_one_time"] == 10_000, a
+a = {"price_type": "recurring", "price_per_customer_annual": 1_000}
+_annualize_one_time(a)
+assert a["price_per_customer_annual"] == 1_000 and "price_one_time" not in a, a
 
 print("all checks passed")

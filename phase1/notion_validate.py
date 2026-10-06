@@ -158,7 +158,9 @@ def append_validation_section(page_id, report, new_prob, claude):
                 f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else "(assumed: no count found in search results)")}}]}})
         if price_annual is not None:
             psrc = claude.get("price_source")
-            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💵 Price: ~${price_annual}/yr per customer " + (
+            one_time = claude.get("price_one_time")
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": (
+                f"💵 Price: ~${one_time:,.0f} one-time, counted as ${price_annual:,.0f}/yr " if one_time else f"💵 Price: ~${price_annual}/yr per customer ") + (
                 f"(source: \"{claude.get('price_source_quote')}\" {psrc})" if psrc else "(assumed: no comparable vendor price found)")}}]}})
         if pricing:
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💰 Pricing: {pricing}"}}]}})
