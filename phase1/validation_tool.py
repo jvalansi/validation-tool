@@ -906,9 +906,14 @@ def _apply_claude_competition(report, analysis):
         s["verdict"] = "validate further" if s["signal_count"] >= 2 else "weak signal — reconsider or reframe"
 
 
+TAM_SHARES = {"100%": 1.0, "10%": 0.1, "1%": 0.01, "0.1%": 0.001}
+
+
 def _source_tam(report, analysis):
-    """Search for a count of analysis["customer_group"] and have Claude cite one. A verified count replaces
-    the guessed tam_customers (and value); otherwise the TAM stays a guess and tam_sourced is False."""
+    """Search for a count of analysis["customer_group"] and have Claude cite one. A verified count is the
+    population, usually broader than the buyers ("4.3 million small businesses"), so TAM = population x a
+    share tier Claude picks in a narrow call; that call gave the same tier 3/3 runs on 10/10 ideas, unlike
+    the open-ended review. Otherwise the TAM stays a guess and tam_sourced is False."""
     analysis["tam_sourced"] = False
     group = analysis.get("customer_group")
     if not group:
@@ -930,12 +935,21 @@ title or snippet (e.g. "13.9 million") or null, "count": the count as a plain in
     analysis.update({k: cite.get(k) for k in ("tam_source", "tam_source_quote")})
     _apply_tam_source(report, analysis)
     count = cite.get("count")
-    if analysis["tam_sourced"] and isinstance(count, (int, float)) and count > 0:
-        import math
-        analysis["tam_customers"] = int(10 ** round(math.log10(count)))
-        price = analysis.get("price_per_customer_annual")
-        if isinstance(price, (int, float)) and price > 0:
-            analysis["value"] = int(10 ** round(math.log10(analysis["tam_customers"] * price)))
+    if not (analysis["tam_sourced"] and isinstance(count, (int, float)) and count > 0):
+        analysis["tam_sourced"] = False
+        return
+    share = _claude_json(f"""Product idea: {report.get("query")}. Population: {cite["tam_source_quote"]} {group}.
+What share of this population would plausibly pay for this product? Choose exactly one of {list(TAM_SHARES)}.
+Return only JSON {{"share": one of those strings, "reason": one short clause on who within the population buys}}""") or {}
+    if share.get("share") not in TAM_SHARES:
+        analysis["tam_sourced"] = False  # a population without a share is not a TAM
+        return
+    tam = count * TAM_SHARES[share["share"]]
+    analysis.update(tam_population=int(count), tam_share=share["share"], tam_share_reason=share.get("reason"),
+                    tam_customers=int(float(f"{tam:.2g}")))  # 2 significant figures: 4.3M x 10% = 430,000, not 10^6
+    price = analysis.get("price_per_customer_annual")
+    if isinstance(price, (int, float)) and price > 0:
+        analysis["value"] = int(float(f"{analysis['tam_customers'] * price:.2g}"))
 
 
 def _source_price(query, report, analysis):

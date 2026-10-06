@@ -202,4 +202,19 @@ for bad in ({"price_source": "https://v.com/pricing", "price_source_quote": "$20
     _apply_price_source(rep, bad)
     assert not bad["price_sourced"] and bad["price_source"] is None, bad
 
+# --- _source_tam: TAM = cited population x share tier, at 2 significant figures ---
+import validation_tool as vt
+_calls = iter([{"tam_source": "https://s.com/n", "tam_source_quote": "4.3 million", "count": 4_300_000},
+               {"share": "10%", "reason": "shops that take orders"}])
+vt._market_size_search = lambda g: {"results": [{"title": "SMB stats", "url": "https://s.com/n",
+                                                  "snippet": "There are 4.3 million small businesses"}]}
+vt._claude_json = lambda prompt: next(_calls)
+a = {"customer_group": "small businesses", "price_per_customer_annual": 1000}
+vt._source_tam({"sources": {}, "query": "Qordr"}, a)
+assert a["tam_sourced"] and a["tam_customers"] == 430_000 and a["value"] == 430_000_000, a
+_calls = iter([{"tam_source": "https://s.com/n", "tam_source_quote": "4.3 million", "count": 4_300_000}, {"share": "half"}])
+a = {"customer_group": "small businesses", "tam_customers": 10**6}
+vt._source_tam({"sources": {}, "query": "Qordr"}, a)
+assert not a["tam_sourced"] and a["tam_customers"] == 10**6, a  # no valid share: keep the guess, flagged
+
 print("all checks passed")

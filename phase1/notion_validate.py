@@ -155,7 +155,7 @@ def append_validation_section(page_id, report, new_prob, claude):
         if tam_customers is not None:
             src = claude.get("tam_source")
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{tam_customers:,} customers " + (
-                f"(source: \"{claude.get('tam_source_quote')}\" {src})" if src else "(assumed: no count found in search results)")}}]}})
+                f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else "(assumed: no count found in search results)")}}]}})
         if price_annual is not None:
             psrc = claude.get("price_source")
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"💵 Price: ~${price_annual}/yr per customer " + (
