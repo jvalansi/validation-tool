@@ -26,6 +26,8 @@ import urllib.request
 # ---------------------------------------------------------------------------
 
 BRAVE_SEARCH_URL = "https://api.search.brave.com/res/v1/web/search"
+EXIT_SEARCH_REFUSED = 3  # report --require-brave exit code: Brave refused, nothing written, resume later
+_brave_refused = []  # HTTP codes; with --require-brave the report is discarded if any search was refused
 
 
 def _web_search(query, max_results=10):
@@ -43,6 +45,7 @@ def _web_search(query, max_results=10):
         with urllib.request.urlopen(req, timeout=15) as resp:
             results = json.loads(resp.read()).get("web", {}).get("results", [])
     except urllib.error.HTTPError as e:  # 402 = prepaid credit used up, 429 = rate limit
+        _brave_refused.append(e.code)
         sys.stderr.write(f"[search] Brave HTTP {e.code}, falling back to ddgs: {e.read()[:200]!r}\n")
         return list(DDGS().text(query, max_results=max_results))
     strip = lambda t: re.sub(r"<[^>]+>", "", t or "")  # Brave bolds matches with <strong>
@@ -863,6 +866,9 @@ def cmd_report(args):
         _source_tam(report, claude_analysis)
         _annualize_one_time(claude_analysis)
 
+    if getattr(args, "require_brave", False) and (_brave_refused or not os.environ.get("BRAVE_API_KEY")):
+        sys.stderr.write(f"Brave search refused (HTTP {sorted(set(_brave_refused))}); report discarded\n")
+        sys.exit(EXIT_SEARCH_REFUSED)
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
 
@@ -1186,6 +1192,8 @@ def main():
     p_report.add_argument("--assume-tech-exists", action="store_true",
                           help="Assume technology works — assess market demand only, not technical feasibility")
     p_report.add_argument("--pain-query", help="Pain/desire search query to use instead of product query (used with --assume-tech-exists)")
+    p_report.add_argument("--require-brave", action="store_true",
+                          help=f"Exit {EXIT_SEARCH_REFUSED} with no report if Brave refuses any search (batch runs resume instead of mixing in ddgs)")
     p_report.add_argument("--skip-trends", action="store_true",
                           help="Skip Google Trends (it rate-limits batch runs); trends-based fields are then meaningless")
     p_report.add_argument("--trends-query", help="Specific short query to use for Google Trends (overrides default query)")

@@ -20,6 +20,7 @@ NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 NOTION_VERSION = "2022-06-28"
 VALIDATION_TOOL = os.path.join(os.path.dirname(__file__), "validation_tool.py")
 PYTHON = "/home/ubuntu/miniconda3/bin/python"
+EXIT_SEARCH_REFUSED = 3  # same as validation_tool.EXIT_SEARCH_REFUSED
 
 
 def notion_get(path):
@@ -187,13 +188,17 @@ def append_validation_section(page_id, report, new_prob, claude):
         resp.read()
 
 
-def run_validation(query, pain_query=None, trends_query=None, skip_trends=False):
-    cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query] + (["--skip-trends"] if skip_trends else [])
+def run_validation(query, pain_query=None, trends_query=None, skip_trends=False, require_brave=False):
+    cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", query] + (["--skip-trends"] if skip_trends else []) + (
+        ["--require-brave"] if require_brave else [])
     if pain_query:
         cmd += ["--pain-query", pain_query, "--assume-tech-exists"]
     if trends_query:
         cmd += ["--trends-query", trends_query]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)  # 3 Claude calls + page fetches
+    if result.returncode == EXIT_SEARCH_REFUSED:
+        print(result.stderr[-300:], file=sys.stderr)
+        sys.exit(EXIT_SEARCH_REFUSED)
     if result.returncode != 0:
         print(f"Validation error: {result.stderr[:200]}", file=sys.stderr)
         return None
@@ -206,6 +211,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Print results without writing to Notion")
     parser.add_argument("--skip-trends", action="store_true",
                         help="Skip Google Trends and leave Trends Interest, TAM Tier and Market Signal as they are")
+    parser.add_argument("--require-brave", action="store_true",
+                        help=f"Exit {EXIT_SEARCH_REFUSED} without writing if Brave refuses a search")
     args = parser.parse_args()
 
     if not NOTION_TOKEN:
@@ -232,7 +239,7 @@ def main():
 
     # Run validation
     print("\nRunning validation...")
-    report = run_validation(validation_query, pain_query or None, trends_query or None, args.skip_trends)
+    report = run_validation(validation_query, pain_query or None, trends_query or None, args.skip_trends, args.require_brave)
     if not report:
         sys.exit(1)
 
@@ -316,6 +323,9 @@ def main():
     blocks = get_page_blocks(args.page_id)
     remove_existing_validation_section(blocks)
     append_validation_section(args.page_id, report, suggested_probability or 0.1, claude)
+    from datetime import datetime, timezone  # stamped last: revalidate_all.py resumes from ideas without it
+    notion_patch(f"pages/{args.page_id}", {"properties": {"Validated": {"date": {
+        "start": datetime.now(timezone.utc).isoformat(timespec="seconds")}}}})
     print("Done.")
 
 
