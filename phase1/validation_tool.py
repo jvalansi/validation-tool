@@ -570,7 +570,7 @@ def _fetch_pricing_prices(operators, max_pages=3):
 # ---------------------------------------------------------------------------
 
 _PRICE_RE = re.compile(
-    r'\$\s*(\d+(?:\.\d+)?)\s*(?:per\s+)?(?:/\s*)?(mo(?:nth)?|yr|year|user|seat|month)?',
+    r'\$\s*(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)\s*(?:per\s+)?(?:/\s*)?(mo(?:nth)?|yr|year|user|seat|month)?',
     re.IGNORECASE
 )
 
@@ -584,7 +584,7 @@ def _extract_prices(texts):
     found = []
     for text in texts:
         for m in _PRICE_RE.finditer(text or ""):
-            amount = float(m.group(1))
+            amount = float(m.group(1).replace(",", ""))  # "$20,000" was read as $20
             raw_period = (m.group(2) or "").lower()
             if raw_period in ("yr", "year"):
                 period, amount_mo = "annual", round(amount / 12, 2)
@@ -592,7 +592,7 @@ def _extract_prices(texts):
                 period, amount_mo = "monthly", amount
             else:
                 period, amount_mo = "unknown", amount
-            if 1 <= amount_mo <= 10000:  # filter noise
+            if 1 <= amount_mo <= 100_000:  # filter noise; one-time hardware (a $25,000 swim spa) is real
                 found.append({"raw": m.group(0).strip(), "monthly_equiv": amount_mo, "period": period})
     # deduplicate
     seen = set()

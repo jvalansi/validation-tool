@@ -217,4 +217,8 @@ a = {"customer_group": "small businesses", "tam_customers": 10**6}
 vt._source_tam({"sources": {}, "query": "Qordr"}, a)
 assert not a["tam_sourced"] and a["tam_customers"] == 10**6, a  # no valid share: keep the guess, flagged
 
+# --- _extract_prices: thousands separators ---
+ps = _extract_prices(["Swim spas cost $25,000 to $70,000; a tether is $49/month"])
+assert [p["monthly_equiv"] for p in ps] == [25000, 70000, 49], ps
+
 print("all checks passed")
