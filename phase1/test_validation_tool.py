@@ -211,7 +211,7 @@ vt._market_size_search = lambda g: {"results": [{"title": "SMB stats", "url": "h
 vt._claude_json = lambda prompt: next(_calls)
 a = {"customer_group": "small businesses", "price_per_customer_annual": 1000}
 vt._source_tam({"sources": {}, "query": "Qordr"}, a)
-assert a["tam_sourced"] and a["tam_customers"] == 430_000 and a["value"] == 430_000_000, a
+assert a["tam_sourced"] and a["tam_customers"] == 1_000_000 and a["value"] == 1_000_000_000, a
 _calls = iter([{"tam_source": "https://s.com/n", "tam_source_quote": "4.3 million", "count": 4_300_000}, {"share": "half"}])
 a = {"customer_group": "small businesses", "tam_customers": 10**6}
 vt._source_tam({"sources": {}, "query": "Qordr"}, a)
@@ -244,7 +244,7 @@ props = {"TAM Population": {"number": 450_000}, "TAM Share": {"number": 0.1}, "T
          "TAM Source Quote": {"rich_text": [{"plain_text": "450,000"}]}, "Customer Group": {"rich_text": [{"plain_text": "day traders"}]}}
 c = {"tam_customers": 1_000_000}
 reuse_prior_tam(c, props)
-assert c["tam_customers"] == 45_000 and c["tam_sourced"] and c["tam_share"] == "10%" and c["customer_group"] == "day traders", c
+assert c["tam_customers"] == 100_000 and c["tam_sourced"] and c["tam_share"] == "10%" and c["customer_group"] == "day traders", c
 c = {"tam_customers": 8_500, "tam_sourced": True}
 reuse_prior_tam(c, props)
 assert c["tam_customers"] == 8_500 and "tam_reused" not in c, c

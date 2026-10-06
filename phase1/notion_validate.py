@@ -15,6 +15,8 @@ import sys
 import urllib.request
 from datetime import date
 
+from validation_tool import round_oom
+
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 NOTION_VERSION = "2022-06-28"
@@ -196,7 +198,7 @@ def reuse_prior_tam(claude, props):
     share = (props.get("TAM Share") or {}).get("number")
     if claude.get("tam_sourced") or not pop or not share:
         return
-    claude.update(tam_sourced=True, tam_reused=True, tam_population=pop, tam_customers=int(float(f"{pop * share:.2g}")),
+    claude.update(tam_sourced=True, tam_reused=True, tam_population=pop, tam_customers=round_oom(pop * share),
                   tam_share=f"{share:.1%}".replace(".0%", "%"), tam_source=(props.get("TAM Source") or {}).get("url"),
                   tam_source_quote=get_text(props.get("TAM Source Quote", {})), customer_group=get_text(props.get("Customer Group", {})),
                   tam_share_reason="kept from an earlier run")

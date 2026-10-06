@@ -13,6 +13,7 @@ Usage:
 """
 
 import argparse
+import math
 import json
 import os
 import re
@@ -959,10 +960,10 @@ Return only JSON {{"share": one of those strings, "reason": one short clause on 
         return
     tam = count * TAM_SHARES[share["share"]]
     analysis.update(tam_guess=analysis.get("tam_customers"), tam_population=int(count), tam_share=share["share"], tam_share_reason=share.get("reason"),
-                    tam_customers=int(float(f"{tam:.2g}")))  # 2 significant figures: 4.3M x 10% = 430,000, not 10^6
+                    tam_customers=round_oom(tam))
     price = analysis.get("price_per_customer_annual")
     if isinstance(price, (int, float)) and price > 0:
-        analysis["value"] = int(float(f"{analysis['tam_customers'] * price:.2g}"))
+        analysis["value"] = round_oom(analysis["tam_customers"] * price)
 
 
 def _source_price(query, report, analysis):
@@ -983,6 +984,11 @@ Return only JSON: {{"price_source": that URL or null, "price_source_quote": the 
 excerpt (e.g. "$49/month") or null}}""") or {}
     analysis.update({k: cite.get(k) for k in ("price_source", "price_source_quote")})
     _apply_price_source(report, analysis)
+
+
+def round_oom(v):
+    """Nearest power of 10 on a log scale (430,000 -> 1,000,000; 300,000 -> 100,000), like Claude's own estimates."""
+    return int(10 ** round(math.log10(v)))
 
 
 TAM_GUESS_DISCOUNT = 10  # 2026-10-06: on 16 ideas with a sourced TAM, Claude's guess was a median 25x higher
