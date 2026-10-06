@@ -945,7 +945,7 @@ Return only JSON {{"share": one of those strings, "reason": one short clause on 
         analysis["tam_sourced"] = False  # a population without a share is not a TAM
         return
     tam = count * TAM_SHARES[share["share"]]
-    analysis.update(tam_population=int(count), tam_share=share["share"], tam_share_reason=share.get("reason"),
+    analysis.update(tam_guess=analysis.get("tam_customers"), tam_population=int(count), tam_share=share["share"], tam_share_reason=share.get("reason"),
                     tam_customers=int(float(f"{tam:.2g}")))  # 2 significant figures: 4.3M x 10% = 430,000, not 10^6
     price = analysis.get("price_per_customer_annual")
     if isinstance(price, (int, float)) and price > 0:
