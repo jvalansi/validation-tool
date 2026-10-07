@@ -1137,7 +1137,7 @@ Provide your assessment as JSON with these fields:
 - "product_category": the narrowest category naming this kind of product, in 2-4 words, as buyers would search for it
   (e.g. "forex signals software"; "home cooked meal marketplace", not "food delivery")
 - "price_type": "one_time" if customers pay once (hardware, a one-off purchase), else "recurring"
-- "price_per_customer_annual": estimated annual revenue per customer in USD (for "one_time", the one-time price), rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
+- "price_per_customer_annual": estimated annual revenue you keep per customer in USD — for a marketplace or payments product, your take rate × what they spend, not the spend itself (for "one_time", the one-time price), rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
 - "legal_status": one of "clear" | "restricted" | "unknown" — whether licensing or standing rules limit who may sell this, based on the regulatory source
 - "legal_reasoning": one sentence citing the specific restriction found, or stating that none surfaced
