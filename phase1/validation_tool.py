@@ -914,7 +914,7 @@ def _apply_claude_competition(report, analysis):
 
 def _cited(competitors, texts):
     """Competitors whose evidence_url's title or snippet names them, as {name, evidence_url, funding_usd}."""
-    return [{k: c.get(k) for k in ("name", "evidence_url", "funding_usd")} for c in competitors or []
+    return [{k: c.get(k) for k in ("name", "evidence_url", "why", "funding_usd")} for c in competitors or []
             if isinstance(c, dict) and c.get("name") and c["name"].lower() in texts.get(c.get("evidence_url"), "")]
 
 
@@ -932,9 +932,12 @@ def _category_competitors(report, analysis):
     report["sources"]["category_search"] = {"query": f"best {category}", "results": results}
     found = _claude_json(f"""Product category: {category}. Buyers: {analysis.get("customer_group") or "unknown"}.
 Search results: {json.dumps(results, ensure_ascii=False)}
-List up to 8 vendors selling a {category} product that a result's title or snippet names — products or companies,
-NOT blogs, review or comparison sites, directories or papers. Return only JSON {{"competitors": [{{"name": str,
-"evidence_url": the url of the result naming it, "funding_usd": total raised if you know it, else null}}]}}""") or {}
+Product idea: {report.get("query")}.
+List up to 8 competitors that a result's title or snippet names — products or companies, NOT blogs, review or
+comparison sites, directories or papers. A competitor sells the same kind of product, one these buyers would compare against this idea; adjacent markets
+don't count (for neighbors selling home-cooked food, restaurant delivery apps and meal kits are not competitors).
+Return only JSON {{"competitors": [{{"name": str, "evidence_url": the url of the result naming it, "why": what it sells, in
+a few words, "funding_usd": total raised if you know it, else null}}]}}""") or {}
     merge_competitors(report, analysis, _cited(found.get("competitors"), _source_texts(results)))
 
 
@@ -1134,7 +1137,8 @@ Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "tam_customers": estimated number of potential customers, rounded to nearest power of 10
 - "customer_group": the paying customers in 2-5 words, as a searchable noun phrase (e.g. "retail forex traders")
-- "product_category": the product category these customers would search to buy this, in 2-4 words (e.g. "forex signals software")
+- "product_category": the narrowest category naming this kind of product, in 2-4 words, as buyers would search for it
+  (e.g. "forex signals software"; "home cooked meal marketplace", not "food delivery")
 - "price_type": "one_time" if customers pay once (hardware, a one-off purchase), else "recurring"
 - "price_per_customer_annual": estimated annual revenue per customer in USD (for "one_time", the one-time price), rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
@@ -1144,9 +1148,11 @@ Provide your assessment as JSON with these fields:
 - "key_opportunities": list of 2-3 strongest signals supporting the idea
 - "value": total addressable annual revenue in USD, rounded to nearest power of 10 — this is the FULL market potential (tam_customers × price_per_customer_annual), with NO adjustment for penetration or probability. Do not discount for competition or execution risk here.
 - "value_reasoning": one sentence explaining the value estimate (reference tam_customers × price_per_customer_annual)
-- "competitors": up to 5 actual vendors selling to these customers, named in the research data above — products or
-  companies, NOT blogs, review or comparison sites, directories or papers. Each: {{"name": str, "evidence_url": the
-  research-data URL whose title or snippet names it, "funding_usd": total raised if you know it, else null}}
+- "competitors": up to 5 actual vendors named in the research data above — products or companies, NOT blogs, review
+  or comparison sites, directories or papers. A competitor sells the same kind of product, one these buyers would compare against this idea; adjacent markets
+  don't count (for neighbors selling home-cooked food, restaurant delivery apps and meal kits are not competitors).
+  Each: {{"name": str, "evidence_url": the research-data URL whose title or snippet names it, "why": what it sells, in
+  a few words, "funding_usd": total raised if you know it, else null}}
 - "competition_level": one of
     "dominant" — a competitor has raised >= $100M or is a big-tech product
     "crowded" — 5+ vendors selling, or a funded competitor among several

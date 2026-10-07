@@ -260,6 +260,6 @@ vt.merge_competitors(r, a, [])
 assert r["summary"]["competition"] == "crowded", r
 assert vt._competitors_level([{"name": "A", "funding_usd": 2e8}]) == "dominant"
 assert vt._cited([{"name": "Foo", "evidence_url": "u"}, {"name": "Bar", "evidence_url": "u"}], {"u": "foo signals"}) == [
-    {"name": "Foo", "evidence_url": "u", "funding_usd": None}]
+    {"name": "Foo", "evidence_url": "u", "why": None, "funding_usd": None}]
 
 print("all checks passed")
