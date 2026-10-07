@@ -15,7 +15,7 @@ import sys
 import urllib.request
 from datetime import date
 
-from validation_tool import round_oom
+from validation_tool import merge_competitors, round_oom
 
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
@@ -160,6 +160,9 @@ def append_validation_section(page_id, report, new_prob, claude):
             blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"👥 TAM: ~{tam_customers:,} customers " + (
                 f"= {claude.get('tam_source_quote')} {claude.get('customer_group')} ({src}) × {claude.get('tam_share')}: {claude.get('tam_share_reason')}" if src else
                 f"(assumed: Claude's guess of {claude.get('tam_guess') or tam_customers:,} ÷ 10, since guesses ran a median 25× above sourced counts)")}}]}})
+        if claude.get("competitors"):
+            blocks.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"🏁 Competitors ({report.get('summary', {}).get('competition')}): "
+                + ", ".join(c["name"] for c in claude["competitors"])}}]}})
         if price_annual is not None:
             psrc = claude.get("price_source")
             one_time = claude.get("price_one_time")
@@ -202,6 +205,13 @@ def reuse_prior_tam(claude, props):
                   tam_share=f"{share:.1%}".replace(".0%", "%"), tam_source=(props.get("TAM Source") or {}).get("url"),
                   tam_source_quote=get_text(props.get("TAM Source Quote", {})), customer_group=get_text(props.get("Customer Group", {})),
                   tam_share_reason="kept from an earlier run")
+
+
+def reuse_prior_competitors(report, claude, props):
+    """Competitors cited on earlier runs stay counted, so a search that misses one doesn't lower the grade."""
+    stored = "".join(t.get("plain_text", "") for t in (props.get("Competitors") or {}).get("rich_text", []))
+    if claude and stored:
+        merge_competitors(report, claude, json.loads(stored))
 
 
 def run_validation(query, pain_query=None, trends_query=None, skip_trends=False, require_brave=False):
@@ -262,6 +272,7 @@ def main():
     # Extract fields
     claude = report.get("claude_analysis", {})
     reuse_prior_tam(claude, props)
+    reuse_prior_competitors(report, claude, props)
     rev = report.get("revenue_estimate", {})
     sources = report.get("sources", {})
 
@@ -314,6 +325,9 @@ def main():
         table_props["Probability"] = {"number": float(suggested_probability)}
     if not args.skip_trends:  # without Trends the signal count is missing its search-volume signals
         table_props["Market Signal"] = {"select": {"name": market_signal}}
+    if claude.get("competitors"):
+        stored = json.dumps(claude["competitors"], ensure_ascii=False)
+        table_props["Competitors"] = {"rich_text": [{"text": {"content": stored[i:i + 2000]}} for i in range(0, len(stored), 2000)]}
     competition = report.get("summary", {}).get("competition")
     if competition:
         table_props["Competition"] = {"select": {"name": competition}}

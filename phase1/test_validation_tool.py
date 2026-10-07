@@ -249,4 +249,17 @@ c = {"tam_customers": 8_500, "tam_sourced": True}
 reuse_prior_tam(c, props)
 assert c["tam_customers"] == 8_500 and "tam_reused" not in c, c
 
+# competitors from the category search and earlier runs raise the grade and cap probability; never lower it
+r = {"summary": {"competition": "contested", "verdict": "weak signal — reconsider or reframe"}}
+a = {"suggested_probability": 1.0, "competitors": [{"name": "VantagePoint"}, {"name": "Forexsignals"}]}
+vt.merge_competitors(r, a, [{"name": n} for n in ("forexsignals", "A", "B", "C")])
+assert len(a["competitors"]) == 5 and r["summary"]["competition"] == "crowded" and a["suggested_probability"] == 0.1, (r, a)
+r = {"summary": {"competition": "crowded"}}
+a = {"competitors": [{"name": "A"}]}
+vt.merge_competitors(r, a, [])
+assert r["summary"]["competition"] == "crowded", r
+assert vt._competitors_level([{"name": "A", "funding_usd": 2e8}]) == "dominant"
+assert vt._cited([{"name": "Foo", "evidence_url": "u"}, {"name": "Bar", "evidence_url": "u"}], {"u": "foo signals"}) == [
+    {"name": "Foo", "evidence_url": "u", "funding_usd": None}]
+
 print("all checks passed")

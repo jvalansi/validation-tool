@@ -863,6 +863,7 @@ def cmd_report(args):
             claude_analysis["suggested_probability"] = 1.0 if prob >= 0.5 else 0.1 if prob >= 0.05 else 0.01
         report["claude_analysis"] = claude_analysis
         _apply_claude_competition(report, claude_analysis)
+        _category_competitors(report, claude_analysis)
         _source_price(args.query, report, claude_analysis)
         _source_tam(report, claude_analysis)
         _discount_unsourced_tam(claude_analysis)
@@ -902,22 +903,82 @@ def _apply_claude_competition(report, analysis):
     level = analysis.get("competition_level")
     if level not in COMPETITION_LEVELS:
         return
-    texts = _source_texts(report.get("sources", {}))
-    cited = [c for c in analysis.get("competitors") or []
-             if isinstance(c, dict) and c.get("name") and c["name"].lower() in texts.get(c.get("evidence_url"), "")]
+    cited = _cited(analysis.get("competitors"), _source_texts(report.get("sources", {})))
     analysis["competitors"] = cited
     if level != "none_found" and not cited:
         return  # a grade with no competitor the data backs is not evidence
     s = report["summary"]
     s["competition_heuristic"], s["competition"] = s["competition"], level
-    if s["verdict"].startswith("unviable"):
+    _competition_verdict(s, level)
+
+
+def _cited(competitors, texts):
+    """Competitors whose evidence_url's title or snippet names them, as {name, evidence_url, funding_usd}."""
+    return [{k: c.get(k) for k in ("name", "evidence_url", "funding_usd")} for c in competitors or []
+            if isinstance(c, dict) and c.get("name") and c["name"].lower() in texts.get(c.get("evidence_url"), "")]
+
+
+def _category_competitors(report, analysis):
+    """The Validation Query is often narrow ("predict forex from import/export data") and its results miss rivals
+    selling to the same buyers, so also search the category they would shop in and cite the vendors it names."""
+    category = analysis.get("product_category")
+    if not category:
+        return
+    try:
+        hits = _web_search(f"best {category}", max_results=10)
+    except Exception:
+        return
+    results = [{"url": h.get("href"), "title": h.get("title", ""), "snippet": (h.get("body") or "")[:300]} for h in hits]
+    report["sources"]["category_search"] = {"query": f"best {category}", "results": results}
+    found = _claude_json(f"""Product category: {category}. Buyers: {analysis.get("customer_group") or "unknown"}.
+Search results: {json.dumps(results, ensure_ascii=False)}
+List up to 8 vendors selling a {category} product that a result's title or snippet names — products or companies,
+NOT blogs, review or comparison sites, directories or papers. Return only JSON {{"competitors": [{{"name": str,
+"evidence_url": the url of the result naming it, "funding_usd": total raised if you know it, else null}}]}}""") or {}
+    merge_competitors(report, analysis, _cited(found.get("competitors"), _source_texts(results)))
+
+
+COMPETITION_SEVERITY = ("none_found", "open", "contested", "funded", "crowded", "dominant")
+CROWDED_COMPETITORS = 5  # cited vendors, so unlike CROWDED_OPERATORS no review-site noise; matches the prompt's "5+"
+
+
+def _competitors_level(competitors):
+    """The grade the review prompt defines, computed from the cited competitors' count and funding."""
+    n = len(competitors)
+    funding = max((c["funding_usd"] for c in competitors if isinstance(c.get("funding_usd"), (int, float))), default=0)
+    if funding >= DOMINANT_FUNDING_USD:
+        return "dominant"
+    if funding >= FUNDED_FUNDING_USD:
+        return "crowded" if n >= CROWDED_COMPETITORS else "funded"
+    return "crowded" if n >= CROWDED_COMPETITORS else "contested" if n >= 2 else "open" if n else "none_found"
+
+
+def merge_competitors(report, analysis, more):
+    """Add competitors not already listed (by name) and raise the grade, verdict and probability ceiling to what
+    the combined list implies. Never lowers the grade: one run's search missing a vendor doesn't remove it."""
+    names = {c["name"].lower() for c in analysis.get("competitors") or []}
+    new = [c for c in more if c["name"].lower() not in names and not names.add(c["name"].lower())]
+    analysis["competitors"] = (analysis.get("competitors") or []) + new
+    s = report.setdefault("summary", {})
+    level, current = _competitors_level(analysis["competitors"]), s.get("competition")
+    if COMPETITION_SEVERITY.index(level) <= COMPETITION_SEVERITY.index(current if current in COMPETITION_SEVERITY else "none_found"):
+        return
+    s["competition"] = level
+    _competition_verdict(s, level)
+    cap = 0.01 if level == "dominant" else 0.1 if level in ("funded", "crowded") else None  # the prompt's ceilings
+    if cap and isinstance(analysis.get("suggested_probability"), (int, float)):
+        analysis["suggested_probability"] = min(analysis["suggested_probability"], cap)
+
+
+def _competition_verdict(s, level):
+    if s.get("verdict", "").startswith("unviable"):
         return
     if level == "dominant":
         s["verdict"] = "crowded — a category owner already serves this market"
     elif level == "crowded":
         s["verdict"] = "crowded — multiple vendors already selling"
     else:
-        s["verdict"] = "validate further" if s["signal_count"] >= 2 else "weak signal — reconsider or reframe"
+        s["verdict"] = "validate further" if s.get("signal_count", 0) >= 2 else "weak signal — reconsider or reframe"
 
 
 TAM_SHARES = {"100%": 1.0, "10%": 0.1, "1%": 0.01, "0.1%": 0.001}
@@ -1073,6 +1134,7 @@ Provide your assessment as JSON with these fields:
 - "tam_assessment": one sentence on market size (mention specific evidence from the data)
 - "tam_customers": estimated number of potential customers, rounded to nearest power of 10
 - "customer_group": the paying customers in 2-5 words, as a searchable noun phrase (e.g. "retail forex traders")
+- "product_category": the product category these customers would search to buy this, in 2-4 words (e.g. "forex signals software")
 - "price_type": "one_time" if customers pay once (hardware, a one-off purchase), else "recurring"
 - "price_per_customer_annual": estimated annual revenue per customer in USD (for "one_time", the one-time price), rounded to nearest power of 10 (e.g. 100 for ~$8-12/mo, 1000 for ~$80-120/mo)
 - "pricing_assessment": one sentence on pricing strategy and willingness to pay (e.g. "B2B SaaS at ~$100/yr is realistic given competitor pricing")
