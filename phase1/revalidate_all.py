@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Re-run phase 1 on every Notion idea (not ❌, with a Validation Query) not validated since --since.
+Re-run phase 1 on every Notion idea (❌ included: it only keeps an idea out of phase 2; with a Validation Query) not validated since --since.
 Resumable: notion_validate stamps "Validated" only on success, so re-running with the same --since
 picks up where a run stopped. Stops when Brave refuses a search (credit used up) instead of
 mixing in ddgs results, which vary run to run.
@@ -29,8 +29,7 @@ def todo(since):
     while True:
         req = urllib.request.Request(f"https://api.notion.com/v1/databases/{DB}/query", method="POST", data=json.dumps({
             "page_size": 100, **({"start_cursor": cur} if cur else {}),
-            "filter": {"and": [{"property": "סטטוס", "status": {"does_not_equal": "❌"}},
-                               {"property": "Validation Query", "rich_text": {"is_not_empty": True}},
+            "filter": {"and": [{"property": "Validation Query", "rich_text": {"is_not_empty": True}},
                                {"or": [{"property": "Validated", "date": {"is_empty": True}},
                                        {"property": "Validated", "date": {"before": since}}]}]}}).encode(),
             headers={"Authorization": f"Bearer {NOTION_TOKEN}", "Notion-Version": NOTION_VERSION, "Content-Type": "application/json"})

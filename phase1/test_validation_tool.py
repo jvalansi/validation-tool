@@ -249,11 +249,11 @@ c = {"tam_customers": 8_500, "tam_sourced": True}
 reuse_prior_tam(c, props)
 assert c["tam_customers"] == 8_500 and "tam_reused" not in c, c
 
-# competitors from the category search and earlier runs raise the grade and cap probability; never lower it
+# competitors from the category search and earlier runs raise the grade, never lower it, and leave probability alone
 r = {"summary": {"competition": "contested", "verdict": "weak signal — reconsider or reframe"}}
 a = {"suggested_probability": 1.0, "competitors": [{"name": "VantagePoint"}, {"name": "Forexsignals"}]}
 vt.merge_competitors(r, a, [{"name": n} for n in ("forexsignals", "A", "B", "C")])
-assert len(a["competitors"]) == 5 and r["summary"]["competition"] == "crowded" and a["suggested_probability"] == 0.1, (r, a)
+assert len(a["competitors"]) == 5 and r["summary"]["competition"] == "crowded" and a["suggested_probability"] == 1.0, (r, a)
 r = {"summary": {"competition": "crowded"}}
 a = {"competitors": [{"name": "A"}]}
 vt.merge_competitors(r, a, [])

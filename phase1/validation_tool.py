@@ -957,7 +957,7 @@ def _competitors_level(competitors):
 
 
 def merge_competitors(report, analysis, more):
-    """Add competitors not already listed (by name) and raise the grade, verdict and probability ceiling to what
+    """Add competitors not already listed (by name) and raise the grade and verdict to what
     the combined list implies. Never lowers the grade: one run's search missing a vendor doesn't remove it."""
     names = {c["name"].lower() for c in analysis.get("competitors") or []}
     new = [c for c in more if c["name"].lower() not in names and not names.add(c["name"].lower())]
@@ -968,9 +968,6 @@ def merge_competitors(report, analysis, more):
         return
     s["competition"] = level
     _competition_verdict(s, level)
-    cap = 0.01 if level == "dominant" else 0.1 if level in ("funded", "crowded") else None  # the prompt's ceilings
-    if cap and isinstance(analysis.get("suggested_probability"), (int, float)):
-        analysis["suggested_probability"] = min(analysis["suggested_probability"], cap)
 
 
 def _competition_verdict(s, level):
@@ -1160,18 +1157,16 @@ Provide your assessment as JSON with these fields:
     "contested" — 2-4 small vendors
     "open" — 1 vendor
     "none_found" — no vendor named in the data
-- "suggested_probability": expected fraction of the total value that will actually be captured, using exactly one of these three values:
-    0.01 — moonshot: paradigm shift required, or tiny realistic penetration (e.g. <1% of a niche market)
-    0.10 — regular challenge: real demand and proven tech, but significant competition or execution risk (realistic penetration ~5-15%)
-    0.99 — low-hanging fruit: clear unmet demand, proven solution, little competition (high penetration likely)
-  This encodes both probability of success AND realistic market penetration. Choose the closest tier.
+- "suggested_probability": the chance that a working product gets built and sold at all, using exactly one of these three values:
+    0.01 — moonshot: unproven tech or a paradigm shift required, or the economics can't work
+    0.10 — regular challenge: proven tech and real demand, but significant execution risk (building it, reaching buyers)
+    0.99 — low-hanging fruit: proven solution, clear demand, straightforward to build and reach buyers
+  Do NOT discount for competition or market penetration: the market share applied downstream already does that from
+  competition_level, so counting it here would apply it twice. Choose the closest tier.
   Ceilings by evidence (apply the lowest that matches):
-    competition_level == "dominant" -> do not exceed 0.01
-    competition_level in ("funded", "crowded") -> do not exceed 0.10
     legal_status == "restricted" -> do not exceed 0.10
     revenue_estimate.below_acquisition_floor is true AND price_observations >= 2 -> do not exceed 0.01
-  A funded competitor is evidence the market is real; it caps the upside, it does not zero it. Competition levels "contested" and "open" carry no ceiling.
-- "probability_reasoning": one sentence explaining the probability choice, including the expected penetration rate
+- "probability_reasoning": one sentence explaining the probability choice
 
 Return only valid JSON, no markdown."""
     return _claude_json(prompt)
