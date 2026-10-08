@@ -12,11 +12,13 @@ Sunday (default):
   4. Proposes the highest-ROI untested ideas (ROI ≥ MIN_ROI, not status ❌) for phase 2, posting
      them to Discord; the user ticks "Phase 2 Approved" in Notion. Market Signal isn't used: phase 2
      is what measures demand, and the signal double-counts competition already in ROI
+  5. build_mvp.py builds and deploys a paid web app for the next ideas in line (next week's proposals),
+     so their phase 2 sends ads to a working service instead of a landing page; it posts its own report
 
 Monday (--launch):
-  5. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
+  6. Launches phase 2 for every approved idea with no "Phase 2 Tested" date, then stamps it
 
-Usage: python weekly.py [--new-niches 2] [--top 10] [--add 2] [--propose 2] [--skip-sweep] [--dry-run]
+Usage: python weekly.py [--new-niches 2] [--top 10] [--add 2] [--propose 2] [--build 2] [--skip-sweep] [--dry-run]
        python weekly.py --launch [--dry-run]
 """
 
@@ -173,10 +175,17 @@ def propose_phase2(k):
         "sorts": [{"property": "ROI", "direction": "descending"}],
         "page_size": k,
     }, method="POST")["results"]
-    return [f"{page_name(p)} (ROI {round(p['properties']['ROI']['formula'].get('number') or 0, 1)}"
+    return [(p["id"], f"{page_name(p)} (ROI {round(p['properties']['ROI']['formula'].get('number') or 0, 1)}"
             f"{'' if p['properties']['TAM Sourced']['checkbox'] else ', TAM assumed'}"
             f"{'' if p['properties']['Price Sourced']['checkbox'] else ', price assumed'}"
-            f"{', ads to live product' if (p['properties'].get('Product URL') or {}).get('url') else ''}) {p['url']}" for p in pages]
+            f"{', ads to live product' if (p['properties'].get('Product URL') or {}).get('url') else ''}"
+            f"{', MVP ' + needs if (needs := mvp_needs(p)) else ''}) {p['url']}") for p in pages]
+
+
+def mvp_needs(p):
+    """The paid APIs the MVP build said the app needs ("needs: ..." in MVP Build), for the user to decide on."""
+    note = "".join(t["plain_text"] for t in (p["properties"].get("MVP Build") or {}).get("rich_text", []))
+    return note[note.find("needs:"):] if "needs:" in note else ""
 
 
 def launch_approved(dry_run):
@@ -207,6 +216,7 @@ def main():
     ap.add_argument("--top", type=int, default=10, help="clusters to phase-1 validate per sweep")
     ap.add_argument("--add", type=int, default=2, help="passing ideas to add to Notion")
     ap.add_argument("--propose", type=int, default=2, help="untested Notion ideas to propose for phase 2")
+    ap.add_argument("--build", type=int, default=2, help="next week's ideas to build an MVP app for")
     ap.add_argument("--skip-sweep", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="no Notion writes, no phase-2 launches")
     args = ap.parse_args()
@@ -227,7 +237,11 @@ def main():
         f"- New niches: {', '.join(niches) or 'none'}\n"
         f"- Added to Notion (AI Generated): {', '.join(added) or 'none passed phase 1'}\n"
         "- Proposed for phase 2 (~$100 of ads each). Tick **Phase 2 Approved** in Notion by Monday 06:00 UTC "
-        "to launch:\n" + "\n".join(f"  - {p}" for p in proposed or ["none qualify"]))
+        "to launch:\n" + "\n".join(f"  - {line}" for _, line in proposed or [(None, "none qualify")]))
+
+    # Next week's ideas get a real app to send the ads to (takes hours; posts its own report)
+    import build_mvp
+    build_mvp.run(args.build, skip=[page_id for page_id, _ in proposed], dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

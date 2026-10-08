@@ -191,6 +191,16 @@ python -m phase2.cli <notion-page-id> [--dry-run]       # launch campaign
 python -m phase2.cli monitor [--dry-run]                # check signups
 ```
 
+Ideas with a **Product URL** skip the landing page: the ads go to the live app, judged on paid Stripe checkouts.
+Each Sunday `phase0/build_mvp.py` (run by `weekly.py`) has a headless Claude Code agent build and deploy such an app at
+`<slug>.javolabs.com` for the next 2 ideas in line, so next week's phase 2 has a service to send clicks to. The outcome,
+and any paid API the app needs, goes in the Notion **MVP Build** property (clear it to retry):
+
+```bash
+python phase0/build_mvp.py --dry-run                    # which ideas would be built
+python phase0/build_mvp.py --page <notion-page-id>      # build one now
+```
+
 ---
 
 ## Resources
