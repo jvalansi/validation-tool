@@ -214,7 +214,7 @@ def stripe_webhook():
     except Exception:
         abort(400)
     if event["type"] == "checkout.session.completed":
-        s = event["data"]["object"]
+        s = event["data"]["object"].to_dict()  # stripe-python 15 objects aren't dicts: .get() raises
         token = (s.get("metadata") or {}).get("token")
         if token and s.get("payment_status") == "paid":
             mark_paid(token, s)
@@ -230,7 +230,7 @@ def report_page(token):
     if job["status"] == "pending_payment" and request.args.get("session_id") == job["stripe_session"]:
         s = stripe.checkout.Session.retrieve(job["stripe_session"])
         if s.payment_status == "paid":
-            mark_paid(token, s)
+            mark_paid(token, s.to_dict())
             job = get_job(token)
     idea = html.escape(job["idea"])
     if job["status"] == "done":
