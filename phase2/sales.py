@@ -7,6 +7,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 
+OWNER_EMAIL_PREFIX = "jvalansi"  # the owner's own test purchases aren't customers
 ENV_FILE = os.path.join(os.path.dirname(__file__), "..", "web", ".env")  # Lobsteady and MVP Verdict share this Stripe account
 
 
@@ -25,7 +26,8 @@ def host(url):
 
 
 def paid_checkouts(product_url, since_iso):
-    """Completed, paid Checkout Sessions since since_iso whose success_url is on product_url's host.
+    """Completed Checkout Sessions with money paid, by someone other than the owner, since since_iso and whose
+    success_url is on product_url's host.
     One Stripe account serves several products, so the host tells them apart."""
     since = int(datetime.fromisoformat(since_iso).timestamp())
     auth = "Basic " + base64.b64encode(f"{_stripe_key()}:".encode()).decode()
@@ -36,8 +38,9 @@ def paid_checkouts(product_url, since_iso):
                                      headers={"Authorization": auth})
         with urllib.request.urlopen(req, timeout=30) as r:
             page = json.loads(r.read())
-        count += sum(1 for s in page["data"] if s.get("payment_status") == "paid"
-                     and host(s.get("success_url") or "") == host(product_url))
+        count += sum(1 for s in page["data"] if s.get("payment_status") == "paid" and s.get("amount_total")
+                     and host(s.get("success_url") or "") == host(product_url)
+                     and not ((s.get("customer_details") or {}).get("email") or "").lower().startswith(OWNER_EMAIL_PREFIX))
         if not page.get("has_more"):
             return count
         after = page["data"][-1]["id"]
