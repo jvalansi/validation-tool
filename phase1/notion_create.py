@@ -3,11 +3,9 @@
 Create and validate a new Notion project page from a raw idea.
 
 Runs the full pipeline:
-  1. Claude generates search queries, description, work plan
-  2. validation_tool.py report fetches market signals
-  3. Numbers are OOM-rounded (prices to nearest power of 10, WW to nearest 5)
-  4. Probability mapped to user scale: 0.01 moonshot / 0.10 standard / 1.0 straightforward
-  5. Notion page created with all properties + body content
+  1. Claude generates search queries, description, work plan, work weeks (nearest 5)
+  2. Notion page created with those properties + body content
+  3. agent_review.py scores TAM, price, competition and probability, searching the web as it goes
 
 Usage:
   python notion_create.py "Promptware" "A system to reduce LLM inference costs via smart prompting"
@@ -22,11 +20,11 @@ import subprocess
 import sys
 import urllib.request
 
+import agent_review
+
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 NOTION_VERSION = "2022-06-28"
 NOTION_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
-VALIDATION_TOOL = os.path.join(os.path.dirname(__file__), "validation_tool.py")
-PYTHON = "/home/ubuntu/miniconda3/bin/python"
 STATUS_TODO = "\u23f3"
 
 
@@ -126,25 +124,11 @@ def claude_enrichment(name, idea):
 # Step 2: Run validation tool
 # ---------------------------------------------------------------------------
 
-def run_validation(validation_query, trends_query=None):
-    cmd = [PYTHON, VALIDATION_TOOL, "report", "--query", validation_query, "--assume-tech-exists"]
-    if trends_query:
-        cmd += ["--trends-query", trends_query]
-    print(f"  cmd: {' '.join(cmd)}")
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=240)
-    if result.returncode != 0:
-        print(f"  Warning: validation error — {result.stderr[:200]}", file=sys.stderr)
-        return None
-    return json.loads(result.stdout)
-
-
 # ---------------------------------------------------------------------------
 # Step 3: Build page body blocks
 # ---------------------------------------------------------------------------
 
-def build_blocks(enriched, report):
-    claude = report.get("claude_analysis", {}) if report else {}
-    sources = report.get("sources", {}) if report else {}
+def build_blocks(enriched):
     blocks = []
 
     def h2(text):
@@ -158,42 +142,6 @@ def build_blocks(enriched, report):
 
     blocks += [h2("What It Is"), para(enriched["what_it_is"])]
     blocks += [h2("Target Customer"), para(enriched["target_customer"])]
-
-    # Validation signals
-    signal_lines = []
-    gt = sources.get("google_trends", {})
-    if "average_interest" in gt:
-        signal_lines.append(
-            f"Google Trends: {gt['average_interest']}/100 avg, {gt.get('trend_direction', '?')}"
-        )
-    hn = sources.get("hacker_news", {})
-    if hn.get("total_results", 0):
-        top = hn.get("top_posts", [{}])[0]
-        signal_lines.append(
-            f"HN: {hn['total_results']} results — top: \"{top.get('title', '')}\" ({top.get('points', 0)} pts)"
-        )
-    rd = sources.get("reddit", {})
-    if rd.get("total_results", 0):
-        signal_lines.append(f"Reddit: {rd['total_results']} results")
-    ph = sources.get("product_hunt", {})
-    if ph.get("existing_products", 0):
-        top_ph = ph.get("top_products", [{}])[0]
-        signal_lines.append(
-            f"Product Hunt: {ph['existing_products']} products — top: \"{top_ph.get('name', '')}\""
-        )
-    if signal_lines:
-        blocks.append(h2("Validation Signals"))
-        blocks += [bullet(s) for s in signal_lines]
-
-    # Risks & Opportunities
-    risks = claude.get("key_risks", [])
-    opps = claude.get("key_opportunities", [])
-    if risks:
-        blocks.append(h2("Key Risks"))
-        blocks += [bullet(r) for r in risks]
-    if opps:
-        blocks.append(h2("Opportunities"))
-        blocks += [bullet(o) for o in opps]
 
     # Work plan
     blocks.append(h2("Work Plan"))
@@ -229,52 +177,21 @@ def main():
         sys.exit(1)
 
     # 1. Claude enrichment
-    print("Step 1/3: Enriching idea with Claude...")
+    print("Step 1/2: Enriching idea with Claude...")
     enriched = claude_enrichment(name, idea)
     print(f"  validation_query: {enriched['validation_query']}")
     print(f"  trends_query:     {enriched['trends_query']}")
     print(f"  work_weeks:       {enriched['work_weeks']}")
 
-    # 2. Run validation
-    print("\nStep 2/3: Running validation tool...")
-    report = run_validation(enriched["validation_query"], enriched.get("trends_query"))
-
-    # 3. Extract & round numbers
-    claude_analysis = (report or {}).get("claude_analysis", {})
-    sources = (report or {}).get("sources", {})
-    signal_count = (report or {}).get("summary", {}).get("signal_count", 0)
-    tam_tier = (report or {}).get("revenue_estimate", {}).get("tam_tier", "niche")
-
-    price_rounded = claude_analysis.get("price_per_customer_annual") or 100
-    tam_rounded = claude_analysis.get("tam_customers") or 10000
-    probability = claude_analysis.get("suggested_probability") or 0.01
     ww_rounded = round_ww(enriched["work_weeks"])
-
-    trends_avg = sources.get("google_trends", {}).get("average_interest")
-    hn_results = sources.get("hacker_news", {}).get("total_results")
-    reddit_results = sources.get("reddit", {}).get("total_results")
-    ph_products = sources.get("product_hunt", {}).get("existing_products")
-
-    if signal_count >= 3:
-        market_signal = "High"
-    elif signal_count >= 1:
-        market_signal = "Low"
-    else:
-        market_signal = "Low"
-
-    print(f"\n  price/yr:      ${price_rounded}")
-    print(f"  TAM customers: {tam_rounded:,}")
-    print(f"  work weeks:    {ww_rounded}")
-    print(f"  probability:   {probability} ({probability*100:.0f}%)")
-    print(f"  market signal: {market_signal}")
 
     if args.dry_run:
         print("\n[dry-run] Skipping Notion write. Enriched data:")
         print(json.dumps(enriched, indent=2))
         return
 
-    # 4. Create Notion page
-    print("\nStep 3/3: Creating Notion page...")
+    # 2. Create Notion page
+    print("\nStep 2/2: Creating Notion page...")
     props = {
         "Project": {"title": [{"text": {"content": name}}]},
         "Description": {"rich_text": [{"text": {"content": enriched["description"]}}]},
@@ -282,28 +199,10 @@ def main():
         "Trends Query": {"rich_text": [{"text": {"content": enriched["trends_query"]}}]},
         "Pain/Desire": {"rich_text": [{"text": {"content": enriched["pain_desire"]}}]},
         "Work Weeks": {"number": ww_rounded},
-        "Price/Customer/yr ($)": {"number": price_rounded},
-        "TAM Customers": {"number": tam_rounded},
-        "TAM Sourced": {"checkbox": bool(claude_analysis.get("tam_sourced"))},
-        "Price Sourced": {"checkbox": bool(claude_analysis.get("price_sourced"))},
-        "Probability": {"number": probability},
-        "Market Signal": {"select": {"name": market_signal}},
-        "TAM Tier": {"select": {"name": tam_tier}},
         "\u05e1\u05d8\u05d8\u05d5\u05e1": {"status": {"name": STATUS_TODO}},
     }
-    competition = (report or {}).get("summary", {}).get("competition")
-    if competition:
-        props["Competition"] = {"select": {"name": competition}}
     if args.ai_generated:
         props["AI Generated"] = {"checkbox": True}
-    if trends_avg is not None:
-        props["Trends Interest"] = {"number": float(trends_avg)}
-    if hn_results is not None:
-        props["HN Results"] = {"number": int(hn_results)}
-    if reddit_results is not None:
-        props["Reddit Results"] = {"number": int(reddit_results)}
-    if ph_products is not None:
-        props["PH Products"] = {"number": int(ph_products)}
 
     page = notion_post("pages", {"parent": {"database_id": NOTION_DB}, "properties": props})
     page_id = page["id"]
@@ -311,10 +210,16 @@ def main():
     print(f"  Created: {page_url}")
     print(f"PAGE_ID={page_id}")
 
-    # 5. Add page body
-    blocks = build_blocks(enriched, report)
+    # 3. Add page body
+    blocks = build_blocks(enriched)
     for i in range(0, len(blocks), 100):
         notion_patch(f"blocks/{page_id}/children", {"children": blocks[i:i + 100]})
+
+    # 4. Score it
+    print("\nScoring with agent_review...")
+    v = agent_review.review(agent_review.notion_get(f"pages/{page_id}"), agent_review.reviewed_rows())
+    agent_review.write(page_id, v)
+    print(f"  TAM {v['tam']:,}, ${v['price']}/yr, {v['competition']}, probability {v['probability']}")
 
     print(f"\nDone! {page_url}")
 

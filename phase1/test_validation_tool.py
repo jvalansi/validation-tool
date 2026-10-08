@@ -262,4 +262,15 @@ assert vt._competitors_level([{"name": "A", "funding_usd": 2e8}]) == "dominant"
 assert vt._cited([{"name": "Foo", "evidence_url": "u"}, {"name": "Bar", "evidence_url": "u"}], {"u": "foo signals"}) == [
     {"name": "Foo", "evidence_url": "u", "why": None, "funding_usd": None}]
 
+# agent_review.snap: steps, one-time /10, and sources only when the quote is on the page
+from agent_review import snap
+v = snap({"population": 4_300_000, "share": 0.1, "population_source_url": "u", "population_quote": "4.3 million", "tam": 5,
+          "price": 20_000, "price_type": "one_time", "price_source_url": "u", "price_quote": "$20,000", "competition": "funded",
+          "probability": 0.05}, check=lambda url, quote: True)
+assert (v["tam"], v["tam_sourced"], v["price"], v["price_one_time"], v["price_sourced"], v["probability"]) == (
+    1_000_000, True, 1_000, 10_000, True, 0.03), v
+v = snap({"population": 4_300_000, "share": 0.1, "tam": 3_000, "price": 240, "competition": "bogus", "probability": 2},
+         check=lambda url, quote: False)
+assert (v["tam"], v["tam_sourced"], v["price"], v["competition"], v["probability"]) == (1_000, False, 100, "none_found", 0.3), v
+
 print("all checks passed")
