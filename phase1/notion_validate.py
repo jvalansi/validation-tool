@@ -23,6 +23,7 @@ NOTION_VERSION = "2022-06-28"
 VALIDATION_TOOL = os.path.join(os.path.dirname(__file__), "validation_tool.py")
 PYTHON = "/home/ubuntu/miniconda3/bin/python"
 EXIT_SEARCH_REFUSED = 3  # same as validation_tool.EXIT_SEARCH_REFUSED
+REVIEWED_FIELDS = ("TAM Customers", "TAM Sourced", "Price/Customer/yr ($)", "Price Sourced", "Competition", "Probability")
 
 
 def notion_get(path):
@@ -355,6 +356,9 @@ def main():
         table_props["Price/Customer/yr ($)"] = {"number": float(price_annual)}
 
     print("\nWriting table fields...")
+    if (props.get("Reviewed") or {}).get("checkbox"):  # set by hand-review; a run's estimates don't replace it
+        for k in REVIEWED_FIELDS:
+            table_props.pop(k, None)
     notion_patch(f"pages/{args.page_id}", {"properties": table_props})
 
     # Write text fields to page body
