@@ -63,9 +63,10 @@ Implementation (follow existing conventions; read these first):
   installed SDK are not dicts: call .to_dict() before .get().
 - LLM, if the product needs one: Anthropic API, key ANTHROPIC_API_KEY in /home/ubuntu/validation-tool/web/.env,
   model claude-sonnet-5. Load the claude-api skill (Skill tool, skill "claude-api") before writing the API code.
-- Host at https://<slug>.javolabs.com: wildcard DNS for *.javolabs.com already points at this server. nginx site +
+- Host at https://<slug>.javolabs.com: add a Route 53 A record to this server's public IP (no wildcard exists; load AWS
+  keys with `set -a; source <(grep -E '^AWS_' /home/ubuntu/.env); set +a`; the zone is javolabs.com), nginx site +
   certbot TLS like the other sites, systemd unit with EnvironmentFile (no inline secrets), gunicorn on an unused
-  127.0.0.1 port (check with `ss -ltn`; 8010-8040 are taken). Use `systemctl restart`, never stop+start.
+  127.0.0.1 port (check with `ss -ltn`; 8010-8060 are taken). Use `systemctl restart`, never stop+start.
 - Code in /home/ubuntu/<slug>, pushed to a new private GitHub repo jvalansi/<slug>. gh auth:
   `export $(cat /home/ubuntu/.env | xargs)`; push with
   `GH=$(grep -oP 'GH_TOKEN=\\K\\S+' /home/ubuntu/.env); git push https://$GH@github.com/jvalansi/<slug>.git main`.
@@ -81,6 +82,11 @@ End your reply with exactly one JSON object and nothing after it:
 {{"status": "built" | "skipped" | "blocked" | "failed", "url": "https://<slug>.javolabs.com" or null,
 "repo": "jvalansi/<slug>" or null, "needs": ["<paid API>: <what it adds, its price>", ...],
 "note": "<one line: what the app does, or why it was skipped/blocked/failed>"}}"""
+
+BLIND = """
+
+This is a blind rebuild, to compare with an app already built for this idea: build a new app under a new slug as if
+none existed. Don't read, use or change any existing app for this idea, its Notion Product URL, or its repo."""
 
 
 def text(p, name):
@@ -128,13 +134,19 @@ def parse_result(reply):
     return r
 
 
-def live(url):
-    try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}),
-                                    timeout=30) as resp:
-            return resp.status == 200
-    except Exception:
-        return False
+def live(url, tries=20):
+    """200 over HTTPS; retried for a while because this server's resolver caches the name's NXDOMAIN (up to the
+    zone's 900s negative TTL) if it was looked up before the agent created the record."""
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}),
+                                        timeout=30) as resp:
+                if resp.status == 200:
+                    return True
+        except Exception:
+            pass
+        time.sleep(60 if i < tries - 1 else 0)
+    return False
 
 
 def summary(r):
@@ -149,7 +161,7 @@ def build(p, write=True):
     claude = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}  # the CLI runs on the subscription
     try:
-        out = subprocess.run([claude, "-p", prompt_for(p), "--output-format", "json", "--model", "claude-opus-5-5",
+        out = subprocess.run([claude, "-p", prompt_for(p) + ("" if write else BLIND), "--output-format", "json", "--model", "claude-opus-5-5",
                               "--dangerously-skip-permissions"],
                              capture_output=True, text=True, timeout=BUILD_TIMEOUT, env=env, cwd="/home/ubuntu")
         r = parse_result(json.loads(out.stdout).get("result", ""))
@@ -189,7 +201,7 @@ def main():
     ap.add_argument("--skip", nargs="*", default=[], help="page ids not to build (this week's proposals)")
     ap.add_argument("--page", help="build this page only")
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--no-write", action="store_true", help="with --page: leave Notion as is (to compare a rebuild)")
+    ap.add_argument("--no-write", action="store_true", help="with --page: blind rebuild under a new slug, Notion left as is (to compare)")
     args = ap.parse_args()
     if args.page:
         r = build(notion(f"pages/{args.page}"), write=not args.no_write)
