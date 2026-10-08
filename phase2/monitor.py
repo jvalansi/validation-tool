@@ -61,7 +61,8 @@ def _uninstall_cron():
     print("  System cron removed (no active campaigns)")
 
 
-def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pain_desire=None, price_per_year=None, days=7):
+def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pain_desire=None, price_per_year=None, days=7,
+                      product=False):
     """Called after a successful deploy to track the campaign."""
     campaigns = load_campaigns()
     # Replace existing entry for same project
@@ -76,6 +77,7 @@ def register_campaign(project_name, form_id, pages_url, notion_page_id=None, pai
         "start_date": datetime.now(timezone.utc).isoformat(),
         "days": days,
         "status": "active",
+        "product": product,  # pages_url is the live product: count paid checkouts, not signups
     })
     save_campaigns(campaigns)
     _install_cron()
@@ -148,6 +150,26 @@ def get_formspree_responses(project_name):
         return []
 
 
+def _monitor_product(campaign, day, total_days, dry_run):
+    """Daily line for ads sent to a live product, and the day-7 decision from paid checkouts."""
+    from .decision import ad_stats, run_sales_decision
+    from .sales import paid_checkouts
+    project = campaign["project"]
+    sales = paid_checkouts(campaign["pages_url"], campaign["start_date"])
+    clicks, spend = ad_stats(project)
+    msg = (f"*{project} — Day {day}/{total_days}*\nPaid checkouts: {sales}  |  {campaign['pages_url']}"
+           + (f"\nAd clicks: {clicks}  |  Spend: ${spend:.2f}" if clicks is not None else ""))
+    print(msg)
+    if not dry_run:
+        _slack(msg)
+    if day >= total_days and not campaign.get("decision_sent"):
+        run_sales_decision(project, campaign.get("notion_page_id"), campaign["pages_url"], campaign["start_date"],
+                           campaign.get("price_per_year"), dry_run=dry_run)
+        if not dry_run:
+            campaign["decision_sent"] = True
+            campaign["status"] = "ended"
+
+
 def run_monitor(dry_run=False):
 
     # Spend cap runs first and independently of signup tracking, so a failure
@@ -175,6 +197,9 @@ def run_monitor(dry_run=False):
         day = days_elapsed(campaign["start_date"]) + 1
 
         print(f"\nChecking campaign: {project} (day {day}/{total_days})")
+        if campaign.get("product"):
+            _monitor_product(campaign, day, total_days, dry_run)
+            continue
 
         try:
             responses = get_formspree_responses(project)

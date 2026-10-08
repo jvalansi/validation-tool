@@ -49,6 +49,15 @@ def decide(total, strong, clicks=None, spend=None):
     return "kill"
 
 
+def decide_sales(sales, price_per_year, clicks=None, spend=None):
+    """Verdict for ads sent to a live product: buyers who pay back their ad cost within a year mean build."""
+    if sales and spend is not None and spend / sales <= (price_per_year or 0):
+        return "build"
+    if clicks is None or clicks < MIN_CLICKS:
+        return "extend"
+    return "validate_more" if sales else "kill"
+
+
 def ad_stats(project_name):
     """Latest (clicks, spend) recorded by the ad cap check, or (None, None)."""
     from .google_ads import _load_state
@@ -56,6 +65,24 @@ def ad_stats(project_name):
         if c["project"] == project_name and "clicks" in c:
             return c["clicks"], c.get("spent_usd", 0)
     return None, None
+
+
+def run_sales_decision(project_name, notion_page_id, product_url, since_iso, price_per_year, dry_run=False):
+    from .sales import paid_checkouts
+    sales = paid_checkouts(product_url, since_iso)
+    clicks, spend = ad_stats(project_name)
+    verdict = decide_sales(sales, price_per_year, clicks, spend)
+    status = {"build": "building", "kill": "killed"}.get(verdict, "validating")
+    msg = (f"*{project_name} — Day 7 Decision: {verdict.upper()}*\n{sales} paid checkouts on {product_url}"
+           + (f" from {clicks} ad clicks (${spend:.2f}" + (f", ${spend / sales:.2f}/customer" if sales else "") + f"; price ${price_per_year}/yr)"
+              if clicks is not None else " (no ad data)"))
+    print(msg)
+    if dry_run:
+        return {"verdict": verdict, "sales": sales}
+    _slack(msg)
+    if notion_page_id and NOTION_TOKEN:
+        _notion_patch(f"pages/{notion_page_id}", {"properties": {"סטטוס": {"status": {"name": status}}}})
+    return {"verdict": verdict, "sales": sales}
 
 
 def run_decision(project_name, notion_page_id, pain_desire, price_per_year, dry_run=False):
@@ -138,4 +165,10 @@ if __name__ == "__main__":
     assert decide(1, 0, 120, 100) == "kill"           # $100/signup
     assert decide(0, 0, 120, 100) == "kill"
     assert decide(5, 0) == "validate_more" and decide(4, 0) == "kill"  # no ad data
+    assert decide_sales(2, 100, 120, 150) == "build"           # $75/customer < $100/yr
+    assert decide_sales(1, 100, 120, 150) == "validate_more"   # $150/customer
+    assert decide_sales(0, 100, 50, 40) == "extend"
+    assert decide_sales(0, 100, 120, 100) == "kill"
+    from phase2.sales import host
+    assert host("https://www.lobsteady.com/success?x=1") == host("lobsteady.com") == "lobsteady.com"
     print("ok")

@@ -326,6 +326,17 @@ def main():
 
     results = {}
 
+    product_url = (props.get("Product URL") or {}).get("url")
+    if product_url:  # already built: send the ads to the product and count paid checkouts, not landing-page signups
+        print(f"Product URL:    {product_url} (no landing page)")
+        if not args.dry_run:
+            from .monitor import register_campaign
+            register_campaign(project_name, None, product_url, args.page_id, pain_desire, price_per_year, args.days, product=True)
+        results["ads"] = step4_ads(project_name, description, pain_desire, validation_query, price_per_year, product_url,
+                                   args.budget, args.days, args.dry_run)
+        print(json.dumps(results, indent=2))
+        return
+
     # Step 1: Landing page
     landing_result = step1_landing_page(project_name, description, pain_desire, price_per_year, args.page_id, args.dry_run)
     results["landing"] = landing_result

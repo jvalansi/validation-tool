@@ -175,7 +175,8 @@ def propose_phase2(k):
     }, method="POST")["results"]
     return [f"{page_name(p)} (ROI {round(p['properties']['ROI']['formula'].get('number') or 0, 1)}"
             f"{'' if p['properties']['TAM Sourced']['checkbox'] else ', TAM assumed'}"
-            f"{'' if p['properties']['Price Sourced']['checkbox'] else ', price assumed'}) {p['url']}" for p in pages]
+            f"{'' if p['properties']['Price Sourced']['checkbox'] else ', price assumed'}"
+            f"{', ads to live product' if (p['properties'].get('Product URL') or {}).get('url') else ''}) {p['url']}" for p in pages]
 
 
 def launch_approved(dry_run):
