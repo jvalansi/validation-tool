@@ -55,15 +55,17 @@ Pain/Desire: {pain_desire}
 Rules:
 - 15 keywords total: 5 broad match, 5 phrase match, 5 exact match
 - Focus on problem-framing terms (what the user types when they have the pain), not product names
-- Phrase match: wrap in double quotes, e.g. "reduce llm costs"
-- Exact match: wrap in square brackets, e.g. [llm cost optimization]
-- Broad match: plain text, e.g. reduce openai api costs
+- Plain keyword text only, e.g. reduce llm costs (no quotes or brackets; match types are added afterwards)
 - Avoid branded terms and overly generic single words
 
-Return a JSON object with keys "broad", "phrase", "exact" — each an array of 5 strings (include the quote/bracket syntax in phrase/exact values).
+Return a JSON object with keys "broad", "phrase", "exact" — each an array of 5 strings.
 Return only valid JSON, no markdown."""
 
-    return _claude_json(prompt)
+    # Match-type syntax is added here: asked for in the JSON, "phrase" quotes came back unescaped and broke parsing.
+    kw = _claude_json(prompt)
+    plain = lambda k: k.strip().strip('"[]').strip()
+    return {"broad": [plain(k) for k in kw["broad"]], "phrase": [f'"{plain(k)}"' for k in kw["phrase"]],
+            "exact": [f"[{plain(k)}]" for k in kw["exact"]]}
 
 
 def generate_business_description(project_name, description, pain_desire):
