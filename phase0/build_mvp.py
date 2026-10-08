@@ -8,7 +8,7 @@ and deepestate). Built and answering over HTTPS → Product URL is set, so next 
 instead of a landing page. The outcome goes in the "MVP Build" property either way (clear it to retry), including
 any paid API the app needs that the user has to sign up for.
 
-Usage: python build_mvp.py [--k 2] [--skip <page-id> ...] [--page <page-id>] [--dry-run]
+Usage: python build_mvp.py [--k 2] [--skip <page-id> ...] [--page <page-id> [--no-write]] [--dry-run]
 """
 
 import argparse
@@ -145,7 +145,7 @@ def summary(r):
     return s[:2000]
 
 
-def build(p):
+def build(p, write=True):
     claude = shutil.which("claude") or "/home/ubuntu/.local/bin/claude"
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}  # the CLI runs on the subscription
     try:
@@ -159,6 +159,8 @@ def build(p):
         r = {"status": "failed", "url": None, "needs": [], "note": "CLI error: " + (out.stderr or out.stdout)[-300:]}
     if r["status"] == "built" and not (r.get("url") and live(r["url"])):
         r.update(status="failed", note=f"reported built but {r.get('url')} isn't answering; {r.get('note')}")
+    if not write:
+        return r
     props = {"MVP Build": {"rich_text": [{"text": {"content": summary(r)}}]}}
     if r["status"] == "built":
         props["Product URL"] = {"url": r["url"]}
@@ -187,9 +189,10 @@ def main():
     ap.add_argument("--skip", nargs="*", default=[], help="page ids not to build (this week's proposals)")
     ap.add_argument("--page", help="build this page only")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--no-write", action="store_true", help="with --page: leave Notion as is (to compare a rebuild)")
     args = ap.parse_args()
     if args.page:
-        r = build(notion(f"pages/{args.page}"))
+        r = build(notion(f"pages/{args.page}"), write=not args.no_write)
         print(json.dumps(r, indent=2))
         return
     run(args.k, args.skip, args.dry_run)
