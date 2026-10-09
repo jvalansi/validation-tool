@@ -1,12 +1,12 @@
 from spec import SECTIONS, check, rich, to_blocks
 
 md = "Here it is.\n" + "\n".join(f"### {s}\n- **Key**: see [src](https://x.org/a)" for s in SECTIONS)
-assert check(md).startswith("### Problem")
+assert check(md).startswith("### Customer")
 try:
-    check(md.replace("### Scope", "### Range"))
+    check(md.replace("### Out of scope", "### Range"))
     assert False, "missing section accepted"
 except ValueError as e:
-    assert "Scope" in str(e)
+    assert "Out of scope" in str(e)
 b = to_blocks("### Input\n- a link\n2. Given x, When y, Then z\nplain")
 assert [x["type"] for x in b] == ["heading_3", "bulleted_list_item", "numbered_list_item", "paragraph"]
 assert b[2]["numbered_list_item"]["rich_text"][0]["text"]["content"] == "Given x, When y, Then z"

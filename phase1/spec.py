@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
 Product spec per idea: a "Spec" section in the idea's Notion page, written by a Claude Code agent that searches as
-it goes. It pins down the product - who it's for, the input it takes, the output it gives, the states a visitor can
-be in, what's in and out of scope - so phase 1 scores that product and build_mvp builds the same one. Sections follow
-GitHub Spec Kit's spec template (scenarios, scope, success criteria, at most 3 [NEEDS CLARIFICATION]) plus explicit
-input/output. Price isn't in it: phase 1 prices the spec.
+it goes. It pins down the product - who it's for, the input it takes, the output it gives, what it deliberately
+doesn't do - so phase 1 scores that product and build_mvp builds the same one. Borrowed from GitHub Spec Kit:
+Given/When/Then scenarios and at most 3 [NEEDS CLARIFICATION] questions. Price isn't in it: phase 1 prices the spec.
 
 The Notion section is the source of truth: edit it to change the product. Re-running (--rewrite) starts from the
 current section, keeps every decision in it and only fills gaps, so answered questions stick.
@@ -25,8 +24,7 @@ from notion_validate import get_page_blocks, notion_get, notion_patch, notion_de
 from analyze import PROFILE  # noqa: E402
 
 HEADING = "Spec"
-SECTIONS = ("Problem", "Customer", "Input", "Output", "States", "Scenarios", "Scope", "Success metric",
-            "Open questions")
+SECTIONS = ("Customer", "Problem", "Input", "Output", "Scenarios", "Out of scope", "Open questions")
 
 PROMPT = """Write the product spec for this idea from the validation-tool ideas DB. It decides what gets scored (market size,
 price, competition) and what an agent builds next as a paid web app, so it must say exactly what the product is.
@@ -46,30 +44,25 @@ Builder: {profile}
 Decide the market by where the most paying customers are that this product can serve, not by the language of the
 idea's name (that only says where the idea came from). Price is set later from this spec: leave it out.
 
-Reply with ONLY these Markdown sections, each a "### " heading, short and concrete:
-### Problem
-Who hurts, what the pain is, and how they deal with it today (with a source link).
+Reply with ONLY these Markdown sections, each a "### " heading. Keep the whole spec under 200 words: one line per
+item, no explanations.
 ### Customer
-The segment, the market (countries) and the language(s) the product works in.
+One line: the segment, the market (countries) and the language(s).
+### Problem
+One line: the pain and how they deal with it today, with a source link.
 ### Input
-Exactly what the user gives (a link, an address, a question, a file, form fields), and one real example.
+One line: exactly what the user gives (a link, an address, a question, a file, form fields), then "e.g." one real example.
 ### Output
-Exactly what they get back, and what it would look like for the example.
-### States
-The states a visitor can be in that change what they see or can do (e.g. first visit, free uses left, out of free
-uses, subscribed), one bullet each.
+One line: exactly what they get back, then "e.g." what it would be for the example.
 ### Scenarios
-3-5 numbered "Given <state>, When <input>, Then <output>" lines, most important first; the first alone is a usable MVP.
-### Scope
-- In: what the MVP does
-- Out: what it deliberately doesn't do (other markets, inputs, features)
-- Cut: what goes first if the build runs long
-### Success metric
-What phase 2 (paid search clicks sent to the app) should count to call it working, e.g. free uses and paid
-checkouts per click.
+3 numbered "Given <state>, When <input>, Then <output>" lines, most important first; the first alone is a usable MVP.
+The states that matter: free uses left, out of free uses, subscribed.
+### Out of scope
+Bullets: other markets, languages, inputs or features the MVP deliberately doesn't do.
 ### Open questions
-At most 3 bullets, only where the answer changes the product (market, input, output):
-"[NEEDS CLARIFICATION: <question>] Default: <what the build does if nobody answers>". "None" if there are none."""
+At most 3 bullets: "[NEEDS CLARIFICATION: <question>] Default: <what the build does if nobody answers>". If the row
+doesn't state the market and language, one of them must ask which, since that changes the product most. "None" if
+there are none."""
 
 
 def text(prop):
