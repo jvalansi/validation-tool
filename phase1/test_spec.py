@@ -14,3 +14,9 @@ r = rich("**Key**: see [src](https://x.org/a) 2*3")
 assert r[0]["annotations"]["bold"] and r[2]["text"]["link"]["url"] == "https://x.org/a"
 assert "".join(p["text"]["content"] for p in r) == "Key: see src 2*3"
 print("ok")
+
+n = to_blocks("### Scope\n- **In:**\n  - a\n  - b\n- **Out:** c\n### Next\nx")
+assert [x["type"] for x in n] == ["heading_3", "bulleted_list_item", "bulleted_list_item", "heading_3", "paragraph"]
+assert [k["bulleted_list_item"]["rich_text"][0]["text"]["content"] for k in n[1]["bulleted_list_item"]["children"]] == ["a", "b"]
+assert "children" not in n[2]["bulleted_list_item"]
+print("ok nested")

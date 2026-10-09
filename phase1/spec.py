@@ -94,7 +94,13 @@ def spec_blocks(page_id):
 def read_spec(page_id):
     """The Spec section as Markdown (without its heading), "" if there is none."""
     prefix = {"heading_3": "### ", "bulleted_list_item": "- ", "numbered_list_item": "1. ", "to_do": "- "}
-    return "\n".join(prefix.get(b["type"], "") + block_text(b) for b in spec_blocks(page_id)[1:]).strip()
+
+    def lines(blocks, depth=0):
+        for b in blocks:
+            yield "  " * depth + prefix.get(b["type"], "") + block_text(b)
+            if b.get("has_children"):
+                yield from lines(get_page_blocks(b["id"]), depth + 1)
+    return "\n".join(lines(spec_blocks(page_id)[1:])).strip()
 
 
 def rich(line):
@@ -112,12 +118,14 @@ def rich(line):
 
 
 def to_blocks(md):
-    """The agent's Markdown -> Notion blocks (### headings, bullets, numbered lines, paragraphs)."""
-    blocks = []
+    """The agent's Markdown -> Notion blocks (### headings, bullets, numbered lines, paragraphs); indented list items
+    become children of the item above them."""
+    blocks, stack = [], []  # stack: (indent, block) of the open list items
     for line in md.splitlines():
         s = line.strip()
         if not s:
             continue
+        indent = len(line) - len(line.lstrip())
         if s.startswith("#"):
             kind, s = "heading_3", s.lstrip("#").strip()
         elif re.match(r"[-*] ", s):
@@ -126,7 +134,15 @@ def to_blocks(md):
             kind, s = "numbered_list_item", s.split(" ", 1)[1]
         else:
             kind = "paragraph"
-        blocks.append({"type": kind, kind: {"rich_text": rich(s[:2000])}})
+        block = {"type": kind, kind: {"rich_text": rich(s[:2000])}}
+        while stack and (stack[-1][0] >= indent or kind == "heading_3"):
+            stack.pop()
+        if stack and kind != "heading_3":
+            stack[-1][1][stack[-1][1]["type"]].setdefault("children", []).append(block)
+        else:
+            blocks.append(block)
+        if kind.endswith("list_item"):
+            stack.append((indent, block))
     return blocks
 
 
