@@ -8,7 +8,7 @@ Given/When/Then scenarios and at most 3 [NEEDS CLARIFICATION] questions. Price i
 The Notion section is the source of truth: edit it to change the product. Re-running (--rewrite) starts from the
 current section, keeps every decision in it and only fills gaps, so answered questions stick.
 
-Usage: python spec.py <page-id> [--rewrite] [--dry-run]
+Usage: python spec.py <page-id> [--rewrite] [--answers "<answers>"] [--dry-run]
        python spec.py --all [--workers 4]   # every scored idea without a spec; prints the open questions
 """
 
@@ -158,7 +158,7 @@ def ask(prompt, timeout=1800):
     return json.loads(out.stdout).get("result", "")
 
 
-def prompt_for(page, current=""):
+def prompt_for(page, current="", answers=""):
     p = page["properties"]
     try:
         competitors = ", ".join(f"{c['name']} ({c.get('why', '')})" for c in json.loads(text(p.get("Competitors")) or "[]"))
@@ -166,6 +166,10 @@ def prompt_for(page, current=""):
         competitors = ""
     cur = ("\nThe current spec, which the owner may have edited: keep every decision and answer in it, fill gaps, "
            "fix only what's wrong, and drop questions it already answers:\n" + current + "\n") if current else ""
+    if answers:
+        cur += ("\nThe owner's answers to the open questions: write them into the spec as decisions. Any question they "
+                "don't answer is settled by its default: write the default in as a decision too and drop the question. "
+                "Leave Open questions as \"None\" unless the answers raise a new one.\n" + answers + "\n")
     return PROMPT.format(name=text(p["Project"]), description=text(p.get("Description")) or "-",
                          pain=text(p.get("Pain/Desire")) or "-", customers=text(p.get("Customer Group")) or "-",
                          competitors=competitors or "none recorded", review=text(p.get("Review Note")) or "-",
@@ -181,12 +185,12 @@ def write_spec(page_id, md):
         notion_patch(f"blocks/{page_id}/children", {"children": blocks[i:i + 100]})
 
 
-def spec(page_id, rewrite=False, dry_run=False):
-    """Writes the page's spec (or rewrites it from the current one); returns the Markdown."""
+def spec(page_id, rewrite=False, dry_run=False, answers=""):
+    """Writes the page's spec (or rewrites it from the current one, with the owner's answers); returns the Markdown."""
     current = read_spec(page_id)
-    if current and not rewrite:
+    if current and not (rewrite or answers):
         return current
-    md = check(ask(prompt_for(notion_get(f"pages/{page_id}"), current)))
+    md = check(ask(prompt_for(notion_get(f"pages/{page_id}"), current, answers)))
     if not dry_run:
         write_spec(page_id, md)
     return md
@@ -216,12 +220,13 @@ def main():
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--rewrite", action="store_true", help="rewrite an existing spec, keeping its decisions")
     ap.add_argument("--dry-run", action="store_true", help="print the spec, don't write it")
+    ap.add_argument("--answers", default="", help="the owner's answers to the open questions (unanswered: defaults)")
     args = ap.parse_args()
     if args.all:
         for name, questions in spec_all(args.workers).items():
             print(f"## {name}\n{questions}\n", flush=True)
         return
-    print(spec(args.page_id, args.rewrite, args.dry_run))
+    print(spec(args.page_id, args.rewrite, args.dry_run, args.answers))
 
 
 if __name__ == "__main__":
