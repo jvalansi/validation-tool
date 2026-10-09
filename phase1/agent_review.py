@@ -99,7 +99,12 @@ def ask_agent(prompt, timeout=900):
     result = subprocess.run([claude, "-p", prompt, "--output-format", "json", "--allowedTools", "WebSearch,WebFetch"],
                             capture_output=True, text=True, timeout=timeout, env=env, cwd="/tmp")
     text = json.loads(result.stdout).get("result", "")
-    return json.loads(text[text.find("{"):text.rfind("}") + 1])
+    return parse_reply(text)
+
+
+def parse_reply(text):
+    """The first JSON object in the agent's reply; text after it (e.g. a sources list) is ignored."""
+    return json.JSONDecoder().raw_decode(text[text.find("{"):])[0]
 
 
 def page_has(url, quote):
@@ -231,7 +236,10 @@ def rescore_all(out_path, workers=4):
                "competition": (r["Competition"]["select"] or {}).get("name"), "probability": r["Probability"]["number"],
                "roi": r["ROI"]["formula"].get("number")}
         try:
-            v = review(p, rows)
+            try:
+                v = review(p, rows)
+            except ValueError:  # malformed JSON (e.g. an unescaped quote in a quote field): one fresh attempt
+                v = review(p, rows)
         except Exception as e:
             print(f"{get_text(r['Project'])[:40]}: FAILED {e}", flush=True)
             return

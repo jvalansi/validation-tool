@@ -280,3 +280,7 @@ from agent_review import roi as _roi
 assert abs(_roi(50_000, 100, "contested", 0.1, 1, 0.75) - 50_000 * 100 * 0.05 * 10 * 0.1 / 4000 * 2 / 1.25) < 1e-9
 assert _roi(1000, 10, "open", 0.1, 2, None) == 1000 * 10 * 0.1 * 10 * 0.1 / 8000
 print("ok roi")
+
+from agent_review import parse_reply as _parse_reply
+assert _parse_reply('Here: {"tam": 5, "c": [{"a": 1}]}\nSources: {x}') == {"tam": 5, "c": [{"a": 1}]}
+print("ok parse_reply")

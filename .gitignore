@@ -10,3 +10,4 @@ validated_ids.json.bak
 web/.env
 web/jobs.db
 phase1/rescore*.jsonl
+phase1/rescore.log
