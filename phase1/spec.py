@@ -9,6 +9,7 @@ The Notion section is the source of truth: edit it to change the product. Re-run
 current section, keeps every decision in it and only fills gaps, so answered questions stick.
 
 Usage: python spec.py <page-id> [--rewrite] [--dry-run]
+       python spec.py --all [--workers 4]   # every scored idea without a spec; prints the open questions
 """
 
 import argparse
@@ -191,12 +192,35 @@ def spec(page_id, rewrite=False, dry_run=False):
     return md
 
 
+def spec_all(workers=4):
+    """Specs for every scored idea (non-products have no TAM) that has none yet; returns {name: open questions}."""
+    from concurrent.futures import ThreadPoolExecutor
+    from agent_review import query_db
+    pages = query_db({"page_size": 100, "filter": {"property": "TAM Customers", "number": {"is_not_empty": True}}})
+
+    def one(p):
+        name = text(p["properties"]["Project"])
+        try:
+            md = spec(p["id"])
+        except Exception as e:  # one bad row shouldn't stop the batch; rerun picks it up (it has no spec)
+            return name, f"FAILED: {e}"
+        return name, md[md.find("### Open questions") + len("### Open questions"):].strip()
+    with ThreadPoolExecutor(workers) as ex:
+        return dict(ex.map(one, pages))
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("page_id")
+    ap.add_argument("page_id", nargs="?")
+    ap.add_argument("--all", action="store_true", help="every scored idea without a spec")
+    ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--rewrite", action="store_true", help="rewrite an existing spec, keeping its decisions")
     ap.add_argument("--dry-run", action="store_true", help="print the spec, don't write it")
     args = ap.parse_args()
+    if args.all:
+        for name, questions in spec_all(args.workers).items():
+            print(f"## {name}\n{questions}\n", flush=True)
+        return
     print(spec(args.page_id, args.rewrite, args.dry_run))
 
 
