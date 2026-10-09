@@ -274,3 +274,9 @@ v = snap({"population": 4_300_000, "share": 0.1, "tam": 3_000, "price": 240, "co
 assert (v["tam"], v["tam_sourced"], v["price"], v["competition"], v["probability"]) == (1_000, False, 100, "none_found", 0.3), v
 
 print("all checks passed")
+
+# The Notion ROI formula, as agent_review.roi recomputes it for rescoring
+from agent_review import roi as _roi
+assert abs(_roi(50_000, 100, "contested", 0.1, 1, 0.75) - 50_000 * 100 * 0.05 * 10 * 0.1 / 4000 * 2 / 1.25) < 1e-9
+assert _roi(1000, 10, "open", 0.1, 2, None) == 1000 * 10 * 0.1 * 10 * 0.1 / 8000
+print("ok roi")

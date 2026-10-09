@@ -5,7 +5,8 @@ Create and validate a new Notion project page from a raw idea.
 Runs the full pipeline:
   1. Claude generates search queries, description, work plan, work weeks (nearest 5)
   2. Notion page created with those properties + body content
-  3. agent_review.py scores TAM, price, competition and probability, searching the web as it goes
+  3. spec.py writes the product spec (customer, input, output, scenarios, out of scope; open questions use defaults)
+  4. agent_review.py scores that spec - TAM, price, competition and probability - searching the web as it goes
 
 Usage:
   python notion_create.py "Promptware" "A system to reduce LLM inference costs via smart prompting"
@@ -21,6 +22,7 @@ import sys
 import urllib.request
 
 import agent_review
+import spec
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 NOTION_VERSION = "2022-06-28"
@@ -215,7 +217,10 @@ def main():
     for i in range(0, len(blocks), 100):
         notion_patch(f"blocks/{page_id}/children", {"children": blocks[i:i + 100]})
 
-    # 4. Score it
+    # 4. Spec it, then score the spec
+    print("\nWriting the spec...")
+    product = spec.spec(page_id)
+    print(product[product.find("### Open questions"):])
     print("\nScoring with agent_review...")
     v = agent_review.review(agent_review.notion_get(f"pages/{page_id}"), agent_review.reviewed_rows())
     agent_review.write(page_id, v)

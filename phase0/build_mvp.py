@@ -20,7 +20,7 @@ import subprocess
 import time
 import urllib.request
 
-from weekly import MIN_ROI, NOTION_DB, UNTESTED, notion, page_name, post
+from weekly import MIN_ROI, NOTION_DB, UNTESTED, VT, notion, page_name, post
 
 BUILD_TIMEOUT = 4 * 3600
 STATUSES = ("built", "skipped", "blocked", "failed")
@@ -37,6 +37,10 @@ The idea (from the Notion row):
 - Price: about ${price}/yr per customer
 - Competitors: {competitors}
 - Reviewer's note: {review}
+
+The product spec - the owner's decisions. Build exactly this: its customer, market and language, its input and output,
+its scenarios (the first is the MVP), and nothing it lists as out of scope:
+{spec}
 
 First decide whether this can be delivered as a web service that does the job for a visitor right away (an answer,
 a report, a generated file, a tool they use). If it can't (hardware, a two-sided marketplace that needs supply first,
@@ -118,7 +122,15 @@ def prompt_for(p):
     return PROMPT.format(name=page_name(p), page_id=p["id"], description=text(p, "Description") or "-",
                          pain=text(p, "Pain/Desire") or "-", customers=text(p, "Customer Group") or "-",
                          price=props["Price/Customer/yr ($)"]["number"] or "unknown", competitors=competitors,
-                         review=text(p, "Review Note") or "-")
+                         review=text(p, "Review Note") or "-", spec=product_spec(p["id"]))
+
+
+def product_spec(page_id):
+    """The idea's Notion spec, written first if it has none (open questions take their defaults)."""
+    import sys
+    sys.path.insert(0, os.path.join(VT, "phase1"))
+    from spec import spec
+    return spec(page_id)
 
 
 def parse_result(reply):

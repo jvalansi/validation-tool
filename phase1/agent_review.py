@@ -8,6 +8,7 @@ Usage:
   python agent_review.py <page-id>            # review and write to Notion
   python agent_review.py <page-id> --dry-run  # print, don't write
   python agent_review.py --blind-test [N]     # re-score N hand-reviewed rows without their values; compare
+  python agent_review.py --rescore-all OUT.jsonl  # re-score every scored row (e.g. after specs change); no writes
 """
 
 import argparse
@@ -24,6 +25,7 @@ from datetime import datetime, timezone
 
 from notion_validate import (NOTION_TOKEN, get_page_blocks, get_text, notion_get, notion_patch,
                              remove_existing_validation_section)
+from spec import read_spec
 from validation_tool import COMPETITION_LEVELS, _extract_prices, _page_text, round_oom
 
 NOTION_DB = "17731083-1fdd-4c06-a3c3-c87aa758703a"
@@ -32,7 +34,8 @@ REFERENCE_ROWS = 12
 
 RUBRIC = """Fill in this idea's row for an ROI ranking: ROI = TAM x price x market share x 10 years x probability / cost of the work weeks.
 Use web search and page fetches as much as you need: look up real counts, real competitor prices, and who already sells this.
-Everything is per the idea as described; if it is a personal goal or research question, score it as the product it could become.
+Score the product its spec defines (customer, market, language, input, output, scope); without a spec, the idea as
+described. If it is a personal goal or research question, score it as the product it could become.
 
 - tam: number of customers who would plausibly pay for this kind of product (not everyone in the group). Find a sourced
   count of the population (population, population_source_url, population_quote: the count exactly as written on that page)
@@ -141,6 +144,9 @@ def review(page, rows):
     ww_blank = r["Work Weeks"]["number"] is None
     idea = (f"Name: {get_text(r['Project'])}\nDescription: {get_text(r['Description'])}\nPain/Desire: {get_text(r['Pain/Desire'])}"
             + ("\nAlso estimate work_weeks." if ww_blank else f"\nWork weeks are already set ({r['Work Weeks']['number']}); return null."))
+    product = read_spec(page["id"])
+    if product:
+        idea += "\n\nSpec:\n" + product
     return snap(ask_agent(RUBRIC.format(references=reference_lines(rows, exclude=page["id"]), idea=idea)))
 
 
@@ -202,14 +208,55 @@ def blind_test(n):
     print("within one step:", {k: f"{c}/{len(sample)}" for k, c in near.items()})
 
 
+SHARE = {"dominant": 0.001, "crowded": 0.01, "none_found": 0.01, "funded": 0.03, "contested": 0.05, "open": 0.1}
+
+
+def roi(tam, price, competition, probability, work_weeks, fun):
+    """The Notion ROI formula: value (10 years at the competition's market share) x probability / work cost x fun."""
+    value = price * tam * SHARE[competition] * 10
+    return value * probability / ((work_weeks or 1) * 4000) * (2 / (2 - fun) if fun is not None else 1)
+
+
+def rescore_all(out_path, workers=4):
+    """Re-scores every scored row without writing to Notion; one JSON line per row in out_path (resumable)."""
+    from concurrent.futures import ThreadPoolExecutor
+    done = {json.loads(l)["id"] for l in open(out_path)} if os.path.exists(out_path) else set()
+    rows = reviewed_rows()
+    pages = [p for p in query_db({"page_size": 100, "filter": {"property": "TAM Customers", "number": {"is_not_empty": True}}})
+             if p["id"] not in done]
+
+    def one(p):
+        r = p["properties"]
+        old = {"tam": r["TAM Customers"]["number"], "price": r["Price/Customer/yr ($)"]["number"],
+               "competition": (r["Competition"]["select"] or {}).get("name"), "probability": r["Probability"]["number"],
+               "roi": r["ROI"]["formula"].get("number")}
+        try:
+            v = review(p, rows)
+        except Exception as e:
+            print(f"{get_text(r['Project'])[:40]}: FAILED {e}", flush=True)
+            return
+        new = {k: v[k] for k in ("tam", "price", "competition", "probability")}
+        new["roi"] = roi(v["tam"], v["price"], v["competition"], v["probability"],
+                         v["work_weeks"] or r["Work Weeks"]["number"], r["Fun Score"]["number"])
+        with open(out_path, "a") as f:
+            f.write(json.dumps({"id": p["id"], "name": get_text(r["Project"]), "old": old, "new": new, "v": v},
+                               ensure_ascii=False) + "\n")
+        print(f"{get_text(r['Project'])[:40]}: ROI {old['roi'] or 0:.1f} -> {new['roi']:.1f}", flush=True)
+    with ThreadPoolExecutor(workers) as ex:
+        list(ex.map(one, pages))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--rescore-all", metavar="OUT.jsonl", help="re-score every scored row into OUT.jsonl; no Notion writes")
     ap.add_argument("page_id", nargs="?")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--blind-test", type=int, metavar="N")
     args = ap.parse_args()
     if args.blind_test:
         return blind_test(args.blind_test)
+    if args.rescore_all:
+        return rescore_all(args.rescore_all)
     page = notion_get(f"pages/{args.page_id}")
     if page["properties"].get("Reviewed", {}).get("checkbox") and not args.dry_run:
         sys.exit("Reviewed by hand; uncheck Reviewed to let the agent rescore it")
