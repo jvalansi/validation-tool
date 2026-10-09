@@ -78,11 +78,10 @@ def get_page_blocks(page_id):
 def remove_existing_validation_section(blocks):
     found = False
     for b in blocks:
-        if not found:
-            t = b["type"]
+        t = b["type"]
+        if t == "heading_2":  # sections are heading_2; the Validation section ends at the next one (e.g. Spec)
             text = "".join(x.get("plain_text", "") for x in b.get(t, {}).get("rich_text", []))
-            if t == "heading_2" and "Validation" in text:
-                found = True
+            found = "Validation" in text
         if found:
             try:
                 notion_delete(f"blocks/{b['id']}")

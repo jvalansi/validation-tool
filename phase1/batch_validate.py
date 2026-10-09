@@ -175,14 +175,13 @@ def delete_block(block_id):
 
 
 def remove_existing_validation_section(blocks):
-    """Delete all blocks from the Validation heading onwards."""
+    """Delete the Validation section: its heading and the blocks up to the next heading_2."""
     found = False
     for b in blocks:
-        if not found:
-            t = b["type"]
+        t = b["type"]
+        if t == "heading_2":  # sections are heading_2; the Validation section ends at the next one (e.g. Spec)
             text = "".join(x.get("plain_text", "") for x in b.get(t, {}).get("rich_text", []))
-            if t == "heading_2" and "Validation" in text:
-                found = True
+            found = "Validation" in text
         if found:
             try:
                 delete_block(b["id"])
