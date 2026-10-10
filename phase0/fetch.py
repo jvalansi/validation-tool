@@ -206,9 +206,11 @@ def main():
     out_dir = os.path.join(HERE, "data", niche)
     os.makedirs(out_dir, exist_ok=True)
     out = os.path.join(out_dir, "raw.jsonl")
+    if only and not os.path.exists(out):  # sweep.py only fetches niches with no raw.jsonl, so this would stick
+        sys.exit(f"{out} missing: run a full fetch before merging {only} into it")
     counts, ids = {}, set()
     with open(out + ".tmp", "w") as f:
-        if only and os.path.exists(out):
+        if only:
             for line in open(out):
                 ids.add(json.loads(line)["id"])
                 f.write(line)
