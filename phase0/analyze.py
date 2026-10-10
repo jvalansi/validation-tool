@@ -72,7 +72,7 @@ def extract_batch(items):
         "service could solve (e.g. tedious manual work, spreadsheets, missing or bad tooling, integration "
         "gaps, expensive or hated incumbents, expertise gaps). "
         "One-off bugs in a specific function, announcements, news, and hype are NOT pains.\n"
-        "Upwork job posts are people paying a freelancer to do a task by hand: a pain if the task recurs "
+        "Upwork and Freelancer.com job posts are people paying a freelancer to do a task by hand: a pain if the task recurs "
         "and software could do it, with the post's budget or 'ongoing' as the pay_signal.\n"
         "Return ONLY a JSON array, one object per item:\n"
         '  {"id": str, "is_pain": bool, "pain": str (one generalized sentence, empty if not a pain), '

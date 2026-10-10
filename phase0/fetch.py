@@ -8,10 +8,10 @@ All keys optional. Each item: {id, source, title, body, engagement, url, created
 
 Reddit gets top posts plus pain-phrase searches ("is there a tool", "I hate", ...),
 which surface complaints far more densely than top posts alone.
-workaround_queries search Upwork job posts: people already paying someone to do a task by hand.
+workaround_queries search Upwork and Freelancer.com job posts: people already paying someone to do a task by hand.
 
 Usage: python fetch.py <niche> [source ...]
-  With sources (e.g. `upwork`), fetches only those and merges them into the existing raw.jsonl.
+  With sources (e.g. `upwork freelancer`), fetches only those and merges them into the existing raw.jsonl.
 Reddit goes through rdt-cli, which needs a logged-in reddit_session cookie in
 ~/.config/rdt-cli/credential.json (see README).
 """
@@ -122,6 +122,31 @@ def upwork(queries):
         time.sleep(2)
 
 
+def _freelancer_item(p):
+    b = p.get("budget") or {}
+    budget = f"{b.get('minimum') or 0:g}-{b.get('maximum') or 0:g} {p['currency']['code']} {p.get('type', '')}"
+    bids = (p.get("bid_stats") or {}).get("bid_count") or 0
+    return {"id": f"fl:{p['id']}", "source": "freelancer", "title": p["title"],
+            "body": f"Budget {budget}, {bids} bids. {p.get('description') or ''}"[:BODY_CHARS], "engagement": bids,
+            "url": f"https://www.freelancer.com/projects/{p['seo_url']}",
+            "created": time.strftime("%Y-%m-%d", time.gmtime(p["time_submitted"]))}
+
+
+def freelancer(queries):
+    """Active Freelancer.com projects from its public API (no key): full description, budget, bid count."""
+    for q in queries:
+        url = "https://www.freelancer.com/api/projects/0.1/projects/active/?" + urllib.parse.urlencode(
+            {"query": q, "limit": 30, "full_description": "true"})
+        try:
+            projects = get_json(url)["result"]["projects"]
+        except Exception as e:
+            print(f"freelancer {q}: {e}", file=sys.stderr)
+            continue
+        for p in projects:
+            yield _freelancer_item(p)
+        time.sleep(1)
+
+
 def rdt(*args):
     """Run rdt-cli and return the listing's children. Raises on auth/network failure."""
     out = subprocess.run([RDT, *args, "--json"], capture_output=True, text=True, timeout=120)
@@ -218,7 +243,8 @@ def main():
                           ("reddit", lambda: reddit(cfg.get("subreddits", []))),
                           ("hackernews", lambda: hacker_news(cfg.get("hn_queries", []))),
                           ("discourse", lambda: discourse(cfg.get("discourse", []))),
-                          ("upwork", lambda: upwork(cfg.get("workaround_queries", [])))):
+                          ("upwork", lambda: upwork(cfg.get("workaround_queries", []))),
+                          ("freelancer", lambda: freelancer(cfg.get("workaround_queries", [])))):
             if only and name not in only:
                 continue
             for item in gen():
