@@ -4,5 +4,13 @@
   "Teachers",
   "teaching",
   "Professors"
+ ],
+ "workaround_queries": [
+  "lesson plan creation",
+  "curriculum development",
+  "worksheet design",
+  "quiz creation",
+  "google classroom setup",
+  "grading assistant"
  ]
 }

@@ -6,5 +6,13 @@
   "Revit",
   "AutoCAD",
   "InteriorDesign"
+ ],
+ "workaround_queries": [
+  "autocad drafting",
+  "revit modeling",
+  "pdf to cad conversion",
+  "3d interior rendering",
+  "floor plan drawing",
+  "bim modeling"
  ]
 }

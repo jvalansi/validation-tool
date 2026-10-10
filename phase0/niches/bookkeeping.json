@@ -4,5 +4,13 @@
   "Accounting",
   "Bookkeeping",
   "taxpros"
+ ],
+ "workaround_queries": [
+  "quickbooks reconciliation",
+  "bookkeeping cleanup",
+  "bank reconciliation",
+  "accounts payable data entry",
+  "xero bookkeeping",
+  "receipt categorization"
  ]
 }

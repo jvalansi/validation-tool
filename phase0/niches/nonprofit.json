@@ -3,5 +3,13 @@
  "subreddits": [
   "nonprofit",
   "grantwriting"
+ ],
+ "workaround_queries": [
+  "grant writing",
+  "grant research",
+  "donor database entry",
+  "salesforce nonprofit data cleanup",
+  "annual report design",
+  "fundraising campaign management"
  ]
 }

@@ -6,5 +6,13 @@
   "arcgis",
   "Surveying",
   "remotesensing"
+ ],
+ "workaround_queries": [
+  "arcgis mapping",
+  "qgis data digitizing",
+  "gis data conversion",
+  "survey drafting autocad civil 3d",
+  "lidar point cloud processing",
+  "georeferencing"
  ]
 }

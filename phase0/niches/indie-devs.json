@@ -9,5 +9,13 @@
   "Ask HN is there a tool",
   "Ask HN I wish there was",
   "Ask HN would pay for"
+ ],
+ "workaround_queries": [
+  "saas mvp development",
+  "bug fixing",
+  "stripe integration",
+  "landing page design",
+  "web scraping",
+  "app store submission"
  ]
 }

@@ -5,5 +5,13 @@
   "shopify",
   "FulfillmentByAmazon",
   "EtsySellers"
+ ],
+ "workaround_queries": [
+  "shopify product listing upload",
+  "amazon listing optimization",
+  "product data entry",
+  "shopify store setup",
+  "amazon seller central management",
+  "inventory spreadsheet update"
  ]
 }

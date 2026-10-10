@@ -4,5 +4,13 @@
   "recruiting",
   "humanresources",
   "recruitinghell"
+ ],
+ "workaround_queries": [
+  "candidate sourcing",
+  "resume screening",
+  "linkedin recruiting",
+  "ats data entry",
+  "interview scheduling",
+  "employee onboarding documents"
  ]
 }

@@ -8,5 +8,13 @@
  "hn_queries": [
   "Ask HN is there a tool devops",
   "Ask HN sysadmin tool"
+ ],
+ "workaround_queries": [
+  "linux server setup",
+  "aws migration",
+  "ci/cd pipeline setup",
+  "docker deployment",
+  "server monitoring setup",
+  "nginx configuration"
  ]
 }

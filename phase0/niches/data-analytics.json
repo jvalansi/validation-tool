@@ -9,5 +9,13 @@
  "hn_queries": [
   "Ask HN data pipeline tool",
   "Ask HN spreadsheet alternative"
+ ],
+ "workaround_queries": [
+  "excel data cleaning",
+  "power bi dashboard",
+  "tableau dashboard",
+  "data scraping",
+  "sql reporting",
+  "etl pipeline"
  ]
 }

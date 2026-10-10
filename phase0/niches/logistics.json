@@ -4,5 +4,13 @@
   "Truckers",
   "logistics",
   "FreightBrokers"
+ ],
+ "workaround_queries": [
+  "truck dispatcher",
+  "freight load booking",
+  "dispatch virtual assistant",
+  "bill of lading data entry",
+  "carrier setup packets",
+  "ifta reporting"
  ]
 }

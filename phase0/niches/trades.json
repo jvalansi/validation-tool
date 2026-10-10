@@ -6,5 +6,13 @@
   "Plumbing",
   "HVAC",
   "Contractor"
+ ],
+ "workaround_queries": [
+  "construction estimating",
+  "quantity takeoff",
+  "construction bid preparation",
+  "permit drawings",
+  "construction scheduling",
+  "subcontractor coordination"
  ]
 }

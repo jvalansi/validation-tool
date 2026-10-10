@@ -3,13 +3,15 @@
 Collect raw discussion items for one niche into data/<niche>/raw.jsonl.
 
 A niche is niches/<name>.json:
-  {"subreddits": [...], "github_repos": [...], "discourse": [...], "hn_queries": [...]}
+  {"subreddits": [...], "github_repos": [...], "discourse": [...], "hn_queries": [...], "workaround_queries": [...]}
 All keys optional. Each item: {id, source, title, body, engagement, url, created}.
 
 Reddit gets top posts plus pain-phrase searches ("is there a tool", "I hate", ...),
 which surface complaints far more densely than top posts alone.
+workaround_queries search Upwork job posts: people already paying someone to do a task by hand.
 
-Usage: python fetch.py <niche>
+Usage: python fetch.py <niche> [source ...]
+  With sources (e.g. `upwork`), fetches only those and merges them into the existing raw.jsonl.
 Reddit goes through rdt-cli, which needs a logged-in reddit_session cookie in
 ~/.config/rdt-cli/credential.json (see README).
 """
@@ -88,6 +90,36 @@ def reddit_via_search(subreddits):
                 yield {"id": f"rd:{m.group(1)}", "source": f"reddit:r/{sub}", "title": h.get("title", ""),
                        "body": h.get("body", "")[:BODY_CHARS], "engagement": 0, "url": h["href"], "created": ""}
             time.sleep(2)
+
+
+def _upwork_item(h):
+    """A search hit → item, or None if it isn't a single job post."""
+    m = re.search(r"upwork\.com/freelance-jobs/apply/[^/]*_~(\d+)", h.get("href", ""))
+    if not m or h.get("body", "").startswith("Find & apply"):  # generic page text, not the post
+        return None
+    title = re.sub(r"\s*-\s*(Freelance Job.*|Upwork)$", "", h.get("title", ""))
+    return {"id": f"uw:{m.group(1)}", "source": "upwork", "title": title, "body": h["body"][:BODY_CHARS],
+            "engagement": 0, "url": h["href"], "created": ""}
+
+
+def upwork(queries):
+    """Upwork job posts via Bing/Yahoo site: search (Upwork returns 403 to direct requests).
+    Titles + snippets only, ~7 hits per query; DuckDuckGo's own backend returns none for this site."""
+    from ddgs import DDGS
+    for q in queries:
+        for attempt in (1, 2):
+            try:
+                hits = DDGS().text(f"site:upwork.com/freelance-jobs/apply {q}", max_results=30, backend="bing,yahoo")
+                break
+            except Exception as e:
+                print(f"upwork {q} (try {attempt}): {e}", file=sys.stderr)
+                hits = []
+                time.sleep(5)
+        for h in hits:
+            item = _upwork_item(h)
+            if item:
+                yield item
+        time.sleep(2)
 
 
 def rdt(*args):
@@ -169,17 +201,24 @@ def discourse(bases, pages=8):
 
 
 def main():
-    niche = sys.argv[1]
+    niche, only = sys.argv[1], sys.argv[2:]
     cfg = json.load(open(os.path.join(HERE, "niches", f"{niche}.json")))
     out_dir = os.path.join(HERE, "data", niche)
     os.makedirs(out_dir, exist_ok=True)
     out = os.path.join(out_dir, "raw.jsonl")
     counts, ids = {}, set()
     with open(out + ".tmp", "w") as f:
+        if only and os.path.exists(out):
+            for line in open(out):
+                ids.add(json.loads(line)["id"])
+                f.write(line)
         for name, gen in (("github", lambda: github(cfg.get("github_repos", []))),
                           ("reddit", lambda: reddit(cfg.get("subreddits", []))),
                           ("hackernews", lambda: hacker_news(cfg.get("hn_queries", []))),
-                          ("discourse", lambda: discourse(cfg.get("discourse", [])))):
+                          ("discourse", lambda: discourse(cfg.get("discourse", []))),
+                          ("upwork", lambda: upwork(cfg.get("workaround_queries", [])))):
+            if only and name not in only:
+                continue
             for item in gen():
                 if item["id"] in ids:
                     continue

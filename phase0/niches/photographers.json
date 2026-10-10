@@ -4,5 +4,13 @@
   "WeddingPhotography",
   "photobusiness",
   "videography"
+ ],
+ "workaround_queries": [
+  "photo editing",
+  "image retouching",
+  "background removal",
+  "video editing",
+  "lightroom editing",
+  "photo culling"
  ]
 }

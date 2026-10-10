@@ -73,7 +73,9 @@ def propose_niches(n):
         f"Niches already covered: {json.dumps(existing)}\n"
         f"Propose {n + 2} NEW niches: groups of people who pay for tools for their work, active on Reddit, "
         "and not overlapping the covered ones. Return ONLY a JSON array of "
-        '{"name": short-kebab-case, "audience": str, "subreddits": [4-6 subreddit names without r/]}'
+        '{"name": short-kebab-case, "audience": str, "subreddits": [4-6 subreddit names without r/], '
+        '"workaround_queries": [4-6 short Upwork job-search phrases for tasks this audience pays freelancers '
+        'to do by hand, e.g. "quickbooks reconciliation"]}'
     )
     added = []
     for p in claude_json(prompt):
@@ -86,7 +88,8 @@ def propose_niches(n):
             continue
         path = os.path.join(HERE, "niches", f"{name}.json")
         with open(path + ".tmp", "w") as f:
-            json.dump({"audience": p["audience"], "subreddits": subs}, f, indent=1)
+            json.dump({"audience": p["audience"], "subreddits": subs,
+                       "workaround_queries": p.get("workaround_queries", [])}, f, indent=1)
         os.replace(path + ".tmp", path)
         added.append(name)
     return added

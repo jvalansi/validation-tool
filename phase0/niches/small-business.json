@@ -4,5 +4,13 @@
   "smallbusiness",
   "Entrepreneur",
   "sweatystartup"
+ ],
+ "workaround_queries": [
+  "virtual assistant",
+  "data entry",
+  "email management",
+  "appointment scheduling",
+  "invoice processing",
+  "crm data entry"
  ]
 }

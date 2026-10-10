@@ -4,5 +4,13 @@
   "privatepractice",
   "therapists",
   "physicaltherapy"
+ ],
+ "workaround_queries": [
+  "medical billing",
+  "insurance credentialing",
+  "therapy practice virtual assistant",
+  "simplepractice setup",
+  "insurance claims follow up",
+  "patient intake scheduling"
  ]
 }

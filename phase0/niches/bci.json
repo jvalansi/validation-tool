@@ -20,5 +20,13 @@
  ],
  "discourse": [
   "https://mne.discourse.group"
+ ],
+ "workaround_queries": [
+  "eeg data analysis",
+  "eeg signal processing",
+  "mne python",
+  "eeg artifact removal",
+  "openbci programming",
+  "neuroscience data analysis matlab"
  ]
 }

@@ -4,5 +4,13 @@
   "TranslationStudies",
   "translator",
   "localization"
+ ],
+ "workaround_queries": [
+  "document translation",
+  "subtitle translation",
+  "transcription",
+  "localization qa",
+  "translation proofreading",
+  "cat tool alignment"
  ]
 }
