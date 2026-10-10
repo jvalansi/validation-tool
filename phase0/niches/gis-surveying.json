@@ -14,5 +14,16 @@
   "survey drafting autocad civil 3d",
   "lidar point cloud processing",
   "georeferencing"
+ ],
+ "app_queries": [
+  "gis",
+  "land survey",
+  "gps field data collection",
+  "map viewer"
+ ],
+ "podcast_queries": [
+  "gis",
+  "mapping geospatial",
+  "land surveying"
  ]
 }

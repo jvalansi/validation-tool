@@ -12,5 +12,16 @@
   "food cost spreadsheet",
   "restaurant bookkeeping",
   "inventory tracking"
+ ],
+ "app_queries": [
+  "restaurant pos",
+  "restaurant inventory",
+  "staff scheduling",
+  "kitchen display"
+ ],
+ "podcast_queries": [
+  "restaurant owner",
+  "restaurant business",
+  "hospitality industry"
  ]
 }

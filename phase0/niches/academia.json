@@ -13,5 +13,16 @@
   "academic editing",
   "systematic review screening",
   "reference formatting"
+ ],
+ "app_queries": [
+  "reference manager",
+  "research papers",
+  "lab notebook",
+  "pdf annotation"
+ ],
+ "podcast_queries": [
+  "phd life",
+  "academic research",
+  "academia"
  ]
 }

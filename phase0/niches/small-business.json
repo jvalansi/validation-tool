@@ -12,5 +12,16 @@
   "appointment scheduling",
   "invoice processing",
   "crm data entry"
+ ],
+ "app_queries": [
+  "small business",
+  "point of sale",
+  "appointment booking",
+  "invoice"
+ ],
+ "podcast_queries": [
+  "small business owner",
+  "entrepreneur",
+  "small business marketing"
  ]
 }

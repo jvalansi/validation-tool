@@ -12,5 +12,16 @@
   "invoice management",
   "lead generation",
   "client onboarding"
+ ],
+ "app_queries": [
+  "freelance time tracking",
+  "invoicing",
+  "project management",
+  "client crm"
+ ],
+ "podcast_queries": [
+  "freelancing",
+  "agency owner",
+  "freelance business"
  ]
 }

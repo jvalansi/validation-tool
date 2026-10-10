@@ -12,5 +12,16 @@
   "simplepractice setup",
   "insurance claims follow up",
   "patient intake scheduling"
+ ],
+ "app_queries": [
+  "therapy practice management",
+  "ehr",
+  "telehealth",
+  "appointment scheduling"
+ ],
+ "podcast_queries": [
+  "private practice",
+  "therapist business",
+  "counseling practice"
  ]
 }

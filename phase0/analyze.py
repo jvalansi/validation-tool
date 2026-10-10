@@ -74,6 +74,8 @@ def extract_batch(items):
         "One-off bugs in a specific function, announcements, news, and hype are NOT pains.\n"
         "Upwork and Freelancer.com job posts are people paying a freelancer to do a task by hand: a pain if the task recurs "
         "and software could do it, with the post's budget or 'ongoing' as the pay_signal.\n"
+        "App reviews are paying users of an existing tool: a pain if it names a workflow the tool fails at, "
+        "not if it's only a crash or login bug. Podcast items are transcript excerpts of practitioners talking.\n"
         "Return ONLY a JSON array, one object per item:\n"
         '  {"id": str, "is_pain": bool, "pain": str (one generalized sentence, empty if not a pain), '
         '"who": "hobbyist"|"student"|"freelancer"|"small_business"|"employee"|"enterprise"|"developer"|"unknown", '
@@ -208,6 +210,11 @@ def main():
     pains = [d for d in extracted.values() if d.get("is_pain") and d.get("pain")]
     print(f"pains: {len(pains)} / {len(extracted)}", file=sys.stderr)
 
+    # New posts (a re-fetch or a merged source) → re-cluster, or their pains would sit unassigned
+    if os.path.exists(TAXONOMY) and os.path.getmtime(RAW) > os.path.getmtime(TAXONOMY):
+        os.remove(TAXONOMY)
+    if os.path.exists(ASSIGNED) and not os.path.exists(TAXONOMY):
+        os.remove(ASSIGNED)
     if not os.path.exists(TAXONOMY):
         write_atomic(TAXONOMY, json.dumps(taxonomy(pains), indent=1, ensure_ascii=False))
     clusters = json.load(open(TAXONOMY))

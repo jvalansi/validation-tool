@@ -12,5 +12,16 @@
   "quiz creation",
   "google classroom setup",
   "grading assistant"
+ ],
+ "app_queries": [
+  "classroom management",
+  "gradebook",
+  "lesson planner",
+  "learning management system"
+ ],
+ "podcast_queries": [
+  "teachers",
+  "teaching education",
+  "higher education teaching"
  ]
 }

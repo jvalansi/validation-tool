@@ -12,5 +12,16 @@
   "ats data entry",
   "interview scheduling",
   "employee onboarding documents"
+ ],
+ "app_queries": [
+  "applicant tracking",
+  "hr management",
+  "payroll",
+  "recruiter"
+ ],
+ "podcast_queries": [
+  "recruiting",
+  "human resources",
+  "talent acquisition"
  ]
 }

@@ -28,5 +28,16 @@
   "eeg artifact removal",
   "openbci programming",
   "neuroscience data analysis matlab"
+ ],
+ "app_queries": [
+  "eeg",
+  "brain computer interface",
+  "neurofeedback",
+  "muse headband"
+ ],
+ "podcast_queries": [
+  "neurotechnology",
+  "brain computer interface",
+  "neuroscience research"
  ]
 }

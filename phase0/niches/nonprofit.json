@@ -11,5 +11,16 @@
   "salesforce nonprofit data cleanup",
   "annual report design",
   "fundraising campaign management"
+ ],
+ "app_queries": [
+  "donor management",
+  "nonprofit fundraising",
+  "volunteer management",
+  "grant management"
+ ],
+ "podcast_queries": [
+  "nonprofit",
+  "grant writing",
+  "fundraising"
  ]
 }

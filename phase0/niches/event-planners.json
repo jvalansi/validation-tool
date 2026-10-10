@@ -12,5 +12,16 @@
   "event registration management",
   "seating chart design",
   "conference logistics coordination"
+ ],
+ "app_queries": [
+  "event planning",
+  "wedding planner",
+  "venue management",
+  "event check in"
+ ],
+ "podcast_queries": [
+  "event planning business",
+  "wedding planner business",
+  "event industry"
  ]
 }

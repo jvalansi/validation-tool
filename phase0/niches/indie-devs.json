@@ -17,5 +17,16 @@
   "landing page design",
   "web scraping",
   "app store submission"
+ ],
+ "app_queries": [
+  "app analytics",
+  "stripe dashboard",
+  "github",
+  "server monitoring"
+ ],
+ "podcast_queries": [
+  "indie hackers",
+  "saas founder",
+  "bootstrapped startup"
  ]
 }

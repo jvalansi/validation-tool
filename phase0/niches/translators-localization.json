@@ -12,5 +12,16 @@
   "localization qa",
   "translation proofreading",
   "cat tool alignment"
+ ],
+ "app_queries": [
+  "translation",
+  "dictionary",
+  "interpreter",
+  "cat tool translation"
+ ],
+ "podcast_queries": [
+  "translation",
+  "translators interpreters",
+  "localization"
  ]
 }

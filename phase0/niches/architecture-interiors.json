@@ -14,5 +14,16 @@
   "3d interior rendering",
   "floor plan drawing",
   "bim modeling"
+ ],
+ "app_queries": [
+  "cad drawing",
+  "bim viewer",
+  "interior design",
+  "floor plan"
+ ],
+ "podcast_queries": [
+  "architecture business",
+  "interior design business",
+  "bim cad"
  ]
 }

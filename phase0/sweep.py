@@ -5,6 +5,7 @@ through phase1/validation_tool.py. Posts the result to Discord #validation-tool.
 
 Steps per niche are cached (raw.jsonl, extracted.jsonl, taxonomy.json, assigned.json),
 so a killed sweep resumes where it stopped. Delete data/<niche>/ to redo a niche.
+A niche's posts are re-fetched every REFETCH_DAYS; analyze.py then re-clusters it.
 Validation results are kept in validated.json, so each sweep validates the top N clusters
 not validated before.
 
@@ -23,6 +24,7 @@ VT = os.path.join(HERE, "..")
 PY = sys.executable
 SWEEP = os.path.join(HERE, "reports", "SWEEP.md")
 VALIDATED = os.path.join(HERE, "validated.json")
+REFETCH_DAYS = 30
 
 
 def load_validated():
@@ -73,7 +75,8 @@ def main():
         f[:-5] for f in os.listdir(os.path.join(HERE, "niches")) if f.endswith(".json"))
 
     for n in niches:
-        if not os.path.exists(os.path.join(HERE, "data", n, "raw.jsonl")):
+        raw = os.path.join(HERE, "data", n, "raw.jsonl")
+        if not os.path.exists(raw) or time.time() - os.path.getmtime(raw) > REFETCH_DAYS * 86400:
             run([PY, "fetch.py", n])
         run([PY, "analyze.py", n])
 

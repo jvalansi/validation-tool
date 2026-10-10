@@ -14,5 +14,16 @@
   "permit drawings",
   "construction scheduling",
   "subcontractor coordination"
+ ],
+ "app_queries": [
+  "contractor estimating",
+  "field service management",
+  "construction management",
+  "job scheduling"
+ ],
+ "podcast_queries": [
+  "contractor business",
+  "construction",
+  "trades business"
  ]
 }

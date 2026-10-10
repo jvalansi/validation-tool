@@ -12,5 +12,16 @@
   "bill of lading data entry",
   "carrier setup packets",
   "ifta reporting"
+ ],
+ "app_queries": [
+  "trucking load board",
+  "dispatch fleet management",
+  "eld logbook",
+  "freight broker"
+ ],
+ "podcast_queries": [
+  "trucking",
+  "freight logistics",
+  "supply chain"
  ]
 }

@@ -16,5 +16,16 @@
   "docker deployment",
   "server monitoring setup",
   "nginx configuration"
+ ],
+ "app_queries": [
+  "server monitoring",
+  "ssh client",
+  "kubernetes",
+  "incident management"
+ ],
+ "podcast_queries": [
+  "devops",
+  "sysadmin",
+  "site reliability engineering"
  ]
 }

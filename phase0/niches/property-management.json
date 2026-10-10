@@ -12,5 +12,16 @@
   "tenant screening",
   "appfolio data entry",
   "real estate lead generation"
+ ],
+ "app_queries": [
+  "property management",
+  "landlord rent collection",
+  "real estate agent crm",
+  "tenant screening"
+ ],
+ "podcast_queries": [
+  "landlord",
+  "real estate investing",
+  "real estate agent"
  ]
 }

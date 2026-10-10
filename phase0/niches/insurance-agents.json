@@ -11,5 +11,15 @@
   "insurance data entry",
   "policy renewal processing",
   "ams360 data entry"
+ ],
+ "app_queries": [
+  "insurance agency management",
+  "insurance agent crm",
+  "insurance quoting"
+ ],
+ "podcast_queries": [
+  "insurance agent",
+  "insurance agency growth",
+  "insurance broker"
  ]
 }

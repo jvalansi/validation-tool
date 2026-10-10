@@ -17,5 +17,16 @@
   "data scraping",
   "sql reporting",
   "etl pipeline"
+ ],
+ "app_queries": [
+  "data analytics dashboard",
+  "sql client",
+  "business intelligence",
+  "data visualization"
+ ],
+ "podcast_queries": [
+  "data engineering",
+  "data science analytics",
+  "analytics engineering"
  ]
 }

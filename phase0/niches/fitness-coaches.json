@@ -12,5 +12,16 @@
   "trainerize setup",
   "mindbody setup",
   "fitness client onboarding"
+ ],
+ "app_queries": [
+  "personal trainer client",
+  "gym management",
+  "fitness studio booking",
+  "workout coaching"
+ ],
+ "podcast_queries": [
+  "personal trainer business",
+  "fitness business",
+  "gym owner"
  ]
 }

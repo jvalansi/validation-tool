@@ -3,12 +3,15 @@
 Collect raw discussion items for one niche into data/<niche>/raw.jsonl.
 
 A niche is niches/<name>.json:
-  {"subreddits": [...], "github_repos": [...], "discourse": [...], "hn_queries": [...], "workaround_queries": [...]}
+  {"subreddits": [...], "github_repos": [...], "discourse": [...], "hn_queries": [...], "workaround_queries": [...],
+   "app_queries": [...], "podcast_queries": [...]}
 All keys optional. Each item: {id, source, title, body, engagement, url, created}.
 
 Reddit gets top posts plus pain-phrase searches ("is there a tool", "I hate", ...),
 which surface complaints far more densely than top posts alone.
 workaround_queries search Upwork and Freelancer.com job posts: people already paying someone to do a task by hand.
+app_queries find the audience's tools on Google Play and take their recent 1-2 star reviews (G2, Capterra and
+TrustRadius return 403). podcast_queries find podcasts that publish transcripts and keep transcript chunks with pain phrases.
 
 Usage: python fetch.py <niche> [source ...]
   With sources (e.g. `upwork freelancer`), fetches only those and merges them into the existing raw.jsonl.
@@ -147,6 +150,110 @@ def freelancer(queries):
         time.sleep(1)
 
 
+def google_play(queries, apps_per_query=3, per_app=20):
+    from google_play_scraper import Sort, reviews, search
+    seen = set()
+    for q in queries:
+        try:
+            apps = [a for a in search(q, n_hits=apps_per_query) if a.get("appId")]
+        except Exception as e:
+            print(f"play search {q}: {e}", file=sys.stderr)
+            continue
+        for a in apps:
+            if a["appId"] in seen:
+                continue
+            seen.add(a["appId"])
+            for stars in (1, 2):
+                try:
+                    rv, _ = reviews(a["appId"], sort=Sort.NEWEST, count=per_app, filter_score_with=stars)
+                except Exception as e:
+                    print(f"play reviews {a['appId']}: {e}", file=sys.stderr)
+                    continue
+                for r in rv:
+                    if len(r.get("content") or "") < 80:  # "this app sucks" says nothing about the work
+                        continue
+                    yield {"id": f"gp:{r['reviewId']}", "source": f"play:{a['appId']}",
+                           "title": f"{a['title']} review ({stars}★)", "body": r["content"][:BODY_CHARS],
+                           "engagement": r.get("thumbsUpCount") or 0,
+                           "url": f"https://play.google.com/store/apps/details?id={a['appId']}",
+                           "created": str(r.get("at") or "")[:10]}
+            time.sleep(1)
+
+
+PAIN_RE = re.compile(r"\b(hate|frustrat|annoying|tedious|manual(ly)?|spreadsheet|nightmare|painful|waste|"
+                     r"wish there|no tool|can't find|struggl|headache|takes forever|hours)", re.I)
+
+
+def transcript_chunks(text, size=1200):
+    """Split a transcript into ~size-char windows and keep those with a pain phrase."""
+    words, chunks, cur = text.split(), [], []
+    for w in words:
+        cur.append(w)
+        if sum(len(x) + 1 for x in cur) >= size:
+            chunks.append(" ".join(cur))
+            cur = []
+    if cur:
+        chunks.append(" ".join(cur))
+    return [(i, c) for i, c in enumerate(chunks) if PAIN_RE.search(c)]
+
+
+def transcript_text(raw):
+    """SRT / VTT / HTML / JSON transcript → plain text (drops cue numbers, timestamps, tags)."""
+    try:
+        d = json.loads(raw)
+        return " ".join(seg.get("body", "") for seg in d.get("segments", []))
+    except ValueError:
+        pass
+    raw = re.sub(r"<[^>]+>", " ", raw)
+    raw = re.sub(r"(?m)^(WEBVTT.*|\d+|[\d:.,]+ --> [\d:.,]+.*)$", " ", raw)
+    return re.sub(r"\s+", " ", raw).strip()
+
+
+def podcasts(queries, shows=25, episodes_per_show=3, chunks_per_episode=8):
+    """Podcasts found via the iTunes search API whose RSS feeds publish <podcast:transcript>
+    (Buzzsprout, Spreaker, RSS.com ...; roughly 1 show in 5) → transcript chunks with pain phrases.
+    YouTube was tried first and blocks this server's transcript requests."""
+    seen = set()
+    for q in queries:
+        url = "https://itunes.apple.com/search?" + urllib.parse.urlencode({"term": q, "media": "podcast", "limit": shows})
+        try:
+            results = get_json(url)["results"]
+        except Exception as e:
+            print(f"podcast search {q}: {e}", file=sys.stderr)
+            continue
+        for show in results:
+            if not show.get("feedUrl") or show["collectionId"] in seen:
+                continue
+            seen.add(show["collectionId"])
+            try:
+                req = urllib.request.Request(show["feedUrl"], headers={"User-Agent": "Mozilla/5.0"})
+                feed = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore")
+            except Exception as e:
+                print(f"podcast feed {show['collectionName']}: {e}", file=sys.stderr)
+                continue
+            n = 0
+            for item in re.findall(r"<item>.*?</item>", feed, re.S):
+                t = re.search(r'<podcast:transcript[^>]*url="([^"]+)"', item)
+                if not t:
+                    continue
+                title = re.search(r"<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>", item, re.S)
+                guid = re.sub(r"\W", "", t.group(1))[-40:]
+                try:
+                    req = urllib.request.Request(t.group(1).replace("&amp;", "&"), headers={"User-Agent": "Mozilla/5.0"})
+                    text = transcript_text(urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore"))
+                except Exception as e:
+                    print(f"transcript {t.group(1)[:60]}: {e}", file=sys.stderr)
+                    continue
+                for i, c in transcript_chunks(text)[:chunks_per_episode]:
+                    yield {"id": f"pc:{guid}:{i}", "source": "podcast",
+                           "title": f"{show['collectionName']}: {title.group(1).strip() if title else ''}",
+                           "body": c[:BODY_CHARS], "engagement": 0, "url": show.get("collectionViewUrl", ""),
+                           "created": ""}
+                n += 1
+                if n == episodes_per_show:
+                    break
+
+
 def rdt(*args):
     """Run rdt-cli and return the listing's children. Raises on auth/network failure."""
     out = subprocess.run([RDT, *args, "--json"], capture_output=True, text=True, timeout=120)
@@ -244,7 +351,9 @@ def main():
                           ("hackernews", lambda: hacker_news(cfg.get("hn_queries", []))),
                           ("discourse", lambda: discourse(cfg.get("discourse", []))),
                           ("upwork", lambda: upwork(cfg.get("workaround_queries", []))),
-                          ("freelancer", lambda: freelancer(cfg.get("workaround_queries", [])))):
+                          ("freelancer", lambda: freelancer(cfg.get("workaround_queries", []))),
+                          ("play", lambda: google_play(cfg.get("app_queries", []))),
+                          ("podcast", lambda: podcasts(cfg.get("podcast_queries", [])))):
             if only and name not in only:
                 continue
             for item in gen():

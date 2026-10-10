@@ -3,7 +3,10 @@
 Sweeps online communities across ~20 niches for recurring pain points, ranks them as product opportunities for a
 solo builder, and runs the top ones through `../phase1` (validation_tool.py). Started as the BCI pain-point study.
 
-- `niches/<name>.json` — audience + sources (subreddits, GitHub repos, Discourse forums, HN queries).
+- `niches/<name>.json` — audience + sources (subreddits, GitHub repos, Discourse forums, HN queries, plus search
+  phrases for Upwork/Freelancer.com job posts, Google Play 1-2★ reviews and podcast transcripts; see `fetch.py`).
+  `sweep.py` re-fetches a niche every 30 days, and `analyze.py` re-clusters it whenever its posts change.
+  Needs `ddgs` and `google-play-scraper` in `../.venv`.
 - `fetch.py <niche>` → `data/<niche>/raw.jsonl`. Reddit goes through [rdt-cli](https://github.com/public-clis/rdt-cli)
   (installed in `../.venv`), falling back to a DuckDuckGo `site:` search if it fails. rdt-cli needs a logged-in
   `reddit_session` cookie in `~/.config/rdt-cli/credential.json` (mode 600):
